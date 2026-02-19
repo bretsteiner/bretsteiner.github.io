@@ -1,0 +1,338 @@
+/* ========================================
+   Methodology Page Enhancements
+   Companion to bs.css — add via:
+   <link rel="stylesheet" href="css/methodology.css">
+   ======================================== */
+
+/* ----------------------------------------
+   Step Hero — Editorial intro for each step
+   ---------------------------------------- */
+.step-hero {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2xl);
+  margin-bottom: var(--space-3xl);
+  padding-bottom: var(--space-2xl);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.step__number--lg {
+  width: 5.5rem;
+  height: 5.5rem;
+  font-size: 2.25rem;
+  border-radius: var(--radius-xl);
+  box-shadow: 0 8px 32px rgba(255, 111, 97, 0.3);
+}
+
+.step-hero__content h2 {
+  margin-top: 0;
+  margin-bottom: var(--space-md);
+}
+
+.step-hero__subtitle {
+  font-size: clamp(1rem, 2vw, 1.25rem);
+  color: rgba(255, 255, 255, 0.75);
+  line-height: 1.7;
+  max-width: 680px;
+  margin: 0;
+}
+
+@media (max-width: 767px) {
+  .step-hero {
+    flex-direction: column;
+    gap: var(--space-lg);
+  }
+  .step__number--lg {
+    width: 4rem;
+    height: 4rem;
+    font-size: 1.75rem;
+  }
+}
+
+/* ----------------------------------------
+   Step Approach — narrative block
+   ---------------------------------------- */
+.step-approach {
+  max-width: 780px;
+  margin-bottom: var(--space-3xl);
+  position: relative;
+  padding-left: var(--space-2xl);
+}
+
+.step-approach::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: linear-gradient(to bottom, var(--accent-coral), transparent);
+  border-radius: 2px;
+}
+
+.step-approach__label {
+  display: block;
+  font-family: 'Inter', sans-serif;
+  font-weight: 700;
+  font-size: 1.1rem;
+  margin-bottom: var(--space-lg);
+  letter-spacing: 0.02em;
+}
+
+.step-approach p {
+  font-size: clamp(0.9375rem, 1.5vw, 1.0625rem);
+  line-height: 1.75;
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: var(--space-lg);
+}
+
+.step-approach p:last-child {
+  margin-bottom: 0;
+}
+
+@media (max-width: 767px) {
+  .step-approach {
+    padding-left: var(--space-lg);
+  }
+}
+
+/* ----------------------------------------
+   Step Cards — grid container enhancements
+   ---------------------------------------- */
+.step-cards {
+  margin-top: 0;
+}
+
+.step-cards > .card {
+  transition: transform var(--transition-base), box-shadow var(--transition-base);
+}
+
+/* ----------------------------------------
+   Clickable Overview Steps
+   ---------------------------------------- */
+.step--link {
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+  border-radius: var(--radius-lg);
+  padding: var(--space-lg) var(--space-xl);
+  margin: 0 calc(-1 * var(--space-xl));
+  transition: 
+    background var(--transition-base),
+    transform var(--transition-base),
+    box-shadow var(--transition-base);
+}
+
+.step--link:hover {
+  background: rgba(255, 111, 97, 0.06);
+  transform: translateX(8px);
+}
+
+.step--link:hover .step__arrow {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.step--link.step--active {
+  background: rgba(255, 111, 97, 0.08);
+  box-shadow: inset 4px 0 0 var(--accent-coral);
+}
+
+.step--link.step--active .step__number {
+  box-shadow: 0 4px 20px rgba(255, 111, 97, 0.4);
+  transform: scale(1.05);
+}
+
+.step__arrow {
+  font-size: 1.5rem;
+  color: var(--accent-coral);
+  opacity: 0;
+  transform: translateX(-8px);
+  transition: 
+    opacity var(--transition-fast),
+    transform var(--transition-fast);
+  flex-shrink: 0;
+  align-self: center;
+}
+
+@media (max-width: 767px) {
+  .step--link {
+    margin: 0 calc(-1 * var(--space-md));
+    padding: var(--space-md);
+  }
+}
+
+/* ----------------------------------------
+   Scroll Reveal Animations
+   ---------------------------------------- */
+@media (prefers-reduced-motion: no-preference) {
+  .reveal {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: 
+      opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+      transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .reveal.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Stagger cards within a grid */
+  .step-cards > .reveal:nth-child(1) { transition-delay: 0s; }
+  .step-cards > .reveal:nth-child(2) { transition-delay: 0.1s; }
+  .step-cards > .reveal:nth-child(3) { transition-delay: 0.2s; }
+  .step-cards > .reveal:nth-child(4) { transition-delay: 0.3s; }
+
+  /* Overview steps stagger */
+  .steps--overview > .reveal:nth-child(1) { transition-delay: 0s; }
+  .steps--overview > .reveal:nth-child(2) { transition-delay: 0.08s; }
+  .steps--overview > .reveal:nth-child(3) { transition-delay: 0.16s; }
+  .steps--overview > .reveal:nth-child(4) { transition-delay: 0.24s; }
+  .steps--overview > .reveal:nth-child(5) { transition-delay: 0.32s; }
+}
+
+/* Fallback for reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* ----------------------------------------
+   Section Dividers — accent between steps
+   ---------------------------------------- */
+.page__segment.section--dark + .page__segment.section--dark {
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.page__segment.section--dark + .page__segment.section--dark::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 3px;
+  background: var(--accent-coral);
+  border-radius: 2px;
+  opacity: 0.5;
+}
+
+/* ----------------------------------------
+   Pagination — subtle dark variant
+   ---------------------------------------- */
+.section--dark + .pagination,
+.section--dark .pagination {
+  background-color: transparent;
+}
+
+/* ----------------------------------------
+   Overview Section — editorial spacing
+   ---------------------------------------- */
+#engagements .section-header {
+  margin-bottom: var(--space-3xl);
+}
+
+#engagements .section-header__title {
+  font-size: clamp(2.25rem, 5vw, 3.5rem);
+  letter-spacing: -0.02em;
+}
+
+#engagements .section-header__text {
+  font-size: clamp(1rem, 2vw, 1.25rem);
+  max-width: 680px;
+  line-height: 1.8;
+}
+
+/* ----------------------------------------
+   Progress indicator on overview steps
+   ---------------------------------------- */
+.steps--overview {
+  position: relative;
+}
+
+.steps--overview .step::before {
+  background: linear-gradient(
+    to bottom,
+    var(--accent-coral) 0%,
+    rgba(255, 111, 97, 0.3) 70%,
+    transparent 100%
+  );
+  width: 2px;
+  left: 2rem;
+}
+
+.steps--overview .step__number {
+  transition: 
+    transform var(--transition-base),
+    box-shadow var(--transition-base);
+  position: relative;
+  z-index: 1;
+}
+
+/* ----------------------------------------
+   Card Image Enhancements
+   ---------------------------------------- */
+.step-cards .card.no-padding figure img {
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.step-cards .card.no-padding:hover figure img {
+  transform: scale(1.04);
+}
+
+/* ----------------------------------------
+   Typography polish for dark sections
+   ---------------------------------------- */
+.section--dark h5 {
+  color: rgba(255, 255, 255, 0.95);
+  font-size: clamp(1.1rem, 2vw, 1.35rem);
+}
+
+.section--dark .sub-heading.type--normal {
+  color: rgba(255, 255, 255, 0.7);
+  line-height: 1.7;
+}
+
+.section--dark .outcomes-title {
+  color: rgba(255, 255, 255, 0.5);
+  border-top-color: rgba(255, 255, 255, 0.1);
+}
+
+.section--dark .outcomes-list li {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+/* ----------------------------------------
+   Dark section card styling
+   ---------------------------------------- */
+.section--dark .card {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.section--dark .card:hover {
+  background: rgba(255, 255, 255, 0.07);
+  border-color: rgba(255, 111, 97, 0.15);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.2);
+}
+
+.section--dark .card.no-padding {
+  border: none;
+}
+
+/* ----------------------------------------
+   Icon backgrounds in dark sections
+   ---------------------------------------- */
+.section--dark .icon__bg {
+  background: rgba(255, 111, 97, 0.12);
+  border-radius: var(--radius-md);
+  width: 3rem;
+  height: 3rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
