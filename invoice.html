@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Invoice – Bret Steiner</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- Core site CSS -->
+  <link rel="stylesheet" href="bs.css" />
+
+  <!-- Invoice-specific styling (scoped) -->
+  <style>
+    .invoice-page {
+      background: linear-gradient(var(--bg-light), var(--bg-light-tone));
+      min-height: 100vh;
+      padding: 6rem 0;
+    }
+
+    .invoice {
+      background: white;
+      border-radius: 1em;
+      box-shadow: 0 16px 40px rgba(0,0,0,0.06);
+      padding: 4rem;
+    }
+
+    .invoice-header {
+      display: flex;
+      justify-content: space-between;
+      gap: 2rem;
+      margin-bottom: 4rem;
+    }
+
+    .invoice-brand h1 {
+      margin: 0 0 0.25rem 0;
+      font-size: 2.2rem;
+    }
+
+    .invoice-brand p {
+      margin: 0;
+      line-height: 1.6;
+      color: var(--text-color-light);
+      opacity: 0.8;
+    }
+
+    .invoice-meta {
+      text-align: right;
+      font-size: 0.95rem;
+    }
+
+    .invoice-meta strong {
+      display: block;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+
+    .invoice-section {
+      margin-bottom: 3rem;
+    }
+
+    .invoice-section__label {
+      text-transform: uppercase;
+      font-size: 0.75rem;
+      letter-spacing: 0.08em;
+      color: var(--accent-attention);
+      font-weight: 700;
+      margin-bottom: 0.75rem;
+    }
+
+    .invoice-client p {
+      margin: 0;
+      line-height: 1.6;
+    }
+
+    /* Table refinement using your variables */
+    .invoice table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 0.95rem;
+    }
+
+    .invoice th {
+      background: var(--table-accent);
+      font-weight: 700;
+    }
+
+    .invoice th,
+    .invoice td {
+      padding: 1.2em;
+      border: 1px solid var(--table-border);
+    }
+
+    .num {
+      text-align: right;
+      white-space: nowrap;
+    }
+
+    /* Totals */
+    .invoice-totals {
+      max-width: 360px;
+      margin-left: auto;
+      margin-top: 2.5rem;
+    }
+
+    .invoice-totals__row {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.5rem 0;
+      font-size: 1rem;
+    }
+
+    .invoice-totals__row.total {
+      font-size: 1.3rem;
+      font-weight: 900;
+      border-top: 2px solid var(--gray-light);
+      padding-top: 1.25rem;
+      margin-top: 0.75rem;
+      color: var(--accent-attention);
+    }
+
+    /* Footer */
+    .invoice-footer {
+      margin-top: 4rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--gray-light);
+      font-size: 0.9rem;
+      opacity: 0.75;
+      line-height: 1.6;
+    }
+
+    @media print {
+      .invoice-page {
+        padding: 0;
+        background: white;
+      }
+      .invoice {
+        box-shadow: none;
+        padding: 0;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <main class="invoice-page">
+    <div class="trim">
+
+      <article class="invoice">
+
+        <!-- Header -->
+        <header class="invoice-header">
+          <div class="invoice-brand">
+            <h1>Bret Steiner</h1>
+            <p>
+              Digital Consulting<br>
+              London, United Kingdom<br>
+              hello@bretsteiner.com
+            </p>
+          </div>
+
+          <div class="invoice-meta">
+            <strong>Invoice</strong>
+            Invoice No: INV-0012<br>
+            Invoice Date: 21 Jan 2026<br>
+            Due Date: 04 Feb 2026
+          </div>
+        </header>
+
+        <!-- Client -->
+        <section class="invoice-section invoice-client">
+          <div class="invoice-section__label">Invoice To</div>
+          <p>
+            Client Company Ltd<br>
+            123 Client Street<br>
+            London, SW1A 1AA
+          </p>
+        </section>
+
+        <!-- Line items -->
+        <section class="invoice-section">
+          <table>
+            <thead>
+              <tr>
+                <th>Description</th>
+                <th class="num">Qty</th>
+                <th class="num">Rate</th>
+                <th class="num">Amount</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Digital Consulting Services (as agreed)</td>
+                <td class="num">—</td>
+                <td class="num">—</td>
+                <td class="num">£0.00</td>
+              </tr>
+              <tr>
+                <td>
+                  Business Expenses – Daily Allowance<br>
+                  <span class="type--xs accent--medium">
+                    Subsistence and incidental expenses
+                  </span>
+                </td>
+                <td class="num">3</td>
+                <td class="num">£25.00</td>
+                <td class="num">£75.00</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <!-- Totals -->
+          <div class="invoice-totals">
+            <div class="invoice-totals__row">
+              <span>Subtotal</span>
+              <span>£75.00</span>
+            </div>
+            <div class="invoice-totals__row">
+              <span>VAT</span>
+              <span>£0.00</span>
+            </div>
+            <div class="invoice-totals__row total">
+              <span>Total Due</span>
+              <span>£75.00</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="invoice-footer">
+          Payment due within 14 days.<br>
+          VAT not applicable – supplier not VAT registered.<br><br>
+          Thank you for your business.
+        </footer>
+
+      </article>
+
+    </div>
+  </main>
+
+</body>
+</html>
