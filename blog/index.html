@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Blog – Path Within Therapy</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="blog.css">
+</head>
+<body>
+
+  <!-- EXACT SITE HEADER -->
+  <header class="site-header">
+    <div class="site-header__inner">
+      <a href="https://pathwithintherapy.com/" class="site-header__logo">
+        <img src="https://pathwithintherapy.com/media/pathwithintherapy-logotype.svg" alt="Path Within Therapy">
+      </a>
+      <nav>
+        <ul class="site-header__nav">
+          <li><a href="https://pathwithintherapy.com/">Home</a></li>
+          <li><a href="https://pathwithintherapy.com/about">About me</a></li>
+          <li>
+            <a href="https://pathwithintherapy.com/therapy">Therapy</a>
+            <ul class="dropdown">
+              <li><a href="https://pathwithintherapy.com/relationship-therapy">Relationship Therapy</a></li>
+              <li><a href="https://pathwithintherapy.com/individual-therapy">Individual Therapy</a></li>
+            </ul>
+          </li>
+          <li><a href="https://pathwithintherapy.com/rates">Rates</a></li>
+          <li><a href="blog.html" class="active">Blog</a></li>
+          <li class="nav-contact"><a href="https://pathwithintherapy.com/contact">Contact</a></li>
+        </ul>
+      </nav>
+      <button class="site-header__burger" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <!-- BLOG HERO -->
+  <section class="blog-hero">
+    <div class="blog-hero__inner">
+      <div>
+        <div class="blog-hero__eyebrow">Reflections &amp; Insights</div>
+        <h1 class="blog-hero__title">Thoughts on<br><em>connection</em><br>&amp; growth</h1>
+      </div>
+      <p class="blog-hero__desc">A space where I share perspectives on relationships, emotional wellbeing, and what it means to live more fully — in your own skin and with those you love.</p>
+    </div>
+  </section>
+
+  <!-- FILTER -->
+  <div class="blog-filter">
+    <button class="filter-btn active" onclick="filterPosts('all',this)">All</button>
+    <button class="filter-btn" onclick="filterPosts('relationships',this)">Relationships</button>
+    <button class="filter-btn" onclick="filterPosts('individual',this)">Individual Growth</button>
+    <button class="filter-btn" onclick="filterPosts('wellbeing',this)">Wellbeing</button>
+  </div>
+
+  <!-- POSTS -->
+  <section class="blog-grid">
+
+    <a class="post-featured" href="blog-post.html" data-cat="relationships" id="featuredPost">
+      <div class="featured-visual">
+        <svg viewBox="0 0 400 420" fill="none" preserveAspectRatio="xMidYMid slice">
+          <path d="M-20 420 Q80 80 200 210 Q320 340 420 -20" stroke="white" stroke-width="2" fill="none"/>
+          <path d="M40 420 Q120 160 200 200 Q280 240 380 -20" stroke="white" stroke-width="1.5" fill="none"/>
+          <path d="M100 420 Q160 220 200 200 Q240 180 300 -20" stroke="white" stroke-width="1" fill="none"/>
+          <circle cx="200" cy="207" r="5" fill="rgba(232,184,75,0.8)"/>
+          <circle cx="200" cy="207" r="16" fill="rgba(232,184,75,0.15)"/>
+        </svg>
+        <span class="featured-badge">Featured · Relationships</span>
+      </div>
+      <div class="featured-body">
+        <div class="post-cat"><span class="post-cat-dot"></span>Relationships</div>
+        <h2 class="post-title">Why Arguments in Relationships Rarely Feel Like They're About What They're About</h2>
+        <p class="post-excerpt">When couples argue about dishes, schedules, or money, something deeper is almost always at play. Understanding the emotional music beneath the words can transform how you and your partner move through conflict — toward each other, rather than away.</p>
+        <div class="post-meta">
+          <span>February 18, 2026</span>
+          <span class="post-meta-sep">·</span>
+          <span>6 min read</span>
+          <span class="post-arrow">→</span>
+        </div>
+      </div>
+    </a>
+
+    <div class="posts-grid" id="postsGrid">
+
+      <a class="post-card" href="blog-post.html" data-cat="individual">
+        <div class="post-cat"><span class="post-cat-dot" style="background:var(--teal)"></span>Individual Growth</div>
+        <h2 class="post-title">The Part of You That Learned to Stay Small</h2>
+        <p class="post-excerpt">Many of us developed early strategies to stay safe — quieting our needs, shrinking our feelings. Therapy is often the first place we get to unlearn that.</p>
+        <div class="post-meta"><span>January 30, 2026</span><span class="post-meta-sep">·</span><span>5 min read</span><span class="post-arrow">→</span></div>
+      </a>
+
+      <a class="post-card" href="blog-post.html" data-cat="wellbeing">
+        <div class="post-cat"><span class="post-cat-dot" style="background:var(--gold)"></span>Wellbeing</div>
+        <h2 class="post-title">Loneliness in a Crowded City: An Expat's Invisible Struggle</h2>
+        <p class="post-excerpt">Amsterdam offers beauty and a thriving expat scene. Yet for many who've relocated, loneliness can arrive quietly — even when life looks full from the outside.</p>
+        <div class="post-meta"><span>January 12, 2026</span><span class="post-meta-sep">·</span><span>7 min read</span><span class="post-arrow">→</span></div>
+      </a>
+
+      <a class="post-card" href="blog-post.html" data-cat="relationships">
+        <div class="post-cat"><span class="post-cat-dot"></span>Relationships</div>
+        <h2 class="post-title">What EFT Taught Me About the Dance Between Two People</h2>
+        <p class="post-excerpt">Emotionally Focused Therapy reveals that conflict isn't a character flaw — it's a dance. Once you see the pattern, you can choose a new step.</p>
+        <div class="post-meta"><span>December 19, 2025</span><span class="post-meta-sep">·</span><span>4 min read</span><span class="post-arrow">→</span></div>
+      </a>
+
+      <a class="post-card" href="blog-post.html" data-cat="individual">
+        <div class="post-cat"><span class="post-cat-dot" style="background:var(--teal)"></span>Individual Growth</div>
+        <h2 class="post-title">Identity After a Big Move: Who Are You When No One Knows You?</h2>
+        <p class="post-excerpt">Moving country strips away the social scaffolding of identity. That can be terrifying. It can also be a gift.</p>
+        <div class="post-meta"><span>November 28, 2025</span><span class="post-meta-sep">·</span><span>6 min read</span><span class="post-arrow">→</span></div>
+      </a>
+
+      <a class="post-card" href="blog-post.html" data-cat="wellbeing">
+        <div class="post-cat"><span class="post-cat-dot" style="background:var(--gold)"></span>Wellbeing</div>
+        <h2 class="post-title">On Rest: Why Doing Nothing Feels So Hard</h2>
+        <p class="post-excerpt">Rest isn't laziness. For many of us, being still without productivity feels dangerous — a signal from an older self that we're falling behind.</p>
+        <div class="post-meta"><span>November 5, 2025</span><span class="post-meta-sep">·</span><span>4 min read</span><span class="post-arrow">→</span></div>
+      </a>
+
+      <a class="post-card" href="blog-post.html" data-cat="relationships">
+        <div class="post-cat"><span class="post-cat-dot"></span>Relationships</div>
+        <h2 class="post-title">LGBTQ+ Couples: The Unique Strengths (and Stresses) Worth Naming</h2>
+        <p class="post-excerpt">Same-sex and queer relationships carry distinct joys and pressures that mainstream couples therapy often doesn't address.</p>
+        <div class="post-meta"><span>October 14, 2025</span><span class="post-meta-sep">·</span><span>5 min read</span><span class="post-arrow">→</span></div>
+      </a>
+
+    </div>
+  </section>
+
+  <!-- EXACT SITE FOOTER -->
+  <footer class="site-footer">
+    <div class="site-footer__inner">
+      <div class="site-footer__logo">
+        <a href="https://pathwithintherapy.com/">
+          <img src="https://pathwithintherapy.com/media/pathwithintherapy-logotype.svg" alt="Path Within Therapy">
+        </a>
+      </div>
+      <div class="site-footer__col">
+        <h4>Therapy</h4>
+        <ul>
+          <li><a href="https://pathwithintherapy.com/therapy#whatiseft">What is EFT?</a></li>
+          <li><a href="https://pathwithintherapy.com/relationship-therapy">Relationship Therapy</a></li>
+          <li><a href="https://pathwithintherapy.com/individual-therapy">Individual therapy</a></li>
+        </ul>
+      </div>
+      <div class="site-footer__col">
+        <h4>About the practice</h4>
+        <ul>
+          <li><a href="https://pathwithintherapy.com/about">About me</a></li>
+          <li><a href="https://pathwithintherapy.com/contact">How to get here</a></li>
+          <li><a href="https://pathwithintherapy.com/rates">How to cancel</a></li>
+        </ul>
+      </div>
+      <div class="site-footer__col">
+        <h4>Contact</h4>
+        <ul>
+          <li>📍 Amsterdam</li>
+          <li>🏢 KVK 97269239</li>
+          <li><a href="mailto:hello@pathwithintherapy.com">hello@pathwithintherapy.com</a></li>
+          <li><a href="tel:+31639207654">+31 6 39207654</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="site-footer__bottom">
+      <p>Copyright 2026 Path Within Therapy</p>
+      <div class="site-footer__bottom-links">
+        <a href="https://pathwithintherapy.com/policy/4c0f27a8-580d-11f0-8b21-ef0799352164">Privacy Policy</a>
+        <span>·</span>
+        <a href="https://pathwithintherapy.com/policy/4c0f2a5a-580d-11f0-b00f-ef0799352164">Terms of Service</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    function filterPosts(cat, btn) {
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      document.querySelectorAll('#postsGrid .post-card').forEach(card => {
+        card.style.display = (cat === 'all' || card.dataset.cat === cat) ? 'flex' : 'none';
+      });
+      const f = document.getElementById('featuredPost');
+      if (f) f.style.display = (cat === 'all' || f.dataset.cat === cat) ? 'grid' : 'none';
+    }
+  </script>
+</body>
+</html>
