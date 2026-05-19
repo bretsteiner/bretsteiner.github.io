@@ -1,0 +1,1141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OBA — Operations Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Sans:wght@300;400;500;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink:    #0D1B2A;
+  --navy:   #1A2F4A;
+  --coral:  #FF6F61;
+  --teal:   #00C9B1;
+  --amber:  #FFB830;
+  --rose:   #FF4D6D;
+  --slate:  #64748B;
+  --lgrey:  #F1F5F9;
+  --mgrey:  #E2E8F0;
+  --dgrey:  #94A3B8;
+  --white:  #FFFFFF;
+  --green:  #10B981;
+  --card-r: 1rem;
+}
+* { box-sizing:border-box; margin:0; padding:0; }
+
+body {
+  font-family:'DM Sans', sans-serif;
+  background: var(--ink);
+  color: var(--white);
+  min-height:100vh;
+  overflow-x:hidden;
+}
+
+/* ── NOISE TEXTURE OVERLAY ── */
+body::before {
+  content:'';
+  position:fixed; inset:0; z-index:0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events:none;
+}
+
+/* ── HEADER ── */
+header {
+  position:sticky; top:0; z-index:100;
+  background: rgba(13,27,42,0.92);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  padding: 0 28px;
+  display:flex; align-items:center; justify-content:space-between;
+  height: 60px;
+}
+.brand {
+  display:flex; align-items:baseline; gap:10px;
+}
+.brand-name {
+  font-family:'Syne', sans-serif;
+  font-weight:800; font-size:1.15rem;
+  color:var(--white); letter-spacing:1px;
+  text-transform:uppercase;
+}
+.brand-tag {
+  font-family:'DM Mono', monospace;
+  font-size:0.65rem; color:var(--teal);
+  letter-spacing:2px; text-transform:uppercase;
+  border:1px solid rgba(0,201,177,0.3);
+  padding:2px 8px; border-radius:20px;
+}
+.header-right {
+  display:flex; align-items:center; gap:10px;
+}
+.last-updated {
+  font-family:'DM Mono', monospace;
+  font-size:0.68rem; color:var(--dgrey);
+  letter-spacing:1px;
+}
+.live-dot {
+  width:8px; height:8px; border-radius:50%;
+  background:var(--green);
+  box-shadow: 0 0 8px var(--green);
+  animation: pulse-dot 2s ease-in-out infinite;
+}
+@keyframes pulse-dot {
+  0%,100% { opacity:1; transform:scale(1); }
+  50%      { opacity:0.5; transform:scale(0.8); }
+}
+
+.hbtn {
+  padding:7px 14px; border-radius:0.4rem;
+  font-family:'DM Sans', sans-serif; font-weight:700;
+  font-size:0.72rem; cursor:pointer; border:none;
+  transition:all 0.15s; letter-spacing:0.5px;
+}
+.hbtn-ghost {
+  background:rgba(255,255,255,0.07);
+  color:rgba(255,255,255,0.7);
+  border:1px solid rgba(255,255,255,0.1);
+}
+.hbtn-ghost:hover { background:rgba(255,255,255,0.14); color:white; }
+.hbtn-teal  { background:var(--teal); color:var(--ink); }
+.hbtn-teal:hover { background:#00b39c; }
+
+/* ── LAYOUT ── */
+.main {
+  position:relative; z-index:1;
+  max-width:1400px; margin:0 auto;
+  padding:28px 24px 80px;
+}
+
+/* ── SECTION LABEL ── */
+.section-label {
+  font-family:'Syne', sans-serif;
+  font-weight:700; font-size:0.72rem;
+  text-transform:uppercase; letter-spacing:3px;
+  color:var(--dgrey); margin-bottom:14px;
+  display:flex; align-items:center; gap:10px;
+}
+.section-label::after {
+  content:''; flex:1; height:1px;
+  background:rgba(255,255,255,0.06);
+}
+
+/* ── STAT CARDS ROW ── */
+.stat-row {
+  display:grid;
+  grid-template-columns:repeat(auto-fit, minmax(200px, 1fr));
+  gap:14px; margin-bottom:28px;
+}
+
+.stat-card {
+  background:rgba(255,255,255,0.04);
+  border:1px solid rgba(255,255,255,0.08);
+  border-radius:var(--card-r);
+  padding:20px 22px;
+  position:relative; overflow:hidden;
+  transition:border-color 0.2s, transform 0.2s;
+}
+.stat-card:hover { border-color:rgba(255,255,255,0.16); transform:translateY(-2px); }
+.stat-card::before {
+  content:''; position:absolute;
+  top:0; left:0; right:0; height:3px;
+}
+.stat-card.coral::before  { background:var(--coral); }
+.stat-card.teal::before   { background:var(--teal); }
+.stat-card.amber::before  { background:var(--amber); }
+.stat-card.green::before  { background:var(--green); }
+.stat-card.rose::before   { background:var(--rose); }
+.stat-card.slate::before  { background:var(--slate); }
+
+.stat-label {
+  font-family:'DM Mono', monospace;
+  font-size:0.62rem; letter-spacing:2px;
+  text-transform:uppercase; color:var(--dgrey);
+  margin-bottom:10px;
+}
+.stat-value {
+  font-family:'Syne', sans-serif;
+  font-weight:800; font-size:2.4rem;
+  line-height:1; color:var(--white);
+  margin-bottom:6px;
+}
+.stat-sub {
+  font-size:0.75rem; color:var(--dgrey);
+  display:flex; align-items:center; gap:5px;
+}
+.stat-badge {
+  display:inline-block; padding:2px 7px;
+  border-radius:20px; font-size:0.65rem; font-weight:700;
+}
+.badge-up   { background:rgba(16,185,129,0.15); color:var(--green); }
+.badge-warn { background:rgba(255,184,48,0.15);  color:var(--amber); }
+.badge-crit { background:rgba(255,77,109,0.15);  color:var(--rose); }
+.badge-info { background:rgba(0,201,177,0.15);   color:var(--teal); }
+
+/* ── TWO-COLUMN LAYOUT ── */
+.two-col { display:grid; grid-template-columns:1fr 1fr; gap:18px; margin-bottom:28px; }
+.three-col { display:grid; grid-template-columns:1fr 1fr 1fr; gap:18px; margin-bottom:28px; }
+@media(max-width:900px) { .two-col, .three-col { grid-template-columns:1fr; } }
+
+/* ── PANEL ── */
+.panel {
+  background:rgba(255,255,255,0.04);
+  border:1px solid rgba(255,255,255,0.08);
+  border-radius:var(--card-r);
+  overflow:hidden;
+}
+.panel-header {
+  padding:14px 18px;
+  border-bottom:1px solid rgba(255,255,255,0.06);
+  display:flex; align-items:center; justify-content:space-between;
+}
+.panel-title {
+  font-family:'Syne', sans-serif;
+  font-weight:700; font-size:0.82rem;
+  text-transform:uppercase; letter-spacing:1px;
+  color:var(--white);
+}
+.panel-body { padding:18px; }
+
+/* ── CALENDAR ── */
+.cal-grid {
+  display:grid;
+  grid-template-columns:repeat(7,1fr);
+  gap:4px;
+}
+.cal-dow {
+  text-align:center;
+  font-family:'DM Mono', monospace;
+  font-size:0.6rem; letter-spacing:1px;
+  color:var(--dgrey); padding-bottom:6px;
+  text-transform:uppercase;
+}
+.cal-cell {
+  aspect-ratio:1;
+  border-radius:6px;
+  display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
+  position:relative; cursor:default;
+  font-size:0.72rem;
+  border:1px solid transparent;
+  transition:all 0.15s;
+  min-height:48px;
+}
+.cal-cell.empty { opacity:0; pointer-events:none; }
+.cal-cell.other-month { opacity:0.3; }
+.cal-cell.today {
+  border-color:var(--teal) !important;
+  background:rgba(0,201,177,0.08) !important;
+}
+.cal-cell .cal-day {
+  font-family:'Syne', sans-serif;
+  font-weight:700; font-size:0.8rem;
+  line-height:1;
+}
+.cal-cell .cal-picks {
+  font-family:'DM Mono', monospace;
+  font-size:0.6rem; margin-top:2px;
+}
+.cal-cell.has-picks {
+  cursor:pointer;
+}
+.cal-cell.has-picks:hover { border-color:rgba(255,255,255,0.2); transform:scale(1.05); }
+
+/* status colours */
+.cal-cell.all-done    { background:rgba(16,185,129,0.15); }
+.cal-cell.some-done   { background:rgba(255,184,48,0.15); }
+.cal-cell.none-done   { background:rgba(255,111,97,0.15); }
+.cal-cell.future-pick { background:rgba(0,201,177,0.08); }
+
+.cal-dot-row { display:flex; gap:2px; margin-top:3px; flex-wrap:wrap; justify-content:center; }
+.cal-dot { width:5px; height:5px; border-radius:50%; }
+.dot-done    { background:var(--green); }
+.dot-pending { background:var(--coral); }
+.dot-future  { background:var(--teal); opacity:0.6; }
+
+/* Cal legend */
+.cal-legend {
+  display:flex; gap:14px; flex-wrap:wrap;
+  margin-top:12px; padding-top:12px;
+  border-top:1px solid rgba(255,255,255,0.06);
+}
+.legend-item {
+  display:flex; align-items:center; gap:5px;
+  font-size:0.68rem; color:var(--dgrey);
+}
+.legend-swatch {
+  width:10px; height:10px; border-radius:2px;
+}
+
+/* Cal month nav */
+.cal-nav {
+  display:flex; align-items:center; gap:10px;
+}
+.cal-month-label {
+  font-family:'Syne', sans-serif;
+  font-weight:700; font-size:0.85rem;
+}
+.cal-nav-btn {
+  background:rgba(255,255,255,0.07);
+  border:1px solid rgba(255,255,255,0.1);
+  color:white; border-radius:5px;
+  width:28px; height:28px;
+  cursor:pointer; font-size:0.8rem;
+  display:flex; align-items:center; justify-content:center;
+  transition:background 0.15s;
+}
+.cal-nav-btn:hover { background:rgba(255,255,255,0.14); }
+
+/* ── STOCK TABLE ── */
+.stock-table { width:100%; border-collapse:collapse; font-size:0.78rem; }
+.stock-table th {
+  font-family:'DM Mono', monospace;
+  font-size:0.6rem; text-transform:uppercase; letter-spacing:1.5px;
+  color:var(--dgrey); padding:8px 12px; text-align:left;
+  border-bottom:1px solid rgba(255,255,255,0.06);
+  font-weight:500;
+}
+.stock-table td { padding:9px 12px; border-bottom:1px solid rgba(255,255,255,0.04); }
+.stock-table tr:last-child td { border-bottom:none; }
+.stock-table tr:hover td { background:rgba(255,255,255,0.03); }
+.item-name { color:rgba(255,255,255,0.85); }
+.rag-bar-wrap { width:90px; }
+.rag-bar {
+  height:5px; border-radius:3px;
+  background:rgba(255,255,255,0.1);
+  overflow:hidden;
+}
+.rag-fill { height:100%; border-radius:3px; transition:width 0.5s ease; }
+.rag-green  { background:var(--green); }
+.rag-amber  { background:var(--amber); }
+.rag-red    { background:var(--rose); }
+.rag-label {
+  font-family:'DM Mono', monospace;
+  font-size:0.62rem; letter-spacing:1px;
+}
+
+/* ── BENEFICIARY BREAKDOWN ── */
+.ben-breakdown {
+  display:grid; grid-template-columns:1fr 1fr;
+  gap:10px;
+}
+.ben-stat {
+  background:rgba(255,255,255,0.04);
+  border:1px solid rgba(255,255,255,0.06);
+  border-radius:8px; padding:14px;
+  text-align:center;
+}
+.ben-stat-val {
+  font-family:'Syne', sans-serif;
+  font-weight:800; font-size:1.8rem;
+  line-height:1; margin-bottom:4px;
+}
+.ben-stat-lbl {
+  font-family:'DM Mono', monospace;
+  font-size:0.6rem; letter-spacing:1.5px;
+  text-transform:uppercase; color:var(--dgrey);
+}
+
+/* ── SERVED CHART (simple bar) ── */
+.served-bars { display:flex; flex-direction:column; gap:8px; margin-top:4px; }
+.served-row  { display:flex; align-items:center; gap:10px; }
+.served-label {
+  font-family:'DM Mono', monospace;
+  font-size:0.62rem; color:var(--dgrey); width:70px;
+  flex-shrink:0; letter-spacing:1px;
+}
+.served-bar-wrap { flex:1; height:18px; background:rgba(255,255,255,0.06); border-radius:3px; overflow:hidden; position:relative; }
+.served-bar-fill { height:100%; border-radius:3px; transition:width 0.6s cubic-bezier(0.34,1.56,0.64,1); background:var(--teal); }
+.served-count {
+  font-family:'DM Mono', monospace;
+  font-size:0.62rem; color:var(--dgrey);
+  width:28px; text-align:right; flex-shrink:0;
+}
+
+/* ── UPCOMING PICKS LIST ── */
+.pick-list { display:flex; flex-direction:column; gap:6px; }
+.pick-row {
+  display:flex; align-items:center; gap:12px;
+  background:rgba(255,255,255,0.03);
+  border:1px solid rgba(255,255,255,0.06);
+  border-radius:7px; padding:10px 14px;
+  transition:border-color 0.15s;
+}
+.pick-row:hover { border-color:rgba(255,255,255,0.14); }
+.pick-row-code {
+  font-family:'DM Mono', monospace;
+  font-size:0.72rem; color:var(--coral);
+  width:90px; flex-shrink:0;
+}
+.pick-row-name { flex:1; font-size:0.82rem; color:rgba(255,255,255,0.85); }
+.pick-row-date {
+  font-family:'DM Mono', monospace;
+  font-size:0.65rem; color:var(--dgrey);
+  width:80px; text-align:right;
+}
+.pick-status {
+  display:inline-block; padding:2px 8px; border-radius:20px;
+  font-family:'DM Mono', monospace; font-size:0.6rem;
+  letter-spacing:1px; text-transform:uppercase; flex-shrink:0;
+}
+.ps-planned  { background:rgba(255,184,48,0.15); color:var(--amber); }
+.ps-complete { background:rgba(16,185,129,0.15); color:var(--green); }
+
+/* ── TOOLTIP FOR CALENDAR ── */
+.cal-tooltip {
+  position:fixed; z-index:200;
+  background:var(--navy);
+  border:1px solid rgba(255,255,255,0.15);
+  border-radius:8px; padding:12px 14px;
+  font-size:0.78rem;
+  box-shadow:0 12px 40px rgba(0,0,0,0.5);
+  pointer-events:none;
+  max-width:220px;
+  opacity:0; transition:opacity 0.15s;
+}
+.cal-tooltip.show { opacity:1; }
+.cal-tooltip-date {
+  font-family:'Syne', sans-serif; font-weight:700;
+  font-size:0.8rem; margin-bottom:8px;
+  color:var(--teal);
+}
+.cal-tooltip-pick {
+  display:flex; align-items:center; gap:6px;
+  margin-bottom:4px; font-size:0.72rem;
+}
+
+/* ── LOADING ── */
+.dash-loading {
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  min-height:60vh; gap:16px;
+}
+.dash-loading .spinner {
+  width:40px; height:40px; border-radius:50%;
+  border:3px solid rgba(0,201,177,0.2);
+  border-top-color:var(--teal);
+  animation:spin 0.8s linear infinite;
+}
+@keyframes spin { to { transform:rotate(360deg); } }
+.dash-loading p {
+  font-family:'DM Mono', monospace; font-size:0.78rem;
+  letter-spacing:2px; color:var(--dgrey); text-transform:uppercase;
+}
+
+/* ── ERROR ── */
+.dash-error {
+  background:rgba(255,77,109,0.08);
+  border:1px solid rgba(255,77,109,0.2);
+  border-radius:var(--card-r);
+  padding:24px; text-align:center;
+  font-size:0.85rem; color:rgba(255,255,255,0.7);
+  margin:20px 0;
+}
+.dash-error strong { color:var(--rose); display:block; margin-bottom:8px; font-size:1rem; }
+
+/* ── CONFIG NOTICE ── */
+.config-notice {
+  background:rgba(0,201,177,0.07);
+  border:1px solid rgba(0,201,177,0.2);
+  border-radius:var(--card-r);
+  padding:22px 26px; margin-bottom:24px;
+  font-size:0.82rem; line-height:1.7;
+  color:rgba(255,255,255,0.7);
+}
+.config-notice strong { color:var(--teal); }
+.config-notice code {
+  font-family:'DM Mono', monospace;
+  background:rgba(0,201,177,0.1); padding:1px 6px; border-radius:3px;
+  font-size:0.75rem; color:var(--teal);
+}
+
+/* ── SCROLL SNAP FOR PANEL BODIES ── */
+.scroll-body {
+  max-height:340px; overflow-y:auto;
+}
+.scroll-body::-webkit-scrollbar { width:4px; }
+.scroll-body::-webkit-scrollbar-track { background:transparent; }
+.scroll-body::-webkit-scrollbar-thumb { background:rgba(255,255,255,0.1); border-radius:2px; }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="brand">
+    <span class="brand-name">🥫 OBA</span>
+    <span class="brand-tag">Operations</span>
+  </div>
+  <div class="header-right">
+    <div class="live-dot"></div>
+    <span class="last-updated" id="last-updated">—</span>
+    <button class="hbtn hbtn-ghost" onclick="loadDashboard()">↻ Refresh</button>
+    <button class="hbtn hbtn-teal"  onclick="window.location.href='OBA_PlanCreator.html'">📋 Plan Creator</button>
+  </div>
+</header>
+
+<div class="main" id="main-content">
+  <div class="dash-loading" id="loading-state">
+    <div class="spinner"></div>
+    <p>Loading dashboard…</p>
+  </div>
+</div>
+
+<!-- CALENDAR TOOLTIP -->
+<div class="cal-tooltip" id="cal-tooltip"></div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════════
+// CONFIGURATION — same values as your other OBA tools
+// ═══════════════════════════════════════════════════════════════════
+const SHEET_ID       = "129xUmLALy4Pk_vnKSSrUl5dfT88nKjTMUnsFJ4VwZxk";   // ← same as pick sheet generator
+const API_KEY        = "AIzaSyDcSfGmEJBdl5AHuVfHokLk7MIzJD2DTvE";    // ← same as pick sheet generator
+
+
+const PICK_TAB    = "2. Pick Plan";
+const BEN_TAB     = "1. Beneficiary Database";
+const STOCK_TAB   = "4. Stock Ledger";
+const FORECAST_TAB= "6. 8-Week Stock Forecast";
+
+const PC = { CODE:0,REF:1,NAME:2,DATE:3,GROUP:4,CD:5,HOUSEHOLD:6,DIETARY:7,PACKED:8,CHECKED:9,STATUS:10,NOTES:11,FIRST_ITEM:12 };
+const BC = { REF:0,NAME:1,TOTAL:2,ADULTS:3,MALE:4,FEMALE:5,CHILDREN:6,CHILD_DOB:7,DIETARY:8,GROUP:9,CD:10,PR_DR:11,FREQUENCY:12,START:13,END:14,STATUS:15 };
+const SC = { ITEM:0, CURRENT:1, WEEKLY_OUT:2, WEEKS_LEFT:3, STATUS:4 };
+
+// ── State ──────────────────────────────────────────────────────────
+let calYear  = new Date().getFullYear();
+let calMonth = new Date().getMonth();
+let picksByDate = {};   // { "YYYY-MM-DD": [pickRow,...] }
+
+// ── Fetch ──────────────────────────────────────────────────────────
+async function fetchSheet(tab) {
+  const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${encodeURIComponent(tab)}?key=${API_KEY}`;
+  const r = await fetch(url);
+  if (!r.ok) { const e = await r.json(); throw new Error(e.error?.message || "Fetch failed"); }
+  return (await r.json()).values || [];
+}
+
+// ── Main load ──────────────────────────────────────────────────────
+async function loadDashboard() {
+  const main = document.getElementById("main-content");
+  main.innerHTML = `<div class="dash-loading"><div class="spinner"></div><p>Loading dashboard…</p></div>`;
+
+  if (SHEET_ID === "YOUR_SHEET_ID") {
+    renderConfigNotice(main);
+    return;
+  }
+
+  try {
+    // Fetch in parallel — gracefully handle missing tabs
+    const results = await Promise.allSettled([
+      fetchSheet(PICK_TAB),
+      fetchSheet(BEN_TAB),
+      fetchSheet(STOCK_TAB),
+    ]);
+
+    const pickRows  = results[0].status==="fulfilled" ? results[0].value : [];
+    const benRows   = results[1].status==="fulfilled" ? results[1].value : [];
+    const stockRows = results[2].status==="fulfilled" ? results[2].value : [];
+
+    // Parse pick data — find header row dynamically
+    let hdrIdx = -1;
+    for (let ri=0; ri<Math.min(pickRows.length,10); ri++) {
+      const row = pickRows[ri]||[];
+      const col0 = (row[0]||"").toString().trim().toLowerCase();
+      const col12= (row[PC.FIRST_ITEM]||"").toString().trim();
+      if ((col0.includes("pick")||col0.includes("code")||col0.includes("product")||col0.includes("date")) && col12.length>0) {
+        hdrIdx=ri; break;
+      }
+    }
+    if (hdrIdx===-1) {
+      let best=-1, bestCount=0;
+      for (let ri=0;ri<Math.min(pickRows.length,10);ri++) {
+        const cnt=(pickRows[ri]||[]).slice(PC.FIRST_ITEM).filter(c=>c&&c.toString().trim()).length;
+        if(cnt>bestCount){bestCount=cnt;best=ri;}
+      }
+      hdrIdx=best>=0?best:1;
+    }
+    const allPicks = pickRows.slice(hdrIdx+1).filter(r=>r&&r[PC.CODE]);
+    const allBens  = benRows.slice(3).filter(r=>r&&r[BC.REF]);
+
+    // Build picks-by-date index
+    picksByDate = {};
+    allPicks.forEach(r => {
+      const d = parseDate(r[PC.DATE]);
+      if (!d) return;
+      const key = toISO(d);
+      if (!picksByDate[key]) picksByDate[key] = [];
+      picksByDate[key].push(r);
+    });
+
+    // Render dashboard
+    renderDashboard(main, allPicks, allBens, stockRows);
+
+    document.getElementById("last-updated").textContent =
+      "Updated " + new Date().toLocaleTimeString("en-GB",{hour:"2-digit",minute:"2-digit"});
+
+  } catch(e) {
+    console.error(e);
+    main.innerHTML = `<div class="dash-error">
+      <strong>⚠️ Could not load dashboard</strong>
+      ${esc(e.message)}<br><br>
+      Check that your SHEET_ID and API_KEY are configured correctly,
+      and that the sheet is shared as "Anyone with link can view".
+    </div>`;
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// RENDER DASHBOARD
+// ═══════════════════════════════════════════════════════════════════
+function renderDashboard(container, allPicks, allBens, stockRows) {
+  const today = new Date(); today.setHours(0,0,0,0);
+  const todayISO = toISO(today);
+
+  // ── Compute KPIs ──────────────────────────────────────────────
+  const activeBens   = allBens.filter(b=>(b[BC.STATUS]||"").toString().trim().toLowerCase()==="active");
+  const totalBens    = allBens.length;
+  const totalAdults  = allBens.reduce((s,b)=>s+(parseInt(b[BC.ADULTS])||0),0);
+  const totalKids    = allBens.reduce((s,b)=>s+(parseInt(b[BC.CHILDREN])||0),0);
+  const totalPeople  = allBens.reduce((s,b)=>s+(parseInt(b[BC.TOTAL])||0),0);
+
+  const completedPicks = allPicks.filter(r=>(r[PC.STATUS]||"").toLowerCase().includes("complete"));
+  const plannedPicks   = allPicks.filter(r=>!(r[PC.STATUS]||"").toLowerCase().includes("complete"));
+  const totalServed    = completedPicks.length;
+
+  // Today's picks
+  const todayPicks  = picksByDate[todayISO] || [];
+  const todayDone   = todayPicks.filter(r=>(r[PC.STATUS]||"").toLowerCase().includes("complete")).length;
+  const todayTodo   = todayPicks.length - todayDone;
+
+  // Overdue: planned picks before today
+  const overduePicks = allPicks.filter(r=>{
+    const d=parseDate(r[PC.DATE]);
+    return d && d<today && !(r[PC.STATUS]||"").toLowerCase().includes("complete");
+  });
+
+  // Next 7 days picks
+  const end7 = new Date(today.getTime()+7*86400000);
+  const next7Picks = allPicks.filter(r=>{
+    const d=parseDate(r[PC.DATE]);
+    return d && d>=today && d<=end7;
+  });
+
+  // Served by month (last 6 months)
+  const servedByMonth = {};
+  for (let i=5;i>=0;i--) {
+    const d=new Date(today.getFullYear(),today.getMonth()-i,1);
+    const key=d.toLocaleString("en-GB",{month:"short",year:"2-digit"});
+    servedByMonth[key]=0;
+  }
+  completedPicks.forEach(r=>{
+    const d=parseDate(r[PC.DATE]);
+    if(!d) return;
+    const key=d.toLocaleString("en-GB",{month:"short",year:"2-digit"});
+    if(servedByMonth[key]!==undefined) servedByMonth[key]++;
+  });
+
+  // ── Build HTML ──────────────────────────────────────────────
+  let html = "";
+
+  // ── STAT CARDS ──
+  html += `<div class="section-label">Key Metrics</div>`;
+  html += `<div class="stat-row">
+
+    <div class="stat-card coral">
+      <div class="stat-label">Active Beneficiaries</div>
+      <div class="stat-value">${activeBens.length}</div>
+      <div class="stat-sub">
+        <span class="stat-badge badge-info">${totalBens} total registered</span>
+      </div>
+    </div>
+
+    <div class="stat-card teal">
+      <div class="stat-label">People Supported</div>
+      <div class="stat-value">${totalPeople}</div>
+      <div class="stat-sub">${totalAdults} adults · ${totalKids} children</div>
+    </div>
+
+    <div class="stat-card amber">
+      <div class="stat-label">Today's Picks</div>
+      <div class="stat-value">${todayPicks.length}</div>
+      <div class="stat-sub">
+        <span class="stat-badge ${todayDone===todayPicks.length&&todayPicks.length>0?"badge-up":"badge-warn"}">${todayDone} done</span>
+        <span style="color:var(--dgrey)">${todayTodo} remaining</span>
+      </div>
+    </div>
+
+    <div class="stat-card ${overduePicks.length>0?"rose":"green"}">
+      <div class="stat-label">Overdue Picks</div>
+      <div class="stat-value">${overduePicks.length}</div>
+      <div class="stat-sub">
+        ${overduePicks.length>0
+          ? `<span class="stat-badge badge-crit">Needs attention</span>`
+          : `<span class="stat-badge badge-up">All on track</span>`}
+      </div>
+    </div>
+
+    <div class="stat-card green">
+      <div class="stat-label">Parcels Completed</div>
+      <div class="stat-value">${totalServed}</div>
+      <div class="stat-sub">
+        <span class="stat-badge badge-info">${plannedPicks.length} planned ahead</span>
+      </div>
+    </div>
+
+    <div class="stat-card slate">
+      <div class="stat-label">Next 7 Days</div>
+      <div class="stat-value">${next7Picks.length}</div>
+      <div class="stat-sub">picks scheduled</div>
+    </div>
+
+  </div>`;
+
+  // ── CALENDAR + UPCOMING PICKS ──
+  html += `<div class="section-label">Pick Calendar</div>`;
+  html += `<div class="two-col">`;
+
+  // Calendar panel
+  html += `<div class="panel">
+    <div class="panel-header">
+      <span class="panel-title">Monthly Calendar</span>
+      <div class="cal-nav">
+        <button class="cal-nav-btn" onclick="changeMonth(-1)">‹</button>
+        <span class="cal-month-label" id="cal-month-label"></span>
+        <button class="cal-nav-btn" onclick="changeMonth(1)">›</button>
+      </div>
+    </div>
+    <div class="panel-body">
+      <div id="cal-container"></div>
+      <div class="cal-legend">
+        <div class="legend-item"><div class="legend-swatch" style="background:rgba(16,185,129,0.3)"></div> All done</div>
+        <div class="legend-item"><div class="legend-swatch" style="background:rgba(255,184,48,0.3)"></div> Partly done</div>
+        <div class="legend-item"><div class="legend-swatch" style="background:rgba(255,111,97,0.3)"></div> Not started</div>
+        <div class="legend-item"><div class="legend-swatch" style="background:rgba(0,201,177,0.15)"></div> Future</div>
+        <div class="legend-item"><div class="legend-swatch" style="border:1px solid var(--teal);"></div> Today</div>
+      </div>
+    </div>
+  </div>`;
+
+  // Upcoming picks panel
+  const upcoming = allPicks.filter(r=>{
+    const d=parseDate(r[PC.DATE]);
+    const end30=new Date(today.getTime()+30*86400000);
+    return d && d>=today && d<=end30;
+  }).sort((a,b)=>{
+    const da=parseDate(a[PC.DATE]), db=parseDate(b[PC.DATE]);
+    return (da||0)-(db||0);
+  });
+
+  html += `<div class="panel">
+    <div class="panel-header">
+      <span class="panel-title">Next 30 Days — Picks</span>
+      <span style="font-family:'DM Mono',monospace;font-size:0.65rem;color:var(--dgrey)">${upcoming.length} picks</span>
+    </div>
+    <div class="panel-body scroll-body">`;
+
+  if (upcoming.length===0) {
+    html+=`<div style="text-align:center;padding:40px;color:var(--dgrey);font-size:0.82rem;">No picks scheduled in the next 30 days.</div>`;
+  } else {
+    html+=`<div class="pick-list">`;
+    upcoming.forEach(r=>{
+      const d=parseDate(r[PC.DATE]);
+      const isToday = d && toISO(d)===todayISO;
+      const status=(r[PC.STATUS]||"Planned").toString();
+      const isDone=status.toLowerCase().includes("complete");
+      html+=`<div class="pick-row">
+        <div class="pick-row-code">${esc(r[PC.CODE]||"")}</div>
+        <div class="pick-row-name">
+          ${esc(r[PC.NAME]||"")}
+          ${isToday?`<span style="font-size:0.65rem;color:var(--teal);margin-left:6px;font-family:'DM Mono',monospace;">TODAY</span>`:""}
+        </div>
+        <div class="pick-row-date">${d?d.toLocaleDateString("en-GB",{day:"2-digit",month:"short"}):""}</div>
+        <span class="pick-status ${isDone?"ps-complete":"ps-planned"}">${esc(status)}</span>
+      </div>`;
+    });
+    html+=`</div>`;
+  }
+  html+=`</div></div>`;
+  html+=`</div>`; // end two-col
+
+  // ── BENEFICIARY BREAKDOWN + SERVED BY MONTH ──
+  html += `<div class="section-label">Beneficiaries</div>`;
+  html += `<div class="two-col">`;
+
+  // Breakdown
+  const collecting  = activeBens.filter(b=>b[BC.CD]==="C").length;
+  const delivering  = activeBens.filter(b=>b[BC.CD]==="D").length;
+  const group1      = activeBens.filter(b=>b[BC.GROUP]==="1").length;
+  const group2      = activeBens.filter(b=>b[BC.GROUP]==="2").length;
+  const withDietary = activeBens.filter(b=>b[BC.DIETARY]&&b[BC.DIETARY].toString().trim()).length;
+  const withKids    = activeBens.filter(b=>parseInt(b[BC.CHILDREN])>0).length;
+
+  html+=`<div class="panel">
+    <div class="panel-header"><span class="panel-title">Beneficiary Breakdown</span></div>
+    <div class="panel-body">
+      <div class="ben-breakdown">
+        <div class="ben-stat">
+          <div class="ben-stat-val" style="color:var(--teal)">${activeBens.length}</div>
+          <div class="ben-stat-lbl">Active</div>
+        </div>
+        <div class="ben-stat">
+          <div class="ben-stat-val" style="color:var(--dgrey)">${totalBens-activeBens.length}</div>
+          <div class="ben-stat-lbl">Inactive</div>
+        </div>
+        <div class="ben-stat">
+          <div class="ben-stat-val" style="color:var(--coral)">${collecting}</div>
+          <div class="ben-stat-lbl">Collection</div>
+        </div>
+        <div class="ben-stat">
+          <div class="ben-stat-val" style="color:var(--amber)">${delivering}</div>
+          <div class="ben-stat-lbl">Delivery</div>
+        </div>
+        <div class="ben-stat">
+          <div class="ben-stat-val" style="color:var(--teal)">${group1}</div>
+          <div class="ben-stat-lbl">Group 1</div>
+        </div>
+        <div class="ben-stat">
+          <div class="ben-stat-val" style="color:var(--teal)">${group2}</div>
+          <div class="ben-stat-lbl">Group 2</div>
+        </div>
+        <div class="ben-stat">
+          <div class="ben-stat-val" style="color:var(--rose)">${withDietary}</div>
+          <div class="ben-stat-lbl">Dietary Needs</div>
+        </div>
+        <div class="ben-stat">
+          <div class="ben-stat-val" style="color:var(--amber)">${withKids}</div>
+          <div class="ben-stat-lbl">With Children</div>
+        </div>
+      </div>
+      <div style="margin-top:18px;">
+        <div style="font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--dgrey);margin-bottom:10px;">Total People in Households</div>
+        <div style="display:flex;align-items:baseline;gap:12px;">
+          <span style="font-family:'Syne',sans-serif;font-weight:800;font-size:2rem;color:var(--white)">${totalPeople}</span>
+          <span style="font-size:0.78rem;color:var(--dgrey)">people supported across all active beneficiaries</span>
+        </div>
+      </div>
+    </div>
+  </div>`;
+
+  // Served by month
+  const months = Object.keys(servedByMonth);
+  const maxServed = Math.max(...Object.values(servedByMonth), 1);
+
+  html+=`<div class="panel">
+    <div class="panel-header">
+      <span class="panel-title">Parcels Delivered — Last 6 Months</span>
+      <span style="font-family:'DM Mono',monospace;font-size:0.65rem;color:var(--dgrey)">${totalServed} total completed</span>
+    </div>
+    <div class="panel-body">
+      <div class="served-bars">`;
+
+  months.forEach(mo=>{
+    const val=servedByMonth[mo];
+    const pct=Math.round((val/maxServed)*100);
+    html+=`<div class="served-row">
+      <div class="served-label">${esc(mo)}</div>
+      <div class="served-bar-wrap">
+        <div class="served-bar-fill" style="width:${pct}%;"></div>
+      </div>
+      <div class="served-count">${val}</div>
+    </div>`;
+  });
+
+  html+=`</div>
+      <div style="margin-top:20px;padding-top:16px;border-top:1px solid rgba(255,255,255,0.06);">
+        <div style="font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--dgrey);margin-bottom:8px;">Overdue Picks</div>`;
+
+  if (overduePicks.length===0) {
+    html+=`<div style="color:var(--green);font-size:0.82rem;">✓ No overdue picks</div>`;
+  } else {
+    html+=`<div class="pick-list">`;
+    overduePicks.slice(0,5).forEach(r=>{
+      const d=parseDate(r[PC.DATE]);
+      html+=`<div class="pick-row" style="border-color:rgba(255,77,109,0.3);">
+        <div class="pick-row-code">${esc(r[PC.CODE]||"")}</div>
+        <div class="pick-row-name">${esc(r[PC.NAME]||"")}</div>
+        <div class="pick-row-date" style="color:var(--rose)">${d?d.toLocaleDateString("en-GB",{day:"2-digit",month:"short"}):""}</div>
+        <span class="pick-status ps-planned">OVERDUE</span>
+      </div>`;
+    });
+    if(overduePicks.length>5) html+=`<div style="font-size:0.72rem;color:var(--dgrey);text-align:center;padding-top:6px;">+${overduePicks.length-5} more overdue</div>`;
+    html+=`</div>`;
+  }
+  html+=`</div></div></div>`;
+  html+=`</div>`; // end two-col
+
+  // ── STOCK LEVELS ──
+  html += `<div class="section-label">Stock Levels</div>`;
+  html += `<div class="panel">
+    <div class="panel-header">
+      <span class="panel-title">Stock Ledger — RAG Status</span>
+      <span style="font-family:'DM Mono',monospace;font-size:0.65rem;color:var(--dgrey)">from Tab 4</span>
+    </div>`;
+
+  if (stockRows.length < 3) {
+    html+=`<div class="panel-body" style="color:var(--dgrey);font-size:0.82rem;">
+      No stock data found in Tab 4 (Stock Ledger). Add stock levels to see them here.
+    </div>`;
+  } else {
+    // Find data rows — skip headers
+    let stockDataRows = [];
+    for (let ri=0;ri<stockRows.length;ri++) {
+      const row=stockRows[ri]||[];
+      const col0=(row[SC.ITEM]||"").toString().trim();
+      const col1=(row[SC.CURRENT]||"").toString().trim();
+      // Skip header/title rows — data rows have a number in col 1 or a RAG in col 4
+      if (col0 && col0.length>2 && !isNaN(Number(col1.replace(/[^0-9.-]/g,"")))) {
+        stockDataRows.push(row);
+      }
+    }
+
+    // Count RAG
+    const ragCounts = { green:0, amber:0, red:0 };
+    stockDataRows.forEach(r=>{
+      const s=(r[SC.STATUS]||"").toString().toLowerCase();
+      if(s.includes("green")||s.includes("🟢")||s.includes("ok")||s.includes("good")) ragCounts.green++;
+      else if(s.includes("amber")||s.includes("🟡")||s.includes("warn")) ragCounts.amber++;
+      else if(s.includes("red")||s.includes("🔴")||s.includes("low")||s.includes("crit")) ragCounts.red++;
+    });
+
+    html+=`<div class="panel-body">
+      <div class="stat-row" style="margin-bottom:16px;">
+        <div class="stat-card green" style="padding:14px 16px;">
+          <div class="stat-label">Well Stocked</div>
+          <div class="stat-value" style="font-size:1.8rem;">${ragCounts.green}</div>
+        </div>
+        <div class="stat-card amber" style="padding:14px 16px;">
+          <div class="stat-label">Low Stock</div>
+          <div class="stat-value" style="font-size:1.8rem;">${ragCounts.amber}</div>
+        </div>
+        <div class="stat-card rose" style="padding:14px 16px;">
+          <div class="stat-label">Critical / Out</div>
+          <div class="stat-value" style="font-size:1.8rem;">${ragCounts.red}</div>
+        </div>
+      </div>`;
+
+    if (stockDataRows.length > 0) {
+      html+=`<div class="scroll-body"><table class="stock-table">
+        <thead><tr>
+          <th>Item</th>
+          <th>Current Stock</th>
+          <th>Weekly Usage</th>
+          <th>Weeks Left</th>
+          <th>Status</th>
+        </tr></thead><tbody>`;
+
+      // Sort: red first, then amber, then green
+      const sorted = [...stockDataRows].sort((a,b)=>{
+        const rank=r=>{const s=(r[SC.STATUS]||"").toLowerCase();return s.includes("red")||s.includes("🔴")||s.includes("low")||s.includes("crit")?0:s.includes("amber")||s.includes("🟡")||s.includes("warn")?1:2;};
+        return rank(a)-rank(b);
+      });
+
+      sorted.forEach(r=>{
+        const name    = r[SC.ITEM]       || "";
+        const current = r[SC.CURRENT]    || "—";
+        const weekly  = r[SC.WEEKLY_OUT] || "—";
+        const weeks   = r[SC.WEEKS_LEFT] || "—";
+        const status  = (r[SC.STATUS]    || "").toString();
+
+        const weeksNum = parseFloat(weeks);
+        const isRed    = status.toLowerCase().includes("red")  ||status.includes("🔴")||(!isNaN(weeksNum)&&weeksNum<2);
+        const isAmber  = status.toLowerCase().includes("amber")||status.includes("🟡")||(!isNaN(weeksNum)&&weeksNum>=2&&weeksNum<4);
+        const pct      = isNaN(weeksNum)?50:Math.min(Math.round((weeksNum/12)*100),100);
+        const fillClass= isRed?"rag-red":isAmber?"rag-amber":"rag-green";
+        const labelCol = isRed?"var(--rose)":isAmber?"var(--amber)":"var(--green)";
+
+        html+=`<tr>
+          <td class="item-name">${esc(name)}</td>
+          <td style="font-family:'DM Mono',monospace;font-size:0.72rem;">${esc(String(current))}</td>
+          <td style="font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--dgrey)">${esc(String(weekly))}</td>
+          <td>
+            <div class="rag-bar-wrap">
+              <div class="rag-bar">
+                <div class="rag-fill ${fillClass}" style="width:${pct}%"></div>
+              </div>
+              <div class="rag-label" style="color:${labelCol};margin-top:2px;">${esc(String(weeks))} wks</div>
+            </div>
+          </td>
+          <td>
+            <span class="stat-badge ${isRed?"badge-crit":isAmber?"badge-warn":"badge-up"}">
+              ${isRed?"● Critical":isAmber?"● Low":"● OK"}
+            </span>
+          </td>
+        </tr>`;
+      });
+
+      html+=`</tbody></table></div>`;
+    }
+    html+=`</div>`;
+  }
+  html+=`</div>`; // end stock panel
+
+  container.innerHTML = html;
+
+  // Render calendar
+  renderCalendar();
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// CALENDAR
+// ═══════════════════════════════════════════════════════════════════
+function renderCalendar() {
+  const container = document.getElementById("cal-container");
+  const labelEl   = document.getElementById("cal-month-label");
+  if (!container || !labelEl) return;
+
+  const today = new Date(); today.setHours(0,0,0,0);
+  const todayISO = toISO(today);
+
+  labelEl.textContent = new Date(calYear, calMonth, 1)
+    .toLocaleString("en-GB",{month:"long",year:"numeric"});
+
+  const firstDay  = new Date(calYear, calMonth, 1).getDay(); // 0=Sun
+  const daysInMon = new Date(calYear, calMonth+1, 0).getDate();
+  const startBlank = (firstDay+6)%7; // Mon-first offset
+
+  let html = `<div class="cal-grid">`;
+  // Day-of-week headers
+  ["Mo","Tu","We","Th","Fr","Sa","Su"].forEach(d=>{
+    html+=`<div class="cal-dow">${d}</div>`;
+  });
+
+  // Blank cells
+  for (let i=0;i<startBlank;i++) html+=`<div class="cal-cell empty"></div>`;
+
+  // Day cells
+  for (let day=1;day<=daysInMon;day++) {
+    const cellDate = new Date(calYear, calMonth, day);
+    const cellISO  = toISO(cellDate);
+    const dayPicks = picksByDate[cellISO] || [];
+    const isToday  = cellISO===todayISO;
+    const isPast   = cellDate < today;
+    const isFuture = cellDate > today;
+
+    let statusClass = "";
+    let dotsHtml    = "";
+
+    if (dayPicks.length > 0) {
+      const done    = dayPicks.filter(r=>(r[PC.STATUS]||"").toLowerCase().includes("complete")).length;
+      const pending = dayPicks.length - done;
+
+      if (isPast || isToday) {
+        if      (done===dayPicks.length) statusClass="all-done";
+        else if (done>0)                 statusClass="some-done";
+        else                             statusClass="none-done";
+      } else {
+        statusClass="future-pick";
+      }
+
+      const maxDots = Math.min(dayPicks.length, 5);
+      dotsHtml = `<div class="cal-dot-row">`;
+      for(let i=0;i<maxDots;i++) {
+        const r=dayPicks[i];
+        const isDone=(r[PC.STATUS]||"").toLowerCase().includes("complete");
+        const dotClass = isDone?"dot-done":isFuture?"dot-future":"dot-pending";
+        dotsHtml+=`<div class="cal-dot ${dotClass}"></div>`;
+      }
+      if(dayPicks.length>5) dotsHtml+=`<div style="font-size:0.45rem;color:var(--dgrey)">+${dayPicks.length-5}</div>`;
+      dotsHtml+=`</div>`;
+    }
+
+    const hasPicksAttr = dayPicks.length>0 ? "has-picks" : "";
+    const todayAttr    = isToday ? "today" : "";
+
+    html+=`<div class="cal-cell ${statusClass} ${hasPicksAttr} ${todayAttr}"
+      ${dayPicks.length>0 ? `onmouseenter="showCalTooltip(event,'${cellISO}')" onmouseleave="hideCalTooltip()"` : ""}
+    >
+      <div class="cal-day">${day}</div>
+      ${dayPicks.length>0 ? `<div class="cal-picks" style="color:var(--dgrey)">${dayPicks.length}</div>` : ""}
+      ${dotsHtml}
+    </div>`;
+  }
+
+  html+=`</div>`;
+  container.innerHTML = html;
+}
+
+function changeMonth(dir) {
+  calMonth += dir;
+  if (calMonth > 11) { calMonth=0; calYear++; }
+  if (calMonth < 0)  { calMonth=11; calYear--; }
+  renderCalendar();
+}
+
+function showCalTooltip(event, dateISO) {
+  const tooltip  = document.getElementById("cal-tooltip");
+  const dayPicks = picksByDate[dateISO] || [];
+  if (!dayPicks.length) return;
+
+  const d    = new Date(dateISO+"T12:00:00");
+  const dStr = d.toLocaleDateString("en-GB",{weekday:"long",day:"numeric",month:"long"});
+  const done = dayPicks.filter(r=>(r[PC.STATUS]||"").toLowerCase().includes("complete")).length;
+
+  let html = `<div class="cal-tooltip-date">${esc(dStr)}</div>`;
+  html    += `<div style="font-size:0.68rem;color:var(--dgrey);margin-bottom:8px;font-family:'DM Mono',monospace;">${done}/${dayPicks.length} complete</div>`;
+
+  dayPicks.slice(0,6).forEach(r=>{
+    const isDone=(r[PC.STATUS]||"").toLowerCase().includes("complete");
+    html+=`<div class="cal-tooltip-pick">
+      <div class="cal-dot ${isDone?"dot-done":"dot-pending"}" style="flex-shrink:0;"></div>
+      <span style="color:var(--coral);font-family:'DM Mono',monospace;font-size:0.65rem;">${esc(r[PC.CODE]||"")}</span>
+      <span style="color:rgba(255,255,255,0.75);font-size:0.7rem;">${esc(r[PC.NAME]||"")}</span>
+    </div>`;
+  });
+  if (dayPicks.length>6) html+=`<div style="font-size:0.65rem;color:var(--dgrey);margin-top:4px;">+${dayPicks.length-6} more</div>`;
+
+  tooltip.innerHTML = html;
+  tooltip.classList.add("show");
+
+  const x = Math.min(event.clientX+14, window.innerWidth-240);
+  const y = Math.min(event.clientY+14, window.innerHeight-200);
+  tooltip.style.left = x+"px";
+  tooltip.style.top  = y+"px";
+}
+
+function hideCalTooltip() {
+  document.getElementById("cal-tooltip").classList.remove("show");
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// CONFIG NOTICE
+// ═══════════════════════════════════════════════════════════════════
+function renderConfigNotice(container) {
+  container.innerHTML = `<div class="config-notice">
+    <strong>⚙️ Setup required</strong><br>
+    Open this file in Notepad and replace the two values near the top of the script:<br><br>
+    <code>const SHEET_ID = "YOUR_SHEET_ID";</code> — the ID from your Google Sheet URL<br>
+    <code>const API_KEY  = "YOUR_API_KEY";</code> — same API key used in the other OBA tools<br><br>
+    The sheet must be shared as <strong>"Anyone with the link can view"</strong>.
+    The dashboard reads from Tab 2 (Pick Plan), Tab 1 (Beneficiary Database), and Tab 4 (Stock Ledger).
+  </div>`;
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// UTILITIES
+// ═══════════════════════════════════════════════════════════════════
+function parseDate(val) {
+  if (!val) return null;
+  const s = val.toString().trim();
+  // dd/mm/yyyy
+  const p = s.split("/");
+  if (p.length===3) {
+    const d=new Date(`${p[2]}-${p[1].padStart(2,"0")}-${p[0].padStart(2,"0")}T12:00:00`);
+    return isNaN(d)?null:d;
+  }
+  const d=new Date(s);
+  return isNaN(d)?null:d;
+}
+
+function toISO(d) {
+  return d instanceof Date ? d.toISOString().slice(0,10) : "";
+}
+
+function esc(s) {
+  return String(s??"")
+    .replace(/&/g,"&amp;").replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+}
+
+// ── Kick off ──────────────────────────────────────────────────────
+window.addEventListener("load", loadDashboard);
+</script>
+</body>
+</html>

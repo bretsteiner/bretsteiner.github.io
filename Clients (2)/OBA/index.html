@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OBA - Directory Explorer</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@900&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --brand-navy: #1a2f4a;
+            --brand-coral: #ff6f61;
+            --brand-teal: #00bcd4;
+            --brand-babyblue: #81d2f6;
+            --brand-white: #ffffff;
+            --bg-dark: #1a2f4a;
+            --text-light: #f7f8f9;
+            --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f0f4f8;
+            background-image: radial-gradient(var(--brand-teal) 0.5px, transparent 0.5px);
+            background-size: 30px 30px;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* HEADER */
+        header.minihero {
+            background: var(--brand-navy);
+            color: var(--brand-white);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem 10%;
+        }
+        .header-logo { height: 60px; width: auto; background-color: white; border-radius: 1em; padding: 0.8em; }
+        .minihero h2 { font-family: 'Inter', sans-serif; font-weight: 900; font-size: 1.8rem; margin: 0; }
+        .sub-heading { font-weight: 700; margin-top: 5px; color: var(--brand-coral); font-size: 1rem; }
+
+        /* CONTENT AREA */
+        .container {
+            flex: 1;
+            max-width: 800px;
+            margin: 50px auto;
+            width: 90%;
+        }
+
+        .file-explorer {
+            background: white;
+            border-radius: 2.5rem;
+            padding: 40px;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .explorer-title {
+            font-family: 'Inter';
+            text-transform: uppercase;
+            font-size: 1.2rem;
+            color: var(--brand-navy);
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* FILE LIST STYLING */
+        #file-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .file-item {
+            display: flex;
+            align-items: center;
+            padding: 15px 20px;
+            margin-bottom: 10px;
+            background: #f8fafc;
+            border-radius: 1rem;
+            text-decoration: none;
+            color: var(--brand-navy);
+            transition: all 0.2s ease;
+            border: 1px solid transparent;
+        }
+
+        .file-item:hover {
+            border-color: var(--brand-teal);
+            transform: translateX(5px);
+            background: white;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+
+        .file-icon { font-size: 1.4rem; margin-right: 15px; }
+        .file-name { font-weight: 700; flex-grow: 1; }
+        .file-ext { font-size: 0.7rem; background: var(--brand-babyblue); padding: 4px 8px; border-radius: 4px; font-weight: 900; }
+
+        /* FOOTER */
+        .footer { background-color: var(--bg-dark); color: var(--text-light); padding: 3rem 0; margin-top: 60px; }
+        .footer__top { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 0 2rem; }
+
+        .status-msg { font-style: italic; color: #718096; text-align: center; }
+    </style>
+</head>
+<body>
+
+    <header class="minihero">
+        <div class="header-text">
+            <h2>Bret Steiner</h2>
+            <h3 class="sub-heading">Product <span style="color:white">Accelerator</span></h3>
+        </div>
+        <img src="https://olivebranchaid.org/wp-content/uploads/2023/08/logo3.svg" alt="Olive Branch Aid Logo" class="header-logo">
+    </header>
+
+    <div class="container">
+        <H1>Stock Control</H1>
+        <a href="oba_dashboard.html">OVerview Dashboard</a> <Br>
+        <a href="OBAPicker2.html">Service User Parcels</a><Br>
+        <a href="OBA_StockControl_DeliveryLog2.html">Deliveries & Stock Take</a><Br>
+        <a href="OBA_BackupForm.html">Backup</a><Br>
+        <a href="Instructions.html">Instructons</a><Br>
+
+        <h2>_______Old files</h2>
+        <a href="OBAStockControlProcess.html">Stock Control Journey Map</a><Br>
+        <a href="OBA_StockControlProcess2.html">Stock Control Journey - Updated</a><Br>
+        <a href="stockcontrol.html">Low Stock Web</a><Br>
+        <H1>Referrals</H1>
+        <a href="OBAReferralJourney.html">Refferal Journey Map</a><Br>
+        <a href="https://olivebranchaid.lovable.app/">Full Operational Prototype Referral + Stock</a><Br>
+        <H1>Other</H1>
+        <a href="OBA_BrandGuidelines.html">OBA Brand Guide</a><Br>
+        <a href="architecture.html">OBA Stock Control architecture</a><Br>
+    </div>
+
+    <footer class="footer">
+        <div class="footer__top">
+            <div class="footer__brand">
+                <span style="font-family:'Inter'; font-weight:900; font-size:1.5rem;">Bret Steiner</span>
+                <span style="margin: 0 15px; color:rgba(255,255,255,0.3);">|</span>
+                <span style="color:var(--brand-coral); font-weight:700; text-transform:uppercase; font-size:0.85rem;">Product Accelerator</span>
+            </div>
+            <div class="footer__social" style="display:flex; gap:20px;">
+                <a href="mailto:bretsteiner@gmail.com" style="color:white; text-decoration:none;">Email</a>
+                <a href="https://www.linkedin.com/in/bretsteiner/" target="_blank" style="color:white; text-decoration:none;">LinkedIn</a>
+            </div>
+        </div>
+    </footer>
+
+   
+</body>
+</html>

@@ -1,0 +1,1506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OBA Plan Creator — Architecture & Setup Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink:    #1A1F0E;
+  --page:   #F4F5EE;
+  --moss:   #2E5438;
+  --sage:   #4A7C59;
+  --sage-lt:#EAF2ED;
+  --lime:   #A8C832;
+  --cream:  #E8EAD8;
+  --gold:   #C8820A;
+  --gold-lt:#FDF3DC;
+  --purple: #8E1C5E;
+  --red:    #B03030;
+  --nav:    #1E2D1A;
+  --white:  #FFFFFF;
+  --muted:  #6B7060;
+  --line:   #D4D8C4;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--page);
+  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── MASTHEAD ─────────────────────────────────────────────── */
+.masthead {
+  background: var(--nav);
+  padding: 60px 60px 50px;
+  position: relative;
+  overflow: hidden;
+}
+.masthead::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    -45deg,
+    transparent,
+    transparent 40px,
+    rgba(255,255,255,0.015) 40px,
+    rgba(255,255,255,0.015) 41px
+  );
+}
+.masthead-inner { position: relative; z-index: 1; max-width: 1200px; margin: 0 auto; }
+.masthead-eyebrow {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.65rem; letter-spacing: 4px; text-transform: uppercase;
+  color: var(--lime); margin-bottom: 14px; display: flex; align-items: center; gap: 10px;
+}
+.masthead-eyebrow::before {
+  content: ''; width: 32px; height: 2px; background: var(--lime);
+}
+.masthead h1 {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(3.5rem, 7vw, 6rem);
+  color: var(--white); line-height: 0.95; letter-spacing: 1px;
+  margin-bottom: 20px;
+}
+.masthead h1 span { color: var(--lime); }
+.masthead-desc {
+  font-size: 1rem; color: rgba(212,217,200,0.7);
+  max-width: 560px; line-height: 1.7; font-weight: 300;
+}
+.masthead-tags {
+  display: flex; flex-wrap: wrap; gap: 8px; margin-top: 24px;
+}
+.tag {
+  font-family: 'DM Mono', monospace; font-size: 0.62rem;
+  letter-spacing: 1.5px; text-transform: uppercase;
+  padding: 4px 12px; border-radius: 20px; border: 1px solid;
+}
+.tag-green  { border-color: rgba(168,200,50,0.4); color: var(--lime); background: rgba(168,200,50,0.07); }
+.tag-white  { border-color: rgba(255,255,255,0.15); color: rgba(212,217,200,0.7); background: rgba(255,255,255,0.05); }
+.masthead-fig {
+  position: absolute; right: 60px; top: 50%; transform: translateY(-50%);
+  font-size: 9rem; opacity: 0.06; pointer-events: none;
+}
+
+/* ── LAYOUT WRAPPER ───────────────────────────────────────── */
+.page-wrap { max-width: 1200px; margin: 0 auto; padding: 60px 40px 100px; }
+
+/* ── SECTION TITLES ───────────────────────────────────────── */
+.section-eyebrow {
+  font-family: 'DM Mono', monospace; font-size: 0.6rem;
+  letter-spacing: 4px; text-transform: uppercase; color: var(--sage);
+  display: flex; align-items: center; gap: 12px; margin-bottom: 10px;
+}
+.section-eyebrow::after { content: ''; flex: 1; height: 1px; background: var(--line); }
+.section-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 2.4rem; color: var(--moss); letter-spacing: 1px;
+  margin-bottom: 30px; line-height: 1;
+}
+
+/* ── CONCEPT STRIP ────────────────────────────────────────── */
+.concept-strip {
+  background: var(--moss);
+  border-radius: 16px;
+  padding: 32px 36px;
+  margin-bottom: 50px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0;
+  position: relative;
+  overflow: hidden;
+}
+.concept-strip::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse at 80% 50%, rgba(168,200,50,0.06) 0%, transparent 60%);
+  pointer-events: none;
+}
+.concept-item {
+  padding: 0 28px;
+  border-right: 1px solid rgba(255,255,255,0.08);
+  position: relative; z-index: 1;
+}
+.concept-item:first-child { padding-left: 0; }
+.concept-item:last-child  { border-right: none; }
+.concept-num {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 2.8rem; color: var(--lime); line-height: 1;
+  margin-bottom: 4px; opacity: 0.6;
+}
+.concept-label {
+  font-family: 'DM Mono', monospace; font-size: 0.58rem;
+  letter-spacing: 2px; text-transform: uppercase;
+  color: rgba(212,217,200,0.5); margin-bottom: 6px;
+}
+.concept-val {
+  font-size: 0.85rem; font-weight: 600; color: rgba(212,217,200,0.9);
+  line-height: 1.4;
+}
+
+/* ── ARCHITECTURE FLOW ────────────────────────────────────── */
+.arch-flow {
+  display: grid;
+  grid-template-columns: 1fr 48px 1fr 48px 1fr;
+  align-items: center;
+  gap: 0;
+  margin-bottom: 50px;
+}
+.arch-block {
+  background: var(--white);
+  border-radius: 14px;
+  border: 1.5px solid var(--line);
+  padding: 24px 22px;
+  box-shadow: 0 2px 12px rgba(30,33,24,0.06);
+  position: relative;
+}
+.arch-block-icon {
+  width: 44px; height: 44px; border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.3rem; margin-bottom: 14px;
+}
+.arch-block-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.3rem; letter-spacing: 0.5px;
+  color: var(--moss); margin-bottom: 8px;
+}
+.arch-block-desc {
+  font-size: 0.78rem; color: var(--muted); line-height: 1.6;
+}
+.arch-block-pills {
+  display: flex; flex-wrap: wrap; gap: 5px; margin-top: 12px;
+}
+.arch-pill {
+  font-family: 'DM Mono', monospace; font-size: 0.55rem;
+  letter-spacing: 1px; text-transform: uppercase;
+  padding: 3px 8px; border-radius: 6px;
+  background: var(--sage-lt); color: var(--sage);
+  border: 1px solid rgba(74,124,89,0.2);
+}
+.arch-arrow {
+  display: flex; align-items: center; justify-content: center;
+  flex-direction: column; gap: 4px;
+}
+.arch-arrow svg { color: var(--sage); }
+.arch-arrow-label {
+  font-family: 'DM Mono', monospace; font-size: 0.5rem;
+  letter-spacing: 1px; text-transform: uppercase;
+  color: var(--muted); text-align: center; line-height: 1.4;
+  max-width: 40px;
+}
+.arch-block.accent-green { border-color: var(--sage); background: var(--sage-lt); }
+.arch-block.accent-gold  { border-color: var(--gold); background: var(--gold-lt); }
+
+/* ── SPREADSHEET ANATOMY ──────────────────────────────────── */
+.sheet-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 12px;
+  margin-bottom: 50px;
+}
+.sheet-tab {
+  border-radius: 12px;
+  padding: 18px 16px;
+  border: 1.5px solid;
+  position: relative;
+  overflow: hidden;
+}
+.sheet-tab::before {
+  content: attr(data-num);
+  position: absolute; top: -6px; right: 12px;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 3.5rem; opacity: 0.06; line-height: 1;
+  pointer-events: none;
+}
+.sheet-tab.t-main   { border-color: rgba(74,124,89,0.4);  background: rgba(74,124,89,0.06); }
+.sheet-tab.t-pick   { border-color: rgba(168,200,50,0.4); background: rgba(168,200,50,0.06); }
+.sheet-tab.t-gold   { border-color: rgba(200,130,10,0.4); background: rgba(200,130,10,0.06); }
+.sheet-tab.t-blue   { border-color: rgba(60,100,200,0.3); background: rgba(60,100,200,0.04); }
+.sheet-tab.t-purple { border-color: rgba(142,28,94,0.3);  background: rgba(142,28,94,0.04); }
+.sheet-tab-num {
+  font-family: 'DM Mono', monospace; font-size: 0.55rem;
+  letter-spacing: 2px; text-transform: uppercase;
+  opacity: 0.6; margin-bottom: 5px;
+}
+.sheet-tab-name {
+  font-weight: 700; font-size: 0.82rem; color: var(--ink);
+  margin-bottom: 8px; line-height: 1.3;
+}
+.sheet-tab-cols {
+  font-family: 'DM Mono', monospace; font-size: 0.62rem;
+  color: var(--muted); line-height: 1.8;
+}
+.sheet-tab-rw {
+  font-family: 'DM Mono', monospace; font-size: 0.55rem;
+  letter-spacing: 1px; margin-top: 8px; padding: 3px 7px;
+  border-radius: 5px; display: inline-block;
+}
+.rw-read  { background: rgba(74,124,89,0.12); color: var(--sage); }
+.rw-write { background: rgba(142,28,94,0.1);  color: var(--purple); }
+.rw-both  { background: rgba(168,200,50,0.12); color: #5a7000; }
+
+/* ── DATA FLOW DIAGRAM ───────────────────────────────────── */
+.flow-diagram {
+  background: var(--nav);
+  border-radius: 16px;
+  padding: 40px;
+  margin-bottom: 50px;
+  position: relative;
+  overflow: hidden;
+}
+.flow-diagram::before {
+  content: '';
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(circle at 20% 20%, rgba(168,200,50,0.05) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(74,124,89,0.08) 0%, transparent 50%);
+  pointer-events: none;
+}
+.flow-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.5rem; color: var(--white); letter-spacing: 1px;
+  margin-bottom: 28px; position: relative; z-index: 1;
+  display: flex; align-items: center; gap: 12px;
+}
+.flow-title::after {
+  content: ''; flex: 1; height: 1px; background: rgba(255,255,255,0.08);
+}
+.flow-grid {
+  display: grid;
+  grid-template-columns: 200px 1fr 200px;
+  grid-template-rows: auto auto auto;
+  gap: 16px;
+  align-items: center;
+  position: relative; z-index: 1;
+}
+.flow-node {
+  border-radius: 10px; padding: 14px 16px;
+  font-size: 0.8rem;
+}
+.flow-node-label {
+  font-family: 'DM Mono', monospace; font-size: 0.55rem;
+  letter-spacing: 2px; text-transform: uppercase;
+  opacity: 0.6; margin-bottom: 5px;
+}
+.flow-node-val {
+  font-weight: 600; line-height: 1.4;
+}
+.fn-browser { background: rgba(168,200,50,0.12); border: 1px solid rgba(168,200,50,0.3); color: #c8e040; }
+.fn-google  { background: rgba(74,124,89,0.2);   border: 1px solid rgba(74,124,89,0.4);   color: #9de0b0; }
+.fn-sheet   { background: rgba(200,130,10,0.15);  border: 1px solid rgba(200,130,10,0.35); color: #f0c060; }
+.fn-local   { background: rgba(100,120,200,0.12); border: 1px solid rgba(100,120,200,0.3); color: #a0b4ff; }
+.flow-mid {
+  display: flex; flex-direction: column; gap: 10px; align-items: center;
+}
+.flow-mid-box {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 10px; padding: 14px 20px;
+  width: 100%; text-align: center;
+}
+.fmb-label {
+  font-family: 'DM Mono', monospace; font-size: 0.55rem;
+  letter-spacing: 2px; text-transform: uppercase;
+  color: rgba(212,217,200,0.4); margin-bottom: 6px;
+}
+.fmb-apis {
+  display: flex; flex-wrap: wrap; gap: 6px; justify-content: center;
+}
+.fmb-api {
+  font-family: 'DM Mono', monospace; font-size: 0.62rem;
+  padding: 3px 9px; border-radius: 5px;
+  background: rgba(168,200,50,0.1); color: var(--lime);
+  border: 1px solid rgba(168,200,50,0.2);
+}
+.flow-arrow-row {
+  grid-column: 1 / -1;
+  display: flex; align-items: center; justify-content: center; gap: 16px;
+  padding: 4px 0;
+}
+.fa-line {
+  height: 1px; flex: 1;
+  background: linear-gradient(to right, transparent, rgba(168,200,50,0.3), transparent);
+}
+.fa-label {
+  font-family: 'DM Mono', monospace; font-size: 0.55rem;
+  letter-spacing: 1.5px; text-transform: uppercase;
+  color: rgba(168,200,50,0.5); white-space: nowrap;
+}
+
+/* ── AUTH FLOW ────────────────────────────────────────────── */
+.auth-steps {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 0;
+  margin-bottom: 50px;
+  position: relative;
+}
+.auth-steps::before {
+  content: '';
+  position: absolute;
+  top: 36px; left: 36px; right: 36px;
+  height: 2px;
+  background: linear-gradient(to right, var(--sage), var(--lime));
+  z-index: 0;
+}
+.auth-step {
+  display: flex; flex-direction: column; align-items: center;
+  text-align: center; padding: 0 10px;
+  position: relative; z-index: 1;
+}
+.auth-step-circle {
+  width: 72px; height: 72px; border-radius: 50%;
+  background: var(--moss); border: 3px solid var(--sage);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.6rem; margin-bottom: 14px;
+  box-shadow: 0 0 0 6px var(--page);
+}
+.auth-step-num {
+  position: absolute; top: 50px; right: calc(50% - 42px);
+  width: 20px; height: 20px; border-radius: 50%;
+  background: var(--lime); color: var(--moss);
+  font-family: 'Bebas Neue', sans-serif; font-size: 0.85rem;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700;
+}
+.auth-step-title {
+  font-family: 'DM Mono', monospace; font-size: 0.62rem;
+  letter-spacing: 1px; text-transform: uppercase;
+  color: var(--moss); font-weight: 700; margin-bottom: 5px;
+}
+.auth-step-desc {
+  font-size: 0.73rem; color: var(--muted); line-height: 1.5;
+}
+
+/* ── SETUP GUIDE ──────────────────────────────────────────── */
+.setup-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 50px;
+}
+.setup-card {
+  background: var(--white);
+  border-radius: 14px;
+  border: 1.5px solid var(--line);
+  overflow: hidden;
+  box-shadow: 0 2px 10px rgba(30,33,24,0.05);
+}
+.setup-card-hdr {
+  background: var(--moss); padding: 14px 20px;
+  display: flex; align-items: center; gap: 12px;
+}
+.setup-card-hdr-icon {
+  width: 32px; height: 32px; border-radius: 8px;
+  background: rgba(255,255,255,0.1);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1rem;
+}
+.setup-card-hdr-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.1rem; letter-spacing: 0.5px; color: var(--white);
+}
+.setup-card-hdr-badge {
+  margin-left: auto;
+  font-family: 'DM Mono', monospace; font-size: 0.55rem;
+  letter-spacing: 1.5px; text-transform: uppercase;
+  background: var(--lime); color: var(--moss);
+  padding: 3px 8px; border-radius: 5px; font-weight: 700;
+}
+.setup-steps {
+  padding: 20px;
+  counter-reset: step;
+}
+.setup-step {
+  display: flex; gap: 14px; margin-bottom: 16px;
+  counter-increment: step;
+}
+.setup-step:last-child { margin-bottom: 0; }
+.setup-step-n {
+  width: 26px; height: 26px; border-radius: 50%;
+  background: var(--sage-lt); border: 2px solid rgba(74,124,89,0.3);
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'DM Mono', monospace; font-size: 0.65rem;
+  font-weight: 700; color: var(--sage); flex-shrink: 0;
+  margin-top: 1px;
+}
+.setup-step-body { flex: 1; }
+.setup-step-title {
+  font-weight: 700; font-size: 0.82rem; color: var(--ink);
+  margin-bottom: 3px;
+}
+.setup-step-desc {
+  font-size: 0.73rem; color: var(--muted); line-height: 1.6;
+}
+.code-snip {
+  font-family: 'DM Mono', monospace; font-size: 0.65rem;
+  background: var(--nav); color: var(--lime);
+  padding: 8px 12px; border-radius: 6px; margin-top: 7px;
+  display: block; line-height: 1.8; overflow-x: auto;
+  white-space: pre;
+}
+.code-snip .c { color: rgba(212,217,200,0.35); }
+.code-snip .k { color: #a8c832; }
+.code-snip .s { color: #f0c070; }
+
+/* ── CONFIG BLOCK ─────────────────────────────────────────── */
+.config-block {
+  background: var(--nav); border-radius: 14px;
+  padding: 32px 36px; margin-bottom: 50px;
+  display: grid; grid-template-columns: 1fr 1fr; gap: 32px;
+}
+.config-col-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.2rem; letter-spacing: 0.5px;
+  color: var(--white); margin-bottom: 16px;
+  display: flex; align-items: center; gap: 10px;
+}
+.config-col-title span {
+  font-family: 'DM Mono', monospace; font-size: 0.55rem;
+  letter-spacing: 2px; text-transform: uppercase;
+  color: var(--lime); background: rgba(168,200,50,0.1);
+  border: 1px solid rgba(168,200,50,0.25); border-radius: 4px;
+  padding: 3px 7px;
+}
+.config-row {
+  display: flex; align-items: flex-start; gap: 12px;
+  margin-bottom: 14px; padding-bottom: 14px;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+.config-row:last-child { border-bottom: none; margin-bottom: 0; }
+.config-key {
+  font-family: 'DM Mono', monospace; font-size: 0.65rem;
+  color: var(--lime); min-width: 140px; padding-top: 1px;
+  flex-shrink: 0;
+}
+.config-desc {
+  font-size: 0.75rem; color: rgba(212,217,200,0.65);
+  line-height: 1.6; flex: 1;
+}
+
+/* ── HOSTING OPTIONS ─────────────────────────────────────── */
+.hosting-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px; margin-bottom: 50px;
+}
+.hosting-card {
+  background: var(--white); border-radius: 12px;
+  border: 1.5px solid var(--line); padding: 22px 20px;
+  box-shadow: 0 2px 8px rgba(30,33,24,0.05);
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.hosting-card:hover { border-color: var(--sage); box-shadow: 0 4px 16px rgba(74,124,89,0.1); }
+.hosting-badge {
+  font-family: 'DM Mono', monospace; font-size: 0.55rem;
+  letter-spacing: 2px; text-transform: uppercase;
+  padding: 3px 9px; border-radius: 10px; display: inline-block;
+  margin-bottom: 12px;
+}
+.hb-free { background: rgba(74,124,89,0.1); color: var(--sage); border: 1px solid rgba(74,124,89,0.2); }
+.hb-paid { background: rgba(200,130,10,0.1); color: var(--gold); border: 1px solid rgba(200,130,10,0.2); }
+.hb-rec  { background: rgba(168,200,50,0.12); color: #5a7000; border: 1px solid rgba(168,200,50,0.3); }
+.hosting-name {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.3rem; letter-spacing: 0.5px;
+  color: var(--moss); margin-bottom: 6px;
+}
+.hosting-desc {
+  font-size: 0.75rem; color: var(--muted); line-height: 1.6;
+  margin-bottom: 12px;
+}
+.hosting-steps {
+  font-family: 'DM Mono', monospace; font-size: 0.65rem;
+  color: var(--ink); line-height: 2;
+}
+.hosting-steps li { list-style: none; padding-left: 14px; position: relative; }
+.hosting-steps li::before { content: '→ '; color: var(--sage); position: absolute; left: 0; }
+
+/* ── SECURITY & SCOPES ────────────────────────────────────── */
+.security-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 14px;
+  margin-bottom: 50px;
+}
+.sec-card {
+  border-radius: 12px; padding: 20px;
+  border: 1.5px solid;
+}
+.sec-card.green { border-color: rgba(74,124,89,0.4); background: rgba(74,124,89,0.05); }
+.sec-card.amber { border-color: rgba(200,130,10,0.4); background: rgba(200,130,10,0.05); }
+.sec-title {
+  font-family: 'DM Mono', monospace; font-size: 0.62rem;
+  letter-spacing: 2px; text-transform: uppercase;
+  margin-bottom: 12px; font-weight: 700;
+}
+.sec-title.green { color: var(--sage); }
+.sec-title.amber { color: var(--gold); }
+.sec-item {
+  display: flex; align-items: flex-start; gap: 10px;
+  font-size: 0.75rem; color: var(--body); margin-bottom: 9px;
+  line-height: 1.5;
+}
+.sec-bullet {
+  width: 18px; height: 18px; border-radius: 4px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.7rem; flex-shrink: 0; margin-top: 1px;
+}
+.sb-green { background: rgba(74,124,89,0.15); color: var(--sage); }
+.sb-amber { background: rgba(200,130,10,0.15); color: var(--gold); }
+
+/* ── FOOTER ───────────────────────────────────────────────── */
+.doc-footer {
+  background: var(--moss); border-radius: 16px;
+  padding: 32px 36px;
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 24px; flex-wrap: wrap;
+}
+.doc-footer-brand {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.4rem; letter-spacing: 1px; color: var(--white);
+}
+.doc-footer-brand small {
+  display: block;
+  font-family: 'DM Mono', monospace; font-size: 0.55rem;
+  letter-spacing: 2px; text-transform: uppercase;
+  color: rgba(212,217,200,0.45); font-weight: 400;
+  margin-top: 2px;
+}
+.doc-footer-note {
+  font-size: 0.75rem; color: rgba(212,217,200,0.55);
+  max-width: 400px; line-height: 1.7;
+}
+
+/* ── CALLOUT BOX ──────────────────────────────────────────── */
+.callout {
+  border-radius: 10px; padding: 16px 20px;
+  display: flex; gap: 14px; align-items: flex-start;
+  margin-bottom: 16px;
+}
+.callout.warn { background: var(--gold-lt); border: 1.5px solid rgba(200,130,10,0.3); }
+.callout.info { background: var(--sage-lt); border: 1.5px solid rgba(74,124,89,0.25); }
+.callout-icon { font-size: 1.1rem; flex-shrink: 0; margin-top: 1px; }
+.callout-text { font-size: 0.78rem; color: var(--ink); line-height: 1.65; }
+.callout-text strong { font-weight: 700; }
+
+/* ── DIVIDER ──────────────────────────────────────────────── */
+.divider {
+  height: 1px; background: var(--line);
+  margin: 50px 0;
+}
+
+/* responsive */
+@media (max-width: 900px) {
+  .masthead { padding: 40px 24px 36px; }
+  .masthead-fig { display: none; }
+  .page-wrap { padding: 40px 20px 80px; }
+  .concept-strip { grid-template-columns: 1fr 1fr; }
+  .concept-item:nth-child(2) { border-right: none; }
+  .arch-flow { grid-template-columns: 1fr; gap: 12px; }
+  .arch-arrow { transform: rotate(90deg); }
+  .sheet-grid { grid-template-columns: 1fr 1fr; }
+  .auth-steps { display: grid; grid-template-columns: 1fr 1fr 1fr; }
+  .auth-steps::before { display: none; }
+  .setup-grid { grid-template-columns: 1fr; }
+  .hosting-grid { grid-template-columns: 1fr; }
+  .security-grid { grid-template-columns: 1fr; }
+  .config-block { grid-template-columns: 1fr; gap: 24px; }
+  .flow-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════
+     MASTHEAD
+══════════════════════════════════════ -->
+<div class="masthead">
+  <div class="masthead-fig">🌿</div>
+  <div class="masthead-inner">
+    <div class="masthead-eyebrow">Technical Architecture</div>
+    <h1>OBA <span>Plan</span><br>Creator</h1>
+    <p class="masthead-desc">A serverless, browser-based food parcel planning tool for Olive Branch Aid volunteers. Reads and writes directly to a private Google Sheet — no backend, no database, no infrastructure to manage.</p>
+    <div class="masthead-tags">
+      <span class="tag tag-green">Vanilla HTML/CSS/JS</span>
+      <span class="tag tag-green">Google Sheets API v4</span>
+      <span class="tag tag-green">Google OAuth 2.0</span>
+      <span class="tag tag-white">Zero Backend</span>
+      <span class="tag tag-white">Static File Hosting</span>
+      <span class="tag tag-white">localStorage State</span>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     PAGE CONTENT
+══════════════════════════════════════ -->
+<div class="page-wrap">
+
+  <!-- AT A GLANCE -->
+  <div class="concept-strip">
+    <div class="concept-item">
+      <div class="concept-num">01</div>
+      <div class="concept-label">Architecture</div>
+      <div class="concept-val">100% Static<br>Single HTML file</div>
+    </div>
+    <div class="concept-item">
+      <div class="concept-num">02</div>
+      <div class="concept-label">Data Store</div>
+      <div class="concept-val">Google Sheets<br>as the database</div>
+    </div>
+    <div class="concept-item">
+      <div class="concept-num">03</div>
+      <div class="concept-label">Auth</div>
+      <div class="concept-val">Google OAuth 2.0<br>Identity Services</div>
+    </div>
+    <div class="concept-item">
+      <div class="concept-num">06</div>
+      <div class="concept-label">Sheet Tabs Used</div>
+      <div class="concept-val">Read 4 tabs<br>Write to 2 tabs</div>
+    </div>
+  </div>
+
+  <!-- SECTION: SYSTEM ARCHITECTURE -->
+  <div class="section-eyebrow">System Architecture</div>
+  <div class="section-title">How It All Fits Together</div>
+
+  <div class="arch-flow">
+
+    <div class="arch-block accent-green">
+      <div class="arch-block-icon" style="background:rgba(74,124,89,0.15);">🌐</div>
+      <div class="arch-block-title">Browser Client</div>
+      <div class="arch-block-desc">A single <code>OBAPicker.html</code> file served from any static host. All logic, UI, and state management runs entirely in the user's browser. No server-side code whatsoever.</div>
+      <div class="arch-block-pills">
+        <span class="arch-pill">HTML5</span>
+        <span class="arch-pill">Vanilla JS</span>
+        <span class="arch-pill">CSS Variables</span>
+        <span class="arch-pill">LocalStorage</span>
+        <span class="arch-pill">Google Fonts</span>
+      </div>
+    </div>
+
+    <div class="arch-arrow">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      <div class="arch-arrow-label">OAuth Token + API Calls</div>
+    </div>
+
+    <div class="arch-block accent-gold">
+      <div class="arch-block-icon" style="background:rgba(200,130,10,0.15);">🔐</div>
+      <div class="arch-block-title">Google APIs</div>
+      <div class="arch-block-desc">Two Google services handle identity and data. The browser calls them directly using the user's OAuth bearer token — no proxy or middleware needed.</div>
+      <div class="arch-block-pills">
+        <span class="arch-pill" style="background:#fff8f0;color:#8a5500;border-color:rgba(200,130,10,0.3);">Identity Services (GIS)</span>
+        <span class="arch-pill" style="background:#fff8f0;color:#8a5500;border-color:rgba(200,130,10,0.3);">Sheets API v4</span>
+        <span class="arch-pill" style="background:#fff8f0;color:#8a5500;border-color:rgba(200,130,10,0.3);">OAuth2 UserInfo</span>
+      </div>
+    </div>
+
+    <div class="arch-arrow">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      <div class="arch-arrow-label">Read / Write Rows</div>
+    </div>
+
+    <div class="arch-block">
+      <div class="arch-block-icon" style="background:rgba(60,130,60,0.12);">📊</div>
+      <div class="arch-block-title">Google Sheet</div>
+      <div class="arch-block-desc">The private Google Spreadsheet acts as the entire database. Access is gated by the sheet's share permissions — only users with access can authenticate and read/write data.</div>
+      <div class="arch-block-pills">
+        <span class="arch-pill">Private Sheet</span>
+        <span class="arch-pill">6 Named Tabs</span>
+        <span class="arch-pill">Long-row Format</span>
+        <span class="arch-pill">batchUpdate API</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- SECTION: SPREADSHEET ANATOMY -->
+  <div class="section-eyebrow">Data Layer</div>
+  <div class="section-title">Spreadsheet Tab Anatomy</div>
+
+  <div class="sheet-grid">
+
+    <div class="sheet-tab t-main" data-num="1">
+      <div class="sheet-tab-num">Tab 1</div>
+      <div class="sheet-tab-name">Beneficiary Database</div>
+      <div class="sheet-tab-cols">
+        REF · NAME · LAST_NAME<br>
+        PARTNER · TOTAL · ADULTS<br>
+        MALE · FEMALE · CHILDREN<br>
+        DIETARY · ALLERGIES<br>
+        GROUP · C/D · FREQUENCY<br>
+        START · END · STATUS
+      </div>
+      <span class="sheet-tab-rw rw-both">READ + WRITE</span>
+    </div>
+
+    <div class="sheet-tab t-pick" data-num="2">
+      <div class="sheet-tab-num">Tab 2</div>
+      <div class="sheet-tab-name">Pick Plan</div>
+      <div class="sheet-tab-cols">
+        CODE · ROW · REF · NAME<br>
+        DATE · PACKED · CHECKED<br>
+        STATUS · NOTES<br>
+        ITEM · SECTION · QTY<br>
+        STATUS_DATE · ITEM_CODE
+      </div>
+      <span class="sheet-tab-rw rw-both">READ + WRITE</span>
+    </div>
+
+    <div class="sheet-tab t-gold" data-num="4">
+      <div class="sheet-tab-num">Tab 4</div>
+      <div class="sheet-tab-name">Stock Ledger</div>
+      <div class="sheet-tab-cols">
+        Item Name · Item Code<br>
+        Portion Size<br>
+        Section Colour (hex)<br>
+        Section Name<br>
+        Min Threshold
+      </div>
+      <span class="sheet-tab-rw rw-read">READ ONLY</span>
+    </div>
+
+    <div class="sheet-tab t-blue" data-num="5a">
+      <div class="sheet-tab-num">Tab 5a</div>
+      <div class="sheet-tab-name">Item Config</div>
+      <div class="sheet-tab-cols">
+        Name · Code · Section<br>
+        Delivery Unit<br>
+        Units Per Portion<br>
+        Portion Label<br>
+        Input Label
+      </div>
+      <span class="sheet-tab-rw rw-read">READ ONLY</span>
+    </div>
+
+    <div class="sheet-tab t-purple" data-num="10">
+      <div class="sheet-tab-num">Tab 10</div>
+      <div class="sheet-tab-name">Reference Data</div>
+      <div class="sheet-tab-cols">
+        Sources · Donors<br>
+        Partner Organisations<br>
+        Dietary Options<br>
+        Allergy Options<br>
+        (col E, G, I)
+      </div>
+      <span class="sheet-tab-rw rw-read">READ ONLY</span>
+    </div>
+
+  </div>
+
+  <!-- SECTION: DATA FLOW -->
+  <div class="flow-diagram">
+    <div class="flow-title">Runtime Data Flow</div>
+    <div class="flow-grid">
+
+      <div class="flow-node fn-browser">
+        <div class="flow-node-label">User Action</div>
+        <div class="flow-node-val">Login → Load home → Open beneficiary → Edit pick → Save</div>
+      </div>
+
+      <div class="flow-mid">
+        <div class="flow-mid-box">
+          <div class="fmb-label">API Calls Made</div>
+          <div class="fmb-apis">
+            <span class="fmb-api">GET /values/{tab}</span>
+            <span class="fmb-api">POST /values:batchUpdate</span>
+            <span class="fmb-api">POST /values/{range}:append</span>
+            <span class="fmb-api">POST :batchUpdate (sortRange)</span>
+            <span class="fmb-api">GET /oauth2/v3/userinfo</span>
+          </div>
+        </div>
+        <div class="flow-mid-box">
+          <div class="fmb-label">In-Memory State</div>
+          <div class="fmb-apis">
+            <span class="fmb-api">allPickRows[]</span>
+            <span class="fmb-api">allBenRows[]</span>
+            <span class="fmb-api">picks[]</span>
+            <span class="fmb-api">existingPicks[]</span>
+            <span class="fmb-api">itemHeaders[]</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="flow-node fn-sheet">
+        <div class="flow-node-label">Google Sheet</div>
+        <div class="flow-node-val">Private spreadsheet — data persisted here. Row inserts keep long format; status updates batch-write col H.</div>
+      </div>
+
+      <div style="grid-column:1/-1; display:flex; gap:16px; align-items:center; padding: 4px 0;">
+        <div style="flex:1; height:1px; background:linear-gradient(to right,transparent,rgba(168,200,50,0.2),transparent);"></div>
+        <span style="font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:1.5px;text-transform:uppercase;color:rgba(168,200,50,0.4);">Persistent between sessions</span>
+        <div style="flex:1; height:1px; background:linear-gradient(to right,transparent,rgba(168,200,50,0.2),transparent);"></div>
+      </div>
+
+      <div class="flow-node fn-local">
+        <div class="flow-node-label">localStorage</div>
+        <div class="flow-node-val">Prepared / Collected / Notified status, amendments, and UI toggle state stored per pick code.</div>
+      </div>
+
+      <div style="display:flex; align-items:center; justify-content:center;">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="rgba(168,200,50,0.4)" stroke-width="1.5"><path d="M7 16V4m0 0L3 8m4-4l4 4M17 8v12m0 0l4-4m-4 4l-4-4"/></svg>
+      </div>
+
+      <div class="flow-node fn-google">
+        <div class="flow-node-label">OAuth Token Cache</div>
+        <div class="flow-node-val">Access token stored in memory with expiry. Silent refresh attempted first; login modal shown if expired.</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- SECTION: AUTH FLOW -->
+  <div class="section-eyebrow">Authentication</div>
+  <div class="section-title">Sign-In Flow</div>
+
+  <div class="auth-steps">
+    <div class="auth-step">
+      <div class="auth-step-circle">🔑</div>
+      <div class="auth-step-num">1</div>
+      <div class="auth-step-title">Page Load</div>
+      <div class="auth-step-desc">Login modal shown immediately. No data loaded until authenticated.</div>
+    </div>
+    <div class="auth-step">
+      <div class="auth-step-circle">🧑‍💼</div>
+      <div class="auth-step-num">2</div>
+      <div class="auth-step-title">Google Popup</div>
+      <div class="auth-step-desc">GIS token client opens Google account selector popup.</div>
+    </div>
+    <div class="auth-step">
+      <div class="auth-step-circle">🎟️</div>
+      <div class="auth-step-num">3</div>
+      <div class="auth-step-title">Token Issued</div>
+      <div class="auth-step-desc">Access token received with <code>spreadsheets</code> + <code>userinfo.profile</code> scopes.</div>
+    </div>
+    <div class="auth-step">
+      <div class="arch-block-icon" style="width:72px;height:72px;border-radius:50%;background:var(--moss);border:3px solid var(--sage);display:flex;align-items:center;justify-content:center;font-size:1.6rem;margin-bottom:14px;box-shadow:0 0 0 6px var(--page);">👤</div>
+      <div class="auth-step-num">4</div>
+      <div class="auth-step-title">User Info</div>
+      <div class="auth-step-desc">Fetch <code>/oauth2/v3/userinfo</code> to get display name shown in header.</div>
+    </div>
+    <div class="auth-step">
+      <div class="auth-step-circle">✅</div>
+      <div class="auth-step-num">5</div>
+      <div class="auth-step-title">Load Home Data</div>
+      <div class="auth-step-desc">All pick rows, beneficiaries, and reference data fetched in parallel.</div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- SECTION: SETUP GUIDE -->
+  <div class="section-eyebrow">Setup Guide</div>
+  <div class="section-title">Deploy From Scratch</div>
+
+  <div class="callout warn">
+    <div class="callout-icon">⚠️</div>
+    <div class="callout-text"><strong>Prerequisites:</strong> A Google account with access to Google Cloud Console, an existing OBA Operations Google Sheet (or a copy of it), and somewhere to host a static HTML file (GitHub Pages, Netlify, etc.).</div>
+  </div>
+
+  <div class="setup-grid">
+
+    <div class="setup-card">
+      <div class="setup-card-hdr">
+        <div class="setup-card-hdr-icon">☁️</div>
+        <div class="setup-card-hdr-title">Step 1 — Google Cloud Project</div>
+        <div class="setup-card-hdr-badge">console.cloud.google.com</div>
+      </div>
+      <div class="setup-steps">
+        <div class="setup-step">
+          <div class="setup-step-n">1</div>
+          <div class="setup-step-body">
+            <div class="setup-step-title">Create a new project</div>
+            <div class="setup-step-desc">Go to <strong>console.cloud.google.com</strong> → New Project. Name it something like "OBA Plan Creator".</div>
+          </div>
+        </div>
+        <div class="setup-step">
+          <div class="setup-step-n">2</div>
+          <div class="setup-step-body">
+            <div class="setup-step-title">Enable required APIs</div>
+            <div class="setup-step-desc">APIs &amp; Services → Library. Search for and enable:
+            <code class="code-snip"><span class="k">Google Sheets API</span>
+<span class="k">Google Identity Services</span> <span class="c">(automatic via GIS script)</span></code></div>
+          </div>
+        </div>
+        <div class="setup-step">
+          <div class="setup-step-n">3</div>
+          <div class="setup-step-body">
+            <div class="setup-step-title">Create an API Key</div>
+            <div class="setup-step-desc">APIs &amp; Services → Credentials → Create Credentials → <strong>API Key</strong>. Restrict it to the Sheets API and your hostname. Copy the key.</div>
+          </div>
+        </div>
+        <div class="setup-step">
+          <div class="setup-step-n">4</div>
+          <div class="setup-step-body">
+            <div class="setup-step-title">Configure OAuth consent screen</div>
+            <div class="setup-step-desc">APIs &amp; Services → OAuth consent screen. Set type to <strong>Internal</strong> (for organisation use) or <strong>External</strong>. Add your hosting domain under Authorised domains.</div>
+          </div>
+        </div>
+        <div class="setup-step">
+          <div class="setup-step-n">5</div>
+          <div class="setup-step-body">
+            <div class="setup-step-title">Create an OAuth 2.0 Client ID</div>
+            <div class="setup-step-desc">Credentials → Create Credentials → <strong>OAuth client ID</strong>. Type: <strong>Web application</strong>. Add your hosted URL to <em>Authorised JavaScript origins</em>:
+            <code class="code-snip"><span class="c"># Example origins</span>
+<span class="s">https://yourorg.github.io</span>
+<span class="s">https://your-app.netlify.app</span>
+<span class="s">http://localhost:5500</span> <span class="c"># for local dev</span></code></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="setup-card">
+      <div class="setup-card-hdr">
+        <div class="setup-card-hdr-icon">📄</div>
+        <div class="setup-card-hdr-title">Step 2 — Configure the HTML File</div>
+        <div class="setup-card-hdr-badge">3 constants to set</div>
+      </div>
+      <div class="setup-steps">
+        <div class="setup-step">
+          <div class="setup-step-n">1</div>
+          <div class="setup-step-body">
+            <div class="setup-step-title">Open the HTML file in a text editor</div>
+            <div class="setup-step-desc">Find the configuration block near the top of the <code>&lt;script&gt;</code> tag (around line 1195).</div>
+          </div>
+        </div>
+        <div class="setup-step">
+          <div class="setup-step-n">2</div>
+          <div class="setup-step-body">
+            <div class="setup-step-title">Set the three constants</div>
+            <div class="setup-step-desc">
+              <code class="code-snip"><span class="c">// ← Your Google Sheet's ID</span>
+<span class="c">// (from the URL: /spreadsheets/d/<b>THIS_PART</b>/edit)</span>
+const SHEET_ID  = <span class="s">"your-sheet-id-here"</span>;
+
+<span class="c">// ← API key from Cloud Console</span>
+const API_KEY   = <span class="s">"AIzaSy..."</span>;
+
+<span class="c">// ← OAuth Client ID from Cloud Console</span>
+const CLIENT_ID = <span class="s">"123456-abc.apps.googleusercontent.com"</span>;</code>
+            </div>
+          </div>
+        </div>
+        <div class="setup-step">
+          <div class="setup-step-n">3</div>
+          <div class="setup-step-body">
+            <div class="setup-step-title">Verify tab names match</div>
+            <div class="setup-step-desc">The sheet tab names in your spreadsheet must exactly match these constants (or update them to match):
+            <code class="code-snip">const PICK_TAB    = <span class="s">"2. Pick Plan"</span>;
+const BEN_TAB     = <span class="s">"1. Beneficiary Database"</span>;
+const LEDGER_TAB  = <span class="s">"4. Stock Ledger"</span>;
+const CONFIG_TAB  = <span class="s">"5a. Item Config"</span>;
+const REF_TAB     = <span class="s">"10. Reference Data"</span>;</code>
+            </div>
+          </div>
+        </div>
+        <div class="setup-step">
+          <div class="setup-step-n">4</div>
+          <div class="setup-step-body">
+            <div class="setup-step-title">Share the Google Sheet</div>
+            <div class="setup-step-desc">The sheet must be shared with (or owned by) the Google accounts that will use the tool. Set permission to <strong>Viewer</strong> minimum — the OAuth token will grant write access via the API scope.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="setup-card">
+      <div class="setup-card-hdr">
+        <div class="setup-card-hdr-icon">🚀</div>
+        <div class="setup-card-hdr-title">Step 3 — Host the File</div>
+        <div class="setup-card-hdr-badge">One file to deploy</div>
+      </div>
+      <div class="setup-steps">
+        <div class="setup-step">
+          <div class="setup-step-n">1</div>
+          <div class="setup-step-body">
+            <div class="setup-step-title">Choose a static host (see options below)</div>
+            <div class="setup-step-desc">Since this is a single HTML file with no build step, any static host works. GitHub Pages is the simplest free option for a non-technical team.</div>
+          </div>
+        </div>
+        <div class="setup-step">
+          <div class="setup-step-n">2</div>
+          <div class="setup-step-body">
+            <div class="setup-step-title">Upload / commit the HTML file</div>
+            <div class="setup-step-desc">For GitHub Pages: create a repo, commit the file as <code>index.html</code>, enable Pages from Settings → Pages → main branch.</div>
+          </div>
+        </div>
+        <div class="setup-step">
+          <div class="setup-step-n">3</div>
+          <div class="setup-step-body">
+            <div class="setup-step-title">Add origin to OAuth client</div>
+            <div class="setup-step-desc">Return to Google Cloud Console → Credentials → your OAuth client → add the live URL (e.g. <code>https://yourorg.github.io</code>) to Authorised JavaScript Origins. Save.</div>
+          </div>
+        </div>
+        <div class="setup-step">
+          <div class="setup-step-n">4</div>
+          <div class="setup-step-body">
+            <div class="setup-step-title">Test sign-in</div>
+            <div class="setup-step-desc">Open the live URL in a browser. The Google sign-in popup should appear. Sign in with an account that has access to the sheet. Picks should load on the home screen.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="setup-card">
+      <div class="setup-card-hdr">
+        <div class="setup-card-hdr-icon">📋</div>
+        <div class="setup-card-hdr-title">Step 4 — Spreadsheet Setup</div>
+        <div class="setup-card-hdr-badge">Structure required</div>
+      </div>
+      <div class="setup-steps">
+        <div class="setup-step">
+          <div class="setup-step-n">1</div>
+          <div class="setup-step-body">
+            <div class="setup-step-title">Ensure header rows exist in each tab</div>
+            <div class="setup-step-desc">The app skips the first 3 rows of Tab 1 and Tab 2 (title, note, header). Row 4 onwards is treated as data. The Pick Plan tab needs column headers in row 3 matching the PC constants.</div>
+          </div>
+        </div>
+        <div class="setup-step">
+          <div class="setup-step-n">2</div>
+          <div class="setup-step-body">
+            <div class="setup-step-title">Stock Ledger — item row format</div>
+            <div class="setup-step-desc">Col A = Item Name, B = Item Code (e.g. <code>BRK-001</code>), C = Portion Size, D = Section Colour (hex), E = Section Name. Section header rows have a name in col A but no code in col B.</div>
+          </div>
+        </div>
+        <div class="setup-step">
+          <div class="setup-step-n">3</div>
+          <div class="setup-step-body">
+            <div class="setup-step-title">Reference Data tab — column layout</div>
+            <div class="setup-step-desc">Data starts from row 4. Partners in col E, Dietary options in col G, Allergies in col I. The app reads these to populate dropdowns in the Add Beneficiary form.</div>
+          </div>
+        </div>
+        <div class="setup-step">
+          <div class="setup-step-n">4</div>
+          <div class="setup-step-body">
+            <div class="setup-step-title">Beneficiary ref format</div>
+            <div class="setup-step-desc">Beneficiary refs follow <code>OBA-001</code> format. The app auto-increments the last numeric ref when adding new beneficiaries. Ensure existing refs are consistent.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- SECTION: HOSTING OPTIONS -->
+  <div class="section-eyebrow">Hosting</div>
+  <div class="section-title">Where to Host the File</div>
+
+  <!-- HOSTING DECISION STRIP -->
+  <div style="background:var(--nav);border-radius:16px;padding:32px 36px;margin-bottom:20px;position:relative;overflow:hidden;">
+    <div style="position:absolute;inset:0;background:radial-gradient(ellipse at 90% 50%,rgba(168,200,50,0.05) 0%,transparent 60%);pointer-events:none;"></div>
+    <div style="font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:3px;text-transform:uppercase;color:var(--lime);margin-bottom:14px;position:relative;z-index:1;">Two Fundamental Approaches</div>
+    <div style="display:grid;grid-template-columns:1fr 40px 1fr;gap:0;align-items:center;position:relative;z-index:1;">
+
+      <div style="background:rgba(168,200,50,0.08);border:1.5px solid rgba(168,200,50,0.25);border-radius:12px;padding:22px 24px;">
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:1.6rem;color:var(--lime);letter-spacing:1px;margin-bottom:6px;">Hosted on a URL</div>
+        <div style="font-size:0.78rem;color:rgba(212,217,200,0.65);line-height:1.7;margin-bottom:14px;">Deploy the HTML file to any static web host. Volunteers access it via a stable web address — nothing to install, works on any device.</div>
+        <div style="display:flex;flex-wrap:wrap;gap:6px;">
+          <span style="font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:1px;text-transform:uppercase;padding:3px 8px;border-radius:5px;background:rgba(168,200,50,0.12);color:var(--lime);border:1px solid rgba(168,200,50,0.25);">GitHub Pages</span>
+          <span style="font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:1px;text-transform:uppercase;padding:3px 8px;border-radius:5px;background:rgba(168,200,50,0.12);color:var(--lime);border:1px solid rgba(168,200,50,0.25);">Netlify</span>
+          <span style="font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:1px;text-transform:uppercase;padding:3px 8px;border-radius:5px;background:rgba(168,200,50,0.12);color:var(--lime);border:1px solid rgba(168,200,50,0.25);">Cloudflare Pages</span>
+        </div>
+      </div>
+
+      <div style="display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:1.1rem;color:rgba(212,217,200,0.25);letter-spacing:1px;">OR</div>
+
+      <div style="background:rgba(74,124,89,0.1);border:1.5px solid rgba(74,124,89,0.3);border-radius:12px;padding:22px 24px;">
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:1.6rem;color:#9de0b0;letter-spacing:1px;margin-bottom:6px;">Run Locally from Google Drive</div>
+        <div style="font-size:0.78rem;color:rgba(212,217,200,0.65);line-height:1.7;margin-bottom:14px;">Store the HTML file in Google Drive and open it directly in a browser. Simple to update — just replace the file. No hosting account needed.</div>
+        <div style="display:flex;flex-wrap:wrap;gap:6px;">
+          <span style="font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:1px;text-transform:uppercase;padding:3px 8px;border-radius:5px;background:rgba(74,124,89,0.15);color:#9de0b0;border:1px solid rgba(74,124,89,0.3);">Google Drive</span>
+          <span style="font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:1px;text-transform:uppercase;padding:3px 8px;border-radius:5px;background:rgba(74,124,89,0.15);color:#9de0b0;border:1px solid rgba(74,124,89,0.3);">Download &amp; Open</span>
+          <span style="font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:1px;text-transform:uppercase;padding:3px 8px;border-radius:5px;background:rgba(74,124,89,0.15);color:#9de0b0;border:1px solid rgba(74,124,89,0.3);">file:// Protocol</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PROS / CONS COMPARISON TABLE -->
+  <div style="background:var(--white);border-radius:14px;border:1.5px solid var(--line);overflow:hidden;margin-bottom:20px;box-shadow:0 2px 12px rgba(30,33,24,0.05);">
+    <!-- Table header -->
+    <div style="display:grid;grid-template-columns:220px 1fr 1fr;background:var(--moss);">
+      <div style="padding:14px 20px;font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:2px;text-transform:uppercase;color:rgba(212,217,200,0.45);">Factor</div>
+      <div style="padding:14px 20px;border-left:1px solid rgba(255,255,255,0.08);">
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:1.1rem;letter-spacing:0.5px;color:var(--lime);">Hosted on a URL</div>
+        <div style="font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:1px;color:rgba(212,217,200,0.4);text-transform:uppercase;margin-top:2px;">GitHub Pages / Netlify / Cloudflare</div>
+      </div>
+      <div style="padding:14px 20px;border-left:1px solid rgba(255,255,255,0.08);">
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:1.1rem;letter-spacing:0.5px;color:#9de0b0;">Run Locally from Drive</div>
+        <div style="font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:1px;color:rgba(212,217,200,0.4);text-transform:uppercase;margin-top:2px;">Download HTML → Open in browser</div>
+      </div>
+    </div>
+
+    <!-- Rows -->
+    <div style="display:grid;grid-template-columns:220px 1fr 1fr;border-bottom:1px solid var(--line);background:var(--sage-lt);">
+      <div style="padding:14px 20px;font-family:'DM Mono',monospace;font-size:0.65rem;font-weight:700;color:var(--moss);text-transform:uppercase;letter-spacing:1px;display:flex;align-items:center;">Setup Complexity</div>
+      <div style="padding:14px 20px;border-left:1px solid var(--line);font-size:0.78rem;color:var(--body);line-height:1.6;"><span style="color:var(--sage);font-weight:700;">⚙ Medium.</span> Requires a Google Cloud project, OAuth Client ID with the correct origin URL set, and an account on a hosting platform.</div>
+      <div style="padding:14px 20px;border-left:1px solid var(--line);font-size:0.78rem;color:var(--body);line-height:1.6;"><span style="color:var(--sage);font-weight:700;">✓ Simple.</span> No hosting account needed. Store the file in a shared Google Drive folder. Each user downloads and opens it locally.</div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:220px 1fr 1fr;border-bottom:1px solid var(--line);">
+      <div style="padding:14px 20px;font-family:'DM Mono',monospace;font-size:0.65rem;font-weight:700;color:var(--moss);text-transform:uppercase;letter-spacing:1px;display:flex;align-items:center;">OAuth Origin Requirement</div>
+      <div style="padding:14px 20px;border-left:1px solid var(--line);font-size:0.78rem;color:var(--body);line-height:1.6;"><span style="color:var(--sage);font-weight:700;">✓ Straightforward.</span> Add your stable <code>https://</code> URL to the OAuth client's Authorised JavaScript Origins once and it works for everyone.</div>
+      <div style="padding:14px 20px;border-left:1px solid var(--line);font-size:0.78rem;color:var(--body);line-height:1.6;"><span style="color:var(--red);font-weight:700;">⚠ Tricky.</span> Local files use a <code>file://</code> origin. Google's OAuth library <strong>does not support <code>file://</code> origins</strong> — the sign-in popup will be blocked. A workaround is required (see below).</div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:220px 1fr 1fr;border-bottom:1px solid var(--line);background:var(--sage-lt);">
+      <div style="padding:14px 20px;font-family:'DM Mono',monospace;font-size:0.65rem;font-weight:700;color:var(--moss);text-transform:uppercase;letter-spacing:1px;display:flex;align-items:center;">Access &amp; Sharing</div>
+      <div style="padding:14px 20px;border-left:1px solid var(--line);font-size:0.78rem;color:var(--body);line-height:1.6;"><span style="color:var(--sage);font-weight:700;">✓ Ideal for teams.</span> Share a single URL with all volunteers. Bookmarkable. Works on phones, tablets, and any browser.</div>
+      <div style="padding:14px 20px;border-left:1px solid var(--line);font-size:0.78rem;color:var(--body);line-height:1.6;"><span style="color:#b07000;font-weight:700;">△ Per-device.</span> Each volunteer must download the file and open it manually. Slightly more friction, especially for non-technical users.</div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:220px 1fr 1fr;border-bottom:1px solid var(--line);">
+      <div style="padding:14px 20px;font-family:'DM Mono',monospace;font-size:0.65rem;font-weight:700;color:var(--moss);text-transform:uppercase;letter-spacing:1px;display:flex;align-items:center;">Updating the App</div>
+      <div style="padding:14px 20px;border-left:1px solid var(--line);font-size:0.78rem;color:var(--body);line-height:1.6;"><span style="color:var(--sage);font-weight:700;">✓ Instant.</span> Push a new file to your host. Everyone gets the update immediately on their next page load — no user action needed.</div>
+      <div style="padding:14px 20px;border-left:1px solid var(--line);font-size:0.78rem;color:var(--body);line-height:1.6;"><span style="color:#b07000;font-weight:700;">△ Manual pull.</span> Each volunteer must re-download the updated file from Google Drive. Easy to end up with users on different versions.</div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:220px 1fr 1fr;border-bottom:1px solid var(--line);background:var(--sage-lt);">
+      <div style="padding:14px 20px;font-family:'DM Mono',monospace;font-size:0.65rem;font-weight:700;color:var(--moss);text-transform:uppercase;letter-spacing:1px;display:flex;align-items:center;">localStorage Persistence</div>
+      <div style="padding:14px 20px;border-left:1px solid var(--line);font-size:0.78rem;color:var(--body);line-height:1.6;"><span style="color:var(--sage);font-weight:700;">✓ Reliable.</span> localStorage is keyed to the origin URL. Status flags (Prepared/Collected) persist correctly across sessions.</div>
+      <div style="padding:14px 20px;border-left:1px solid var(--line);font-size:0.78rem;color:var(--body);line-height:1.6;"><span style="color:#b07000;font-weight:700;">△ Works, but shared.</span> On <code>file://</code>, localStorage is shared across all local HTML files — no collision risk for this app, but worth knowing. Persists fine between opens.</div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:220px 1fr 1fr;border-bottom:1px solid var(--line);">
+      <div style="padding:14px 20px;font-family:'DM Mono',monospace;font-size:0.65rem;font-weight:700;color:var(--moss);text-transform:uppercase;letter-spacing:1px;display:flex;align-items:center;">Security</div>
+      <div style="padding:14px 20px;border-left:1px solid var(--line);font-size:0.78rem;color:var(--body);line-height:1.6;"><span style="color:var(--sage);font-weight:700;">✓ Standard.</span> HTTPS enforced. OAuth origin is locked to your domain. API key can be restricted to that domain in Google Cloud Console.</div>
+      <div style="padding:14px 20px;border-left:1px solid var(--line);font-size:0.78rem;color:var(--body);line-height:1.6;"><span style="color:#b07000;font-weight:700;">△ Weaker.</span> The HTML file (containing SHEET_ID, API key, Client ID) sits on a volunteer's machine. API key domain restriction cannot be applied to <code>file://</code>.</div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:220px 1fr 1fr;">
+      <div style="padding:14px 20px;font-family:'DM Mono',monospace;font-size:0.65rem;font-weight:700;color:var(--moss);text-transform:uppercase;letter-spacing:1px;display:flex;align-items:center;">Verdict</div>
+      <div style="padding:14px 20px;border-left:1px solid var(--line);font-size:0.78rem;color:var(--body);line-height:1.6;background:rgba(168,200,50,0.05);">
+        <span style="display:inline-block;background:var(--lime);color:var(--moss);font-family:'DM Mono',monospace;font-size:0.58rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;padding:3px 10px;border-radius:10px;margin-bottom:6px;">Best for teams</span><br>
+        Stable URL, instant updates, works on all devices, proper OAuth support. A little more initial setup — but pays off immediately.
+      </div>
+      <div style="padding:14px 20px;border-left:1px solid var(--line);font-size:0.78rem;color:var(--body);line-height:1.6;background:rgba(74,124,89,0.04);">
+        <span style="display:inline-block;background:rgba(74,124,89,0.15);color:var(--sage);font-family:'DM Mono',monospace;font-size:0.58rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;padding:3px 10px;border-radius:10px;border:1px solid rgba(74,124,89,0.25);margin-bottom:6px;">Good for testing</span><br>
+        Fastest way to verify the app works with your sheet. OAuth workaround required for production use — best treated as a dev/test method.
+      </div>
+    </div>
+  </div>
+
+  <!-- GOOGLE DRIVE LOCAL WORKAROUND -->
+  <div style="background:var(--gold-lt);border:1.5px solid rgba(200,130,10,0.35);border-radius:14px;padding:24px 28px;margin-bottom:20px;">
+    <div style="font-family:'Bebas Neue',sans-serif;font-size:1.3rem;letter-spacing:0.5px;color:var(--gold);margin-bottom:4px;">⚠ Running Locally: The OAuth Problem &amp; Workaround</div>
+    <div style="font-size:0.78rem;color:#5a3800;line-height:1.7;margin-bottom:16px;">Google's Identity Services (GIS) library rejects <code>file://</code> origins — the sign-in popup will fail silently or show an error. There are two practical workarounds if you want to run the file locally without a web host:</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+      <div style="background:rgba(200,130,10,0.08);border-radius:10px;padding:16px 18px;border:1px solid rgba(200,130,10,0.2);">
+        <div style="font-weight:700;font-size:0.82rem;color:#7a4500;margin-bottom:8px;">Option A — Use a local dev server</div>
+        <div style="font-size:0.75rem;color:#5a3800;line-height:1.7;margin-bottom:10px;">Serve the file over <code>http://localhost</code> instead of <code>file://</code>. Add <code>http://localhost:PORT</code> to your OAuth origins. This is the cleanest solution.</div>
+        <code style="display:block;font-family:'DM Mono',monospace;font-size:0.65rem;background:var(--nav);color:var(--lime);padding:10px 12px;border-radius:6px;line-height:1.9;white-space:pre;"><span style="color:rgba(212,217,200,0.35)"># Python (built-in)</span>
+python -m http.server 5500
+
+<span style="color:rgba(212,217,200,0.35)"># Node (npx, no install)</span>
+npx serve .
+
+<span style="color:rgba(212,217,200,0.35)"># VS Code: "Live Server" extension</span>
+<span style="color:#f0c070">Right-click → Open with Live Server</span></code>
+      </div>
+      <div style="background:rgba(200,130,10,0.08);border-radius:10px;padding:16px 18px;border:1px solid rgba(200,130,10,0.2);">
+        <div style="font-weight:700;font-size:0.82rem;color:#7a4500;margin-bottom:8px;">Option B — Store in Google Drive &amp; open via Drive's viewer</div>
+        <div style="font-size:0.75rem;color:#5a3800;line-height:1.7;">Upload the file to Google Drive. Right-click → <strong>Open with → Google Chrome</strong> (or download and open). Drive itself doesn't host it as a URL — but combined with Option A on a shared machine (e.g. a warehouse laptop), this is a workable team setup.</div>
+        <div style="margin-top:12px;padding:10px 12px;background:rgba(200,130,10,0.1);border-radius:6px;font-size:0.73rem;color:#6a3800;line-height:1.6;">
+          <strong>Shared machine tip:</strong> If one laptop is the dedicated "packing station", set up a local server on that machine and bookmark <code>localhost:5500</code>. Store the HTML in a synced Drive folder — updating is as simple as replacing the file in Drive.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- THREE HOSTING CARDS -->
+  <div style="font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:3px;text-transform:uppercase;color:var(--sage);display:flex;align-items:center;gap:12px;margin-bottom:14px;">
+    URL Hosting Options
+    <div style="flex:1;height:1px;background:var(--line);"></div>
+  </div>
+
+  <div class="hosting-grid">
+
+    <div class="hosting-card">
+      <div class="hosting-badge hb-rec">★ Recommended</div>
+      <div class="hosting-name">GitHub Pages</div>
+      <div class="hosting-desc">Free, reliable, version-controlled. Ideal for a small charity team — updates are a git commit away. Custom domain supported.</div>
+      <ul class="hosting-steps">
+        <li>Create a GitHub repository</li>
+        <li>Commit <code>index.html</code> to <code>main</code></li>
+        <li>Settings → Pages → Deploy from branch</li>
+        <li>URL: <code>yourorg.github.io/repo</code></li>
+        <li>Add URL to OAuth origins</li>
+      </ul>
+      <div style="margin-top:14px;padding-top:14px;border-top:1px solid var(--line);">
+        <div style="font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:6px;">Pros &amp; Cons</div>
+        <div style="font-size:0.72rem;color:var(--body);line-height:1.8;">
+          <span style="color:var(--sage);">✓</span> Free forever &nbsp;·&nbsp; <span style="color:var(--sage);">✓</span> Version history<br>
+          <span style="color:var(--sage);">✓</span> Custom domain &nbsp;·&nbsp; <span style="color:var(--sage);">✓</span> Team collaboration<br>
+          <span style="color:var(--red);">✗</span> Requires git knowledge
+        </div>
+      </div>
+    </div>
+
+    <div class="hosting-card">
+      <div class="hosting-badge hb-free">Free</div>
+      <div class="hosting-name">Netlify Drop</div>
+      <div class="hosting-desc">Drag-and-drop deployment. No account needed for a quick test. Create a free account for a persistent URL and instant redeploys.</div>
+      <ul class="hosting-steps">
+        <li>Go to <code>netlify.com/drop</code></li>
+        <li>Drag the HTML file onto the page</li>
+        <li>Get a random <code>*.netlify.app</code> URL</li>
+        <li>Add URL to OAuth origins</li>
+        <li>Upgrade for custom domain</li>
+      </ul>
+      <div style="margin-top:14px;padding-top:14px;border-top:1px solid var(--line);">
+        <div style="font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:6px;">Pros &amp; Cons</div>
+        <div style="font-size:0.72rem;color:var(--body);line-height:1.8;">
+          <span style="color:var(--sage);">✓</span> No account for initial test<br>
+          <span style="color:var(--sage);">✓</span> Simplest drag-and-drop deploy<br>
+          <span style="color:var(--red);">✗</span> Random URL without account<br>
+          <span style="color:var(--red);">✗</span> Custom domain requires paid plan
+        </div>
+      </div>
+    </div>
+
+    <div class="hosting-card">
+      <div class="hosting-badge hb-free">Free</div>
+      <div class="hosting-name">Cloudflare Pages</div>
+      <div class="hosting-desc">Fast global CDN with generous free tier. Connects to GitHub for automatic deploys on every commit — good for teams with evolving needs.</div>
+      <ul class="hosting-steps">
+        <li>Connect Cloudflare to GitHub repo</li>
+        <li>No build command needed</li>
+        <li>Set output directory to <code>/</code></li>
+        <li>Get a <code>*.pages.dev</code> URL</li>
+        <li>Add URL to OAuth origins</li>
+      </ul>
+      <div style="margin-top:14px;padding-top:14px;border-top:1px solid var(--line);">
+        <div style="font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:6px;">Pros &amp; Cons</div>
+        <div style="font-size:0.72rem;color:var(--body);line-height:1.8;">
+          <span style="color:var(--sage);">✓</span> Fast global CDN &nbsp;·&nbsp; <span style="color:var(--sage);">✓</span> Free custom domain<br>
+          <span style="color:var(--sage);">✓</span> Auto-deploy on git push<br>
+          <span style="color:var(--red);">✗</span> Slightly more setup than Netlify<br>
+          <span style="color:var(--red);">✗</span> Requires Cloudflare account
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- GOOGLE DRIVE AS DISTRIBUTION -->
+  <div style="font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:3px;text-transform:uppercase;color:var(--sage);display:flex;align-items:center;gap:12px;margin-top:6px;margin-bottom:14px;">
+    Local / Drive Options
+    <div style="flex:1;height:1px;background:var(--line);"></div>
+  </div>
+
+  <div class="hosting-grid">
+
+    <div class="hosting-card" style="border-color:rgba(74,124,89,0.3);background:rgba(74,124,89,0.03);">
+      <div class="hosting-badge" style="background:rgba(74,124,89,0.1);color:var(--sage);border:1px solid rgba(74,124,89,0.25);">Google Drive</div>
+      <div class="hosting-name">Drive + Local Server</div>
+      <div class="hosting-desc">Store the HTML in a shared Google Drive folder. Each volunteer downloads it and opens via a local server (<code>localhost</code>). Best for a shared warehouse PC setup.</div>
+      <ul class="hosting-steps">
+        <li>Upload HTML to a shared Drive folder</li>
+        <li>Each user downloads to their machine</li>
+        <li>Run <code>python -m http.server 5500</code></li>
+        <li>Add <code>http://localhost:5500</code> to OAuth origins</li>
+        <li>Bookmark <code>localhost:5500</code></li>
+      </ul>
+      <div style="margin-top:14px;padding-top:14px;border-top:1px solid var(--line);">
+        <div style="font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:6px;">Pros &amp; Cons</div>
+        <div style="font-size:0.72rem;color:var(--body);line-height:1.8;">
+          <span style="color:var(--sage);">✓</span> No hosting account needed<br>
+          <span style="color:var(--sage);">✓</span> File lives in familiar Drive<br>
+          <span style="color:var(--sage);">✓</span> Works offline (except API calls)<br>
+          <span style="color:var(--red);">✗</span> Manual download for each update<br>
+          <span style="color:var(--red);">✗</span> Requires running a local server<br>
+          <span style="color:var(--red);">✗</span> OAuth only works on localhost
+        </div>
+      </div>
+    </div>
+
+    <div class="hosting-card" style="border-color:rgba(200,130,10,0.3);background:rgba(200,130,10,0.03);">
+      <div class="hosting-badge hb-paid">⚠ Limited</div>
+      <div class="hosting-name">Drive: Direct file:// Open</div>
+      <div class="hosting-desc">Download the HTML from Drive and double-click to open directly in a browser. Quickest way to view the file — but Google OAuth <strong>will not work</strong> over <code>file://</code>.</div>
+      <ul class="hosting-steps">
+        <li>Upload HTML to Google Drive</li>
+        <li>Download file to desktop</li>
+        <li>Double-click to open in browser</li>
+        <li style="color:var(--red);">⚠ Sign-in popup will be blocked</li>
+        <li style="color:var(--red);">⚠ Cannot load or save sheet data</li>
+      </ul>
+      <div style="margin-top:14px;padding-top:14px;border-top:1px solid var(--line);">
+        <div style="font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:6px;">Pros &amp; Cons</div>
+        <div style="font-size:0.72rem;color:var(--body);line-height:1.8;">
+          <span style="color:var(--sage);">✓</span> Zero setup — just open the file<br>
+          <span style="color:var(--sage);">✓</span> Useful for viewing HTML structure<br>
+          <span style="color:var(--red);">✗</span> <strong>OAuth sign-in will fail</strong><br>
+          <span style="color:var(--red);">✗</span> No sheet read/write possible<br>
+          <span style="color:var(--red);">✗</span> Not a viable production method
+        </div>
+      </div>
+    </div>
+
+    <div class="hosting-card" style="border-color:rgba(142,28,94,0.2);background:rgba(142,28,94,0.03);">
+      <div class="hosting-badge" style="background:rgba(142,28,94,0.1);color:var(--purple);border:1px solid rgba(142,28,94,0.2);">Not Supported</div>
+      <div class="hosting-name">Google Drive Preview</div>
+      <div class="hosting-desc">Google Drive's built-in HTML preview mode renders the visual layout but strips JavaScript entirely. The app cannot function here at all.</div>
+      <ul class="hosting-steps" style="color:var(--muted);">
+        <li style="color:var(--red);">⚠ JS is stripped — app won't load</li>
+        <li style="color:var(--red);">⚠ No OAuth, no API calls</li>
+        <li style="color:var(--red);">⚠ Only static HTML renders</li>
+        <li>Fine for previewing layout only</li>
+        <li>Not a usable hosting method</li>
+      </ul>
+      <div style="margin-top:14px;padding-top:14px;border-top:1px solid var(--line);">
+        <div style="font-family:'DM Mono',monospace;font-size:0.55rem;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:6px;">Pros &amp; Cons</div>
+        <div style="font-size:0.72rem;color:var(--body);line-height:1.8;">
+          <span style="color:var(--sage);">✓</span> Instantly see HTML structure<br>
+          <span style="color:var(--red);">✗</span> JavaScript completely disabled<br>
+          <span style="color:var(--red);">✗</span> Cannot be used as the app<br>
+          <span style="color:var(--red);">✗</span> Misleading — looks like it works
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- SECTION: CONFIGURATION REFERENCE -->
+  <div class="config-block">
+
+    <div>
+      <div class="config-col-title">Constants Reference <span>config block</span></div>
+      <div class="config-row">
+        <div class="config-key">SHEET_ID</div>
+        <div class="config-desc">The unique ID of your Google Sheet, extracted from its URL between <code>/d/</code> and <code>/edit</code>.</div>
+      </div>
+      <div class="config-row">
+        <div class="config-key">API_KEY</div>
+        <div class="config-desc">Google Cloud API key restricted to the Sheets API. Used as a fallback read path for public sheets only.</div>
+      </div>
+      <div class="config-row">
+        <div class="config-key">CLIENT_ID</div>
+        <div class="config-desc">OAuth 2.0 Web Application client ID. Controls which domain can request tokens. Must match the hosted origin exactly.</div>
+      </div>
+      <div class="config-row">
+        <div class="config-key">SCOPES</div>
+        <div class="config-desc">Two OAuth scopes: <code>spreadsheets</code> (full read/write to sheets) and <code>userinfo.profile</code> (to display the user's name).</div>
+      </div>
+    </div>
+
+    <div>
+      <div class="config-col-title">Column Index Maps <span>constants</span></div>
+      <div class="config-row">
+        <div class="config-key">BC (BenColumns)</div>
+        <div class="config-desc">Maps 21 columns (A–U) of the Beneficiary Database tab. Zero-indexed. Drives all beneficiary data reads and new-row writes.</div>
+      </div>
+      <div class="config-row">
+        <div class="config-key">PC (PickColumns)</div>
+        <div class="config-desc">Maps 14 columns (A–N) of the Pick Plan tab. Includes STATUS (col H), STATUS_DATE (col M), and ITEM_CODE (col N) for sheet formula joins.</div>
+      </div>
+      <div class="config-row">
+        <div class="config-key">Pick Code Format</div>
+        <div class="config-desc">Codes follow <code>MMM YY-NNN</code> e.g. <code>MAR25-001</code>. The app appends <code>(N)</code> — the item count — when writing rows, e.g. <code>MAR25-001 (8)</code>.</div>
+      </div>
+      <div class="config-row">
+        <div class="config-key">Long-row Format</div>
+        <div class="config-desc">Each pick produces one sheet row <em>per item</em>. Row 1 of each pick carries meta data (ref, name, date, status); subsequent rows have only item + qty populated.</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- SECTION: SECURITY -->
+  <div class="section-eyebrow">Security & Scopes</div>
+  <div class="section-title">What Access Is Requested</div>
+
+  <div class="security-grid">
+
+    <div class="sec-card green">
+      <div class="sec-title green">✓ What the App CAN Do</div>
+      <div class="sec-item">
+        <span class="sec-bullet sb-green">✓</span>
+        Read all rows from the OBA Operations Google Sheet (any tab by name).
+      </div>
+      <div class="sec-item">
+        <span class="sec-bullet sb-green">✓</span>
+        Write new pick rows to Tab 2 (Pick Plan) via append and batchUpdate.
+      </div>
+      <div class="sec-item">
+        <span class="sec-bullet sb-green">✓</span>
+        Update status columns (H, M) in Tab 2 for existing picks.
+      </div>
+      <div class="sec-item">
+        <span class="sec-bullet sb-green">✓</span>
+        Append new rows to Tab 1 (Beneficiary Database) for new beneficiaries.
+      </div>
+      <div class="sec-item">
+        <span class="sec-bullet sb-green">✓</span>
+        Read the user's display name from Google UserInfo (no email stored).
+      </div>
+    </div>
+
+    <div class="sec-card amber">
+      <div class="sec-title amber">⚠ Scope Notes & Limitations</div>
+      <div class="sec-item">
+        <span class="sec-bullet sb-amber">!</span>
+        The <code>spreadsheets</code> scope grants access to <em>all</em> sheets in Google Drive that the user can access — not just this one. This is a Google API limitation; it cannot be scoped to a single sheet.
+      </div>
+      <div class="sec-item">
+        <span class="sec-bullet sb-amber">!</span>
+        The access token lives in memory only — cleared on sign-out or page close. It is never written to localStorage or cookies.
+      </div>
+      <div class="sec-item">
+        <span class="sec-bullet sb-amber">!</span>
+        Pick status (Prepared/Collected) and amendment notes are stored in <strong>localStorage per browser</strong> — not synced across devices or to the sheet automatically.
+      </div>
+      <div class="sec-item">
+        <span class="sec-bullet sb-amber">!</span>
+        The API key in the config is exposed in the HTML source. Restrict it to your hosting domain in Google Cloud Console to prevent misuse.
+      </div>
+    </div>
+
+  </div>
+
+  <!-- SECTION: TROUBLESHOOTING -->
+  <div class="section-eyebrow">Troubleshooting</div>
+  <div class="section-title">Common Issues</div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:50px;">
+    <div class="callout info">
+      <div class="callout-icon">🔐</div>
+      <div class="callout-text"><strong>Sign-in popup blocked:</strong> Browser popup blockers may block the Google OAuth window. Ensure the sign-in is triggered by a direct user click (not programmatically delayed). Add the hosted URL to browser popup allow-list if needed.</div>
+    </div>
+    <div class="callout warn">
+      <div class="callout-icon">🌐</div>
+      <div class="callout-text"><strong>401 / "origin not allowed":</strong> The URL you're accessing from isn't in the OAuth client's Authorised JavaScript Origins. Go to Google Cloud Console → Credentials → edit your OAuth client → add the exact URL (no trailing slash).</div>
+    </div>
+    <div class="callout info">
+      <div class="callout-icon">📊</div>
+      <div class="callout-text"><strong>No picks loading / blank home:</strong> Check the tab names in the spreadsheet exactly match the constants (<code>PICK_TAB</code>, <code>BEN_TAB</code> etc). Tab names are case-sensitive. Open browser DevTools → Console for specific API error messages.</div>
+    </div>
+    <div class="callout warn">
+      <div class="callout-icon">📝</div>
+      <div class="callout-text"><strong>Save fails / 403 error:</strong> The signed-in user doesn't have edit access to the sheet. Share the sheet with them as <strong>Editor</strong>. The API key alone only provides read access to public sheets — write operations require the OAuth token.</div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="doc-footer">
+    <div class="doc-footer-brand">
+      Olive Branch Aid
+      <small>Plan Creator — Architecture Reference</small>
+    </div>
+    <div class="doc-footer-note">
+      This application is a single static HTML file with zero dependencies beyond Google's CDN-hosted scripts. All logic is client-side. Updates are deployed by replacing the HTML file on your static host.
+    </div>
+    <div style="font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:2px;text-transform:uppercase;color:rgba(212,217,200,0.4);text-align:right;">
+      Sheets API v4<br>GIS OAuth 2.0<br>Static Hosting
+    </div>
+  </div>
+
+</div><!-- end page-wrap -->
+
+</body>
+</html>

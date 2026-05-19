@@ -1,0 +1,1083 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OBA Operations Suite — System Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --sage:       #4A7C6F;
+    --sage-light: #6B9E8F;
+    --sage-dark:  #2D5248;
+    --sage-faint: #EAF2EF;
+    --cream:      #FAF8F4;
+    --warm-grey:  #F4F1EC;
+    --border:     #D8E8E4;
+    --text:       #1E2B26;
+    --text-mid:   #4A5E58;
+    --text-soft:  #7A9490;
+    --red:        #C0392B;
+    --amber:      #D4860A;
+    --green:      #2E7D5E;
+    --blue:       #2563A8;
+    --red-faint:  #FDF0EE;
+    --amber-faint:#FEF9EC;
+    --green-faint:#EEF7F3;
+    --blue-faint: #EEF4FD;
+    --radius:     10px;
+    --shadow:     0 2px 12px rgba(0,0,0,0.07);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(--text); font-size: 16px; line-height: 1.7; }
+
+  .site-header { background: var(--sage-dark); padding: 32px 48px 28px; position: sticky; top: 0; z-index: 100; border-bottom: 3px solid var(--sage); }
+  .site-header .brand { display: flex; align-items: center; gap: 16px; margin-bottom: 6px; }
+  .site-header .logo-box { width: 44px; height: 44px; background: var(--sage); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-family: 'DM Serif Display', serif; font-size: 22px; color: #fff; letter-spacing: -1px; }
+  .site-header h1 { font-family: 'DM Serif Display', serif; font-size: 22px; color: #fff; font-weight: 400; }
+  .site-header .subtitle { font-size: 13px; color: rgba(255,255,255,0.55); letter-spacing: 0.05em; text-transform: uppercase; margin-left: 60px; }
+
+  .layout { display: grid; grid-template-columns: 260px 1fr; min-height: calc(100vh - 100px); max-width: 1240px; margin: 0 auto; }
+
+  .sidebar { background: var(--warm-grey); border-right: 1px solid var(--border); padding: 32px 0; position: sticky; top: 100px; height: calc(100vh - 100px); overflow-y: auto; }
+  .sidebar-title { font-size: 10px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-soft); padding: 0 24px 8px; }
+  .sidebar a { display: block; padding: 9px 24px; font-size: 13.5px; font-weight: 400; color: var(--text-mid); text-decoration: none; border-left: 3px solid transparent; transition: all 0.15s; }
+  .sidebar a:hover { background: var(--sage-faint); color: var(--sage-dark); border-left-color: var(--sage-light); }
+  .sidebar a.active { background: var(--sage-faint); color: var(--sage-dark); border-left-color: var(--sage); font-weight: 600; }
+  .sidebar-group { margin-bottom: 24px; }
+
+  main { padding: 48px 56px; max-width: 860px; }
+
+  .doc-section { margin-bottom: 64px; scroll-margin-top: 120px; }
+  .section-eyebrow { display: inline-flex; align-items: center; gap: 8px; font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--sage); background: var(--sage-faint); border: 1px solid var(--border); border-radius: 20px; padding: 4px 12px; margin-bottom: 12px; }
+  .doc-section h2 { font-family: 'DM Serif Display', serif; font-size: 30px; font-weight: 400; color: var(--sage-dark); margin-bottom: 8px; line-height: 1.2; }
+  .section-lead { font-size: 16px; color: var(--text-mid); margin-bottom: 28px; max-width: 640px; }
+  hr.section-rule { border: none; border-top: 1px solid var(--border); margin-bottom: 32px; }
+
+  .interaction { background: #fff; border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 20px; overflow: hidden; box-shadow: var(--shadow); }
+  .interaction-header { display: flex; align-items: flex-start; gap: 16px; padding: 20px 24px; background: var(--warm-grey); border-bottom: 1px solid var(--border); cursor: pointer; user-select: none; }
+  .interaction-header:hover { background: var(--sage-faint); }
+  .step-badge { min-width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; margin-top: 2px; }
+  .badge-sage  { background: var(--sage);      color: #fff; }
+  .badge-amber { background: var(--amber);     color: #fff; }
+  .badge-green { background: var(--green);     color: #fff; }
+  .badge-red   { background: var(--red);       color: #fff; }
+  .badge-blue  { background: var(--blue);      color: #fff; }
+  .badge-grey  { background: var(--text-soft); color: #fff; }
+  .interaction-header-text { flex: 1; }
+  .interaction-title { font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 3px; }
+  .interaction-subtitle { font-size: 13px; color: var(--text-soft); }
+  .chevron { color: var(--text-soft); font-size: 18px; margin-top: 6px; transition: transform 0.2s; flex-shrink: 0; }
+  .interaction.open .chevron { transform: rotate(180deg); }
+  .interaction-body { padding: 24px 24px 20px; display: none; }
+  .interaction.open .interaction-body { display: block; }
+
+  .pipeline { position: relative; padding-left: 36px; margin: 20px 0; }
+  .pipeline::before { content: ''; position: absolute; left: 11px; top: 8px; bottom: 8px; width: 2px; background: var(--border); }
+  .pipeline-step { position: relative; margin-bottom: 16px; font-size: 14.5px; color: var(--text-mid); }
+  .pipeline-step::before { content: ''; position: absolute; left: -29px; top: 6px; width: 10px; height: 10px; border-radius: 50%; background: var(--sage); border: 2px solid #fff; box-shadow: 0 0 0 2px var(--sage-light); }
+  .pipeline-step strong { color: var(--text); }
+
+  .writes-to { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+  .writes-tag { font-size: 12px; font-weight: 600; padding: 4px 10px; border-radius: 20px; border: 1px solid; }
+  .writes-tag.tab   { background: var(--sage-faint);  border-color: var(--sage-light); color: var(--sage-dark); }
+  .writes-tag.note  { background: var(--amber-faint); border-color: #E6B84A;           color: #7A4F00; }
+  .writes-tag.auto  { background: var(--blue-faint);  border-color: #80AADD;           color: var(--blue); }
+  .writes-tag.good  { background: var(--green-faint); border-color: #7DC4A8;           color: var(--green); }
+
+  .callout { border-radius: var(--radius); padding: 14px 18px; font-size: 14px; margin: 16px 0; display: flex; gap: 12px; align-items: flex-start; }
+  .callout-icon { font-size: 20px; flex-shrink: 0; margin-top: 1px; }
+  .callout.info    { background: var(--blue-faint);  border-left: 4px solid var(--blue);  color: #1a3a6b; }
+  .callout.warning { background: var(--amber-faint); border-left: 4px solid var(--amber); color: #5a3500; }
+  .callout.success { background: var(--green-faint); border-left: 4px solid var(--green); color: #1a4d35; }
+  .callout.danger  { background: var(--red-faint);   border-left: 4px solid var(--red);   color: #6b1a12; }
+
+  .rag-row { display: flex; align-items: center; gap: 14px; padding: 10px 0; border-bottom: 1px solid var(--border); font-size: 14px; }
+  .rag-row:last-child { border-bottom: none; }
+  .rag-dot { font-size: 22px; }
+
+  .status-table { width: 100%; border-collapse: collapse; font-size: 14px; margin: 16px 0; }
+  .status-table th { text-align: left; font-size: 11px; font-weight: 600; letter-spacing: 0.07em; text-transform: uppercase; color: var(--text-soft); padding: 8px 12px; border-bottom: 2px solid var(--border); }
+  .status-table td { padding: 10px 12px; border-bottom: 1px solid var(--border); color: var(--text-mid); vertical-align: top; }
+  .status-table tr:last-child td { border-bottom: none; }
+
+  .pill { display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; border-radius: 20px; padding: 3px 10px; }
+  .pill-planned   { background: #EEF4FD; color: #2563A8; border: 1px solid #B3CDED; }
+  .pill-prepared  { background: #FEF9EC; color: #7A4F00; border: 1px solid #E6C86A; }
+  .pill-collected { background: #EEF7F3; color: #1a4d35; border: 1px solid #7DC4A8; }
+  .pill-complete  { background: #2E7D5E; color: #fff; }
+  .pill-cancelled { background: #F5F0F0; color: #888; border: 1px solid #ccc; }
+
+  .formula { background: var(--sage-dark); color: #A8D5C4; font-family: 'Courier New', monospace; font-size: 13px; border-radius: var(--radius); padding: 16px 20px; margin: 16px 0; overflow-x: auto; line-height: 1.6; }
+  .formula .comment { color: #5A9E8A; }
+
+  .tabs-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 16px; }
+  .tab-card { background: #fff; border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 16px; font-size: 13px; }
+  .tab-card strong { display: block; color: var(--sage-dark); font-size: 14px; margin-bottom: 4px; }
+  .tab-card span { color: var(--text-soft); }
+
+  .hero { background: linear-gradient(135deg, var(--sage-dark) 0%, var(--sage) 100%); border-radius: 14px; padding: 36px 40px; color: #fff; margin-bottom: 48px; position: relative; overflow: hidden; }
+  .hero::after { content: 'OBA'; position: absolute; right: -10px; bottom: -30px; font-family: 'DM Serif Display', serif; font-size: 140px; color: rgba(255,255,255,0.06); pointer-events: none; }
+  .hero h2 { font-family: 'DM Serif Display', serif; font-size: 28px; font-weight: 400; margin-bottom: 10px; }
+  .hero p { font-size: 15px; color: rgba(255,255,255,0.8); max-width: 560px; line-height: 1.65; }
+
+  @media print {
+    .sidebar, .site-header { display: none !important; }
+    .layout { grid-template-columns: 1fr; }
+    main { padding: 20px; }
+    .interaction-body { display: block !important; }
+    .chevron { display: none; }
+  }
+  @media (max-width: 900px) {
+    .layout { grid-template-columns: 1fr; }
+    .sidebar { display: none; }
+    main { padding: 24px 20px; }
+    .tabs-grid { grid-template-columns: 1fr; }
+    .site-header { padding: 20px 24px 16px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="brand">
+    <div class="logo-box">OB</div>
+    <h1>OBA Operations Suite — System Guide</h1>
+  </div>
+  <div class="subtitle">Plain-language guide to how the stock control and pick plan system works</div>
+</header>
+
+<div class="layout">
+
+  <nav class="sidebar">
+    <div class="sidebar-group">
+      <div class="sidebar-title">Getting Started</div>
+      <a href="#overview" class="active">System Overview</a>
+      <a href="#spreadsheet">The Spreadsheet</a>
+    </div>
+    <div class="sidebar-group">
+      <div class="sidebar-title">Stock and Deliveries</div>
+      <a href="#stocktake">📦 Doing a Stock Take</a>
+      <a href="#deliveries">🚛 Logging a Delivery</a>
+      <a href="#stockledger">📊 Reading the Stock Ledger</a>
+      <a href="#forecast">📅 8-Week Forecast</a>
+    </div>
+    <div class="sidebar-group">
+      <div class="sidebar-title">Pick Plans</div>
+      <a href="#createpick">🛒 Creating a Pick Plan</a>
+      <a href="#pickstatuses">🔄 Pick Status Journey</a>
+      <a href="#prepared">✅ Marking as Prepared</a>
+      <a href="#collected">📬 Marking as Collected</a>
+      <a href="#complete">🏁 Marking as Complete</a>
+      <a href="#cancel">❌ Cancelling a Pick</a>
+      <a href="#amend">✏️ Amending a Pick</a>
+    </div>
+    <div class="sidebar-group">
+      <div class="sidebar-title">Dashboard and Reporting</div>
+      <a href="#dashboard">🖥️ The Dashboard</a>
+      <a href="#ragguide">🔴🟡🟢 RAG Status</a>
+      <a href="#backup">🆘 Emergency Backup Form</a>
+    </div>
+    <div class="sidebar-group">
+      <div class="sidebar-title">Reference</div>
+      <a href="#itemcodes">🔑 Item Codes</a>
+      <a href="#passwords">🔒 Sheet Protection</a>
+    </div>
+  </nav>
+
+  <main>
+
+    <div class="hero">
+      <h2>How the OBA System Works</h2>
+      <p>This guide explains every action you can take in the system — in plain English. For each thing you do, it tells you exactly what gets saved, what gets calculated, and what changes on screen.</p>
+    </div>
+
+    <!-- OVERVIEW -->
+    <section class="doc-section" id="overview">
+      <div class="section-eyebrow">📖 Getting Started</div>
+      <h2>System Overview</h2>
+      <p class="section-lead">The OBA Operations Suite is made up of two parts that work together: a set of apps you use on screen, and a Google Spreadsheet that stores all the data.</p>
+      <hr class="section-rule">
+
+      <div class="interaction open">
+        <div class="interaction-header" onclick="toggle(this)">
+          <div class="step-badge badge-sage">📱</div>
+          <div class="interaction-header-text">
+            <div class="interaction-title">The Three Apps</div>
+            <div class="interaction-subtitle">What each app is for</div>
+          </div>
+          <div class="chevron">▾</div>
+        </div>
+        <div class="interaction-body">
+          <p style="font-size:14px;color:var(--text-mid);margin-bottom:16px;">You interact with the system through three separate apps. Each one talks to the same Google Spreadsheet in the background.</p>
+          <table class="status-table">
+            <thead><tr><th>App</th><th>What it does</th></tr></thead>
+            <tbody>
+              <tr><td><strong>📋 Plan Creator</strong></td><td>Create pick plans for beneficiaries, update statuses (Planned, Prepared, Collected, Complete), and add new beneficiaries to the register.</td></tr>
+              <tr><td><strong>🚛 Delivery Log</strong></td><td>Log incoming deliveries, do stock takes, and record expected deliveries that have been arranged but not yet arrived.</td></tr>
+              <tr><td><strong>🖥️ Dashboard</strong></td><td>A read-only overview of everything — picks for the day, stock levels, deliveries, and the 8-week stock forecast.</td></tr>
+            </tbody>
+          </table>
+          <div class="callout info">
+            <div class="callout-icon">💡</div>
+            <div>All three apps need you to sign in with Google first. This is so the system knows who made each change — your name is recorded automatically on every entry.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SPREADSHEET -->
+    <section class="doc-section" id="spreadsheet">
+      <div class="section-eyebrow">📊 The Spreadsheet</div>
+      <h2>The Spreadsheet</h2>
+      <p class="section-lead">Everything the apps save ends up in the Google Spreadsheet. It has 12 tabs, each with a specific job. The apps write to the spreadsheet for you — you do not need to type into it directly.</p>
+      <hr class="section-rule">
+
+      <div class="tabs-grid">
+        <div class="tab-card"><strong>1. Beneficiary Database</strong><span>One row per person. Stores names, household size, dietary needs, and collection group.</span></div>
+        <div class="tab-card"><strong>2. Pick Plan</strong><span>Every item in every pick ever created. One row per item line. Written by the Plan Creator app.</span></div>
+        <div class="tab-card"><strong>3. To-Do List (2 Weeks)</strong><span>An auto-generated view of what needs doing in the next fortnight.</span></div>
+        <div class="tab-card"><strong>4. Stock Ledger</strong><span>The master stock list. Calculates current stock, committed stock, and forecast automatically from the other tabs.</span></div>
+        <div class="tab-card"><strong>5. Delivery Log</strong><span>Every delivery ever received. One row per item per delivery. Written by the Delivery Log app.</span></div>
+        <div class="tab-card"><strong>6. Expected Deliveries</strong><span>Deliveries that have been booked in but not yet received.</span></div>
+        <div class="tab-card"><strong>6. Stock Forecast (8 Weeks)</strong><span>Shows predicted stock levels week by week for the next eight weeks, based on planned picks and expected deliveries.</span></div>
+        <div class="tab-card"><strong>7. Admin Dashboard</strong><span>Key summary numbers visible directly inside the spreadsheet.</span></div>
+        <div class="tab-card"><strong>8. Post-Pick Audit Log</strong><span>Records any amendments made to picks after they were saved.</span></div>
+        <div class="tab-card"><strong>9. Template Config</strong><span>Sets the default pack quantities for each household size (e.g. 1 Adult, 4 People, 6+ People).</span></div>
+        <div class="tab-card"><strong>10. Reference Data</strong><span>Lists of sources and donor names used in the dropdown menus.</span></div>
+        <div class="tab-card"><strong>11. Stock Take Log</strong><span>Every stock take ever done. One row per item counted.</span></div>
+      </div>
+
+      <div class="callout warning" style="margin-top:20px;">
+        <div class="callout-icon">🔒</div>
+        <div>Most tabs are protected — you cannot edit them directly in the spreadsheet. The apps write to them on your behalf. Only a small number of cells (like Min Threshold in Tab 4) can be changed directly.</div>
+      </div>
+    </section>
+
+    <!-- STOCK TAKE -->
+    <section class="doc-section" id="stocktake">
+      <div class="section-eyebrow">📦 Stock</div>
+      <h2>Doing a Stock Take</h2>
+      <p class="section-lead">A stock take is when you physically count how much of each item you have on the shelves and enter that number into the system. It resets the starting point for all stock calculations.</p>
+      <hr class="section-rule">
+
+      <div class="callout info">
+        <div class="callout-icon">📱</div>
+        <div>Stock takes are done in the <strong>Delivery Log app</strong>. Tap "Stock Take" from the home screen.</div>
+      </div>
+
+      <div class="interaction open">
+        <div class="interaction-header" onclick="toggle(this)">
+          <div class="step-badge badge-sage">1</div>
+          <div class="interaction-header-text">
+            <div class="interaction-title">You open the Stock Take screen</div>
+            <div class="interaction-subtitle">What loads and what you see</div>
+          </div>
+          <div class="chevron">▾</div>
+        </div>
+        <div class="interaction-body">
+          <div class="pipeline">
+            <div class="pipeline-step">The app reads <strong>Tab 4 (Stock Ledger)</strong> to get the full list of all items, their sections, and current stock levels.</div>
+            <div class="pipeline-step">Items are shown grouped by section — for example, Breakfast and Drinks, Tinned Goods, Store Cupboard. Each section has its own colour, loaded directly from the spreadsheet.</div>
+            <div class="pipeline-step">Each item shows its current calculated stock level as a reference. You type in the actual quantity you have just counted on the shelf.</div>
+          </div>
+          <div class="callout success">
+            <div class="callout-icon">✅</div>
+            <div>You do not have to count every single item. You can leave items blank if you are only counting certain sections. Only items you enter a number for will be saved.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="interaction">
+        <div class="interaction-header" onclick="toggle(this)">
+          <div class="step-badge badge-sage">2</div>
+          <div class="interaction-header-text">
+            <div class="interaction-title">You enter quantities and tap Save</div>
+            <div class="interaction-subtitle">What gets written to the spreadsheet</div>
+          </div>
+          <div class="chevron">▾</div>
+        </div>
+        <div class="interaction-body">
+          <div class="pipeline">
+            <div class="pipeline-step">The app generates a unique <strong>Stock Take ID</strong> — for example <code>ST-2026-03-19-7342</code>. This ties all the counted items from this session together.</div>
+            <div class="pipeline-step">For every item you entered a quantity for, the app writes one new row to <strong>Tab 11 (Stock Take Log)</strong>.</div>
+            <div class="pipeline-step">Each row records: Stock Take ID, row number, the date and time, your name, the item name, its section, the quantity you counted, and the item code.</div>
+          </div>
+          <div class="writes-to">
+            <span class="writes-tag tab">→ Tab 11: Stock Take Log</span>
+            <span class="writes-tag auto">Auto: timestamp added</span>
+            <span class="writes-tag auto">Auto: your name recorded</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="interaction">
+        <div class="interaction-header" onclick="toggle(this)">
+          <div class="step-badge badge-green">3</div>
+          <div class="interaction-header-text">
+            <div class="interaction-title">Tab 4 (Stock Ledger) updates automatically</div>
+            <div class="interaction-subtitle">How the current stock figure is recalculated after a stock take</div>
+          </div>
+          <div class="chevron">▾</div>
+        </div>
+        <div class="interaction-body">
+          <p style="font-size:14px;color:var(--text-mid);margin-bottom:12px;">Tab 4 does not store a fixed number for stock. Instead it <em>calculates</em> the current stock level every time using the following logic:</p>
+          <div class="formula">
+<span class="comment"># Current Physical Stock (Column F in Tab 4)</span>
+Latest stock take count for this item
++ Deliveries received on or after that stock take date
+− Picks marked Prepared, Collected, or Complete
+  where the status was changed after the stock take date
+          </div>
+          <div class="callout info">
+            <div class="callout-icon">💡</div>
+            <div>This means stock levels are always live. The moment you save a stock take, every item you counted is used as the new starting point. Any deliveries or picks that happened after the count are automatically added or subtracted on top.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- DELIVERIES -->
+    <section class="doc-section" id="deliveries">
+      <div class="section-eyebrow">🚛 Deliveries</div>
+      <h2>Logging a Delivery</h2>
+      <p class="section-lead">When stock arrives at OBA, you record it in the Delivery Log app. This tells the system that more items are now available and adds them to the stock count.</p>
+      <hr class="section-rule">
+
+      <div class="callout info">
+        <div class="callout-icon">📱</div>
+        <div>Deliveries are logged in the <strong>Delivery Log app</strong>. Tap "New Delivery" from the home screen.</div>
+      </div>
+
+      <div class="interaction open">
+        <div class="interaction-header" onclick="toggle(this)">
+          <div class="step-badge badge-sage">1</div>
+          <div class="interaction-header-text">
+            <div class="interaction-title">You choose the source and donor</div>
+            <div class="interaction-subtitle">Community Drive, Supermarket Collection, or Individual Donor</div>
+          </div>
+          <div class="chevron">▾</div>
+        </div>
+        <div class="interaction-body">
+          <div class="pipeline">
+            <div class="pipeline-step">You pick the type of source — for example: Supermarket Collection, Community Drive, or Individual Donor.</div>
+            <div class="pipeline-step">You then pick or type the donor name. The donor list is loaded from <strong>Tab 10 (Reference Data)</strong>. If a donor is not on the list, you can add them on the spot.</div>
+            <div class="pipeline-step">You enter the expected delivery date (if you knew it in advance) and the actual date you received it today.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="interaction">
+        <div class="interaction-header" onclick="toggle(this)">
+          <div class="step-badge badge-sage">2</div>
+          <div class="interaction-header-text">
+            <div class="interaction-title">You enter the items and quantities</div>
+            <div class="interaction-subtitle">Counting out what arrived</div>
+          </div>
+          <div class="chevron">▾</div>
+        </div>
+        <div class="interaction-body">
+          <div class="pipeline">
+            <div class="pipeline-step">The app shows the full item grid, grouped by section — the same layout as the stock take screen.</div>
+            <div class="pipeline-step">You type in how many of each item arrived. Items you did not receive can be left at zero.</div>
+            <div class="pipeline-step">A running total updates as you go, showing the overall quantity recorded so far for this delivery.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="interaction">
+        <div class="interaction-header" onclick="toggle(this)">
+          <div class="step-badge badge-sage">3</div>
+          <div class="interaction-header-text">
+            <div class="interaction-title">You tap Save</div>
+            <div class="interaction-subtitle">What gets written to the spreadsheet</div>
+          </div>
+          <div class="chevron">▾</div>
+        </div>
+        <div class="interaction-body">
+          <div class="pipeline">
+            <div class="pipeline-step">A unique <strong>Delivery Ref</strong> is generated — for example <code>DEL-1773882741</code>.</div>
+            <div class="pipeline-step">For each item with a quantity above zero, the app writes one row to <strong>Tab 5 (Delivery Log)</strong>.</div>
+            <div class="pipeline-step">Each row contains: Delivery Ref, row number, source, donor name, expected date, received date, weight, item name, section, quantity, any notes, and the item code.</div>
+          </div>
+          <div class="writes-to">
+            <span class="writes-tag tab">→ Tab 5: Delivery Log</span>
+            <span class="writes-tag auto">Auto: Delivery Ref generated</span>
+            <span class="writes-tag good">Stock Ledger updates instantly</span>
+          </div>
+          <div class="callout success">
+            <div class="callout-icon">✅</div>
+            <div>As soon as the delivery is saved, Tab 4 (Stock Ledger) adds those quantities to the current physical stock figure for each item — because the received date is filled in, the formulas include it straight away.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="interaction">
+        <div class="interaction-header" onclick="toggle(this)">
+          <div class="step-badge badge-blue">+</div>
+          <div class="interaction-header-text">
+            <div class="interaction-title">Logging an Expected (Future) Delivery</div>
+            <div class="interaction-subtitle">Booking in a delivery before it arrives</div>
+          </div>
+          <div class="chevron">▾</div>
+        </div>
+        <div class="interaction-body">
+          <div class="pipeline">
+            <div class="pipeline-step">From the Delivery Log home screen, tap "Expected Deliveries" to log a delivery that has been arranged but not yet arrived.</div>
+            <div class="pipeline-step">You enter the source, donor, expected date, rough weight, and any notes. You do not enter item quantities at this stage — just the overall expected delivery.</div>
+            <div class="pipeline-step">This is saved to <strong>Tab 6 (Expected Deliveries)</strong> and shows with a ⏳ Pending status.</div>
+            <div class="pipeline-step">When the delivery arrives, you mark it as ✅ Received. The system then includes it in the stock forecast calculations.</div>
+          </div>
+          <div class="callout warning">
+            <div class="callout-icon">⚠️</div>
+            <div>Expected deliveries do <strong>not</strong> add to current physical stock until they are marked as Received. They only appear in the 8-week forecast as expected incoming stock.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- STOCK LEDGER -->
+    <section class="doc-section" id="stockledger">
+      <div class="section-eyebrow">📊 Stock Ledger</div>
+      <h2>Reading the Stock Ledger</h2>
+      <p class="section-lead">Tab 4 (Stock Ledger) is the master list of all stock. It shows four different numbers for every item and updates automatically whenever anything in the system changes.</p>
+      <hr class="section-rule">
+
+      <div class="interaction open">
+        <div class="interaction-header" onclick="toggle(this)">
+          <div class="step-badge badge-sage">📊</div>
+          <div class="interaction-header-text">
+            <div class="interaction-title">The five columns explained</div>
+            <div class="interaction-subtitle">What each number means</div>
+          </div>
+          <div class="chevron">▾</div>
+        </div>
+        <div class="interaction-body">
+          <table class="status-table">
+            <thead><tr><th>Column</th><th>What it shows</th></tr></thead>
+            <tbody>
+              <tr><td><strong>E — Min Threshold</strong></td><td>The minimum amount you want to have in stock at all times. <strong>You can edit this number directly in the spreadsheet.</strong> It is the only column in Tab 4 that is unlocked.</td></tr>
+              <tr><td><strong>F — Current Physical</strong></td><td>What you have on the shelf right now. Calculated from: latest stock take + deliveries received since then − picks that have been Prepared, Collected, or Completed after the stock take date.</td></tr>
+              <tr><td><strong>G — Committed</strong></td><td>Stock that is already earmarked for picks in <em>Planned</em> status. It is not gone yet — but it is spoken for and should not be used for anything else.</td></tr>
+              <tr><td><strong>H — Forecasted</strong></td><td>A forward-looking number: Physical stock + expected deliveries still to arrive − Committed (Planned) picks. Shows where you are heading.</td></tr>
+              <tr><td><strong>I — RAG Status</strong></td><td>A colour-coded health indicator. See the RAG guide section for what each colour means.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- RAG -->
+    <section class="doc-section" id="ragguide">
+      <div class="section-eyebrow">🔴🟡🟢 Status Indicators</div>
+      <h2>RAG Status — What the Colours Mean</h2>
+      <p class="section-lead">Every item in the stock ledger has a RAG status. RAG stands for Red, Amber, Green. It tells you at a glance whether stock levels are healthy or need attention.</p>
+      <hr class="section-rule">
+
+      <div class="rag-row">
+        <span class="rag-dot">⚫</span>
+        <div>
+          <strong>No Data</strong><br>
+          <span style="font-size:14px;color:var(--text-mid);">No stock take has been done for this item yet. The system does not have a counted figure to start from, so it cannot calculate a reliable stock level.</span>
+        </div>
+      </div>
+      <div class="rag-row">
+        <span class="rag-dot">🔴</span>
+        <div>
+          <strong>Below Minimum</strong><br>
+          <span style="font-size:14px;color:var(--text-mid);">Current physical stock is lower than the minimum threshold set in column E. Action is needed — try to restock this item as soon as possible.</span>
+        </div>
+      </div>
+      <div class="rag-row">
+        <span class="rag-dot">🟡</span>
+        <div>
+          <strong>Low Stock</strong><br>
+          <span style="font-size:14px;color:var(--text-mid);">Current stock is above the minimum, but less than one-and-a-half times the minimum. Stock is getting low — keep an eye on it and plan to replenish soon.</span>
+        </div>
+      </div>
+      <div class="rag-row">
+        <span class="rag-dot">🟢</span>
+        <div>
+          <strong>OK</strong><br>
+          <span style="font-size:14px;color:var(--text-mid);">Stock is at a healthy level — at least one-and-a-half times the minimum threshold. No action needed.</span>
+        </div>
+      </div>
+
+      <div class="callout info" style="margin-top:16px;">
+        <div class="callout-icon">💡</div>
+        <div>The Dashboard shows a summary badge next to the Stock navigation item — for example <strong>3🔴</strong> means three items are currently below their minimum. The badge turns purple if any items are critical.</div>
+      </div>
+    </section>
+
+    <!-- FORECAST -->
+    <section class="doc-section" id="forecast">
+      <div class="section-eyebrow">📅 Forecast</div>
+      <h2>The 8-Week Stock Forecast</h2>
+      <p class="section-lead">The forecast (Tab 6) shows a prediction of how much of each item you will have at the end of each of the next eight weeks, based on planned picks and expected deliveries.</p>
+      <hr class="section-rule">
+
+      <div class="interaction open">
+        <div class="interaction-header" onclick="toggle(this)">
+          <div class="step-badge badge-blue">📅</div>
+          <div class="interaction-header-text">
+            <div class="interaction-title">How the forecast is calculated week by week</div>
+            <div class="interaction-subtitle">What goes into each week's predicted number</div>
+          </div>
+          <div class="chevron">▾</div>
+        </div>
+        <div class="interaction-body">
+          <div class="formula">
+<span class="comment"># Week 1 (the current week, Monday to Sunday)</span>
+Current Physical Stock (from Tab 4 col F)
+− Planned picks scheduled within this week
++ Expected deliveries due within this week (not yet received)
+
+<span class="comment"># Week 2 onwards</span>
+Previous week's forecast figure
+− Planned picks scheduled in that week
++ Expected deliveries due in that week
+          </div>
+          <div class="callout warning">
+            <div class="callout-icon">⚠️</div>
+            <div>The forecast only includes picks with a <strong>Planned</strong> status. It does not include Prepared, Collected, or Complete picks. It also only includes deliveries with a blank received date — meaning they have not arrived yet. It is a prediction, not a guarantee.</div>
+          </div>
+          <p style="font-size:14px;color:var(--text-mid);margin-top:12px;">In the spreadsheet, cells shown in <strong style="color:var(--red)">red</strong> mean that week's predicted stock is below the minimum threshold. Cells in <strong style="color:var(--amber)">amber</strong> mean stock is getting low that week.</p>
+          <p style="font-size:14px;color:var(--text-mid);margin-top:8px;">In the Dashboard's Forecast view, you can hover over any cell to see exactly which picks and deliveries are pushing the number up or down that week.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- CREATE PICK -->
+    <section class="doc-section" id="createpick">
+      <div class="section-eyebrow">🛒 Pick Plans</div>
+      <h2>Creating a Pick Plan</h2>
+      <p class="section-lead">A pick plan is a list of items to pack for a specific beneficiary on a specific date. The system works out the right quantities automatically based on their household size.</p>
+      <hr class="section-rule">
+
+      <div class="callout info">
+        <div class="callout-icon">📱</div>
+        <div>Pick plans are created in the <strong>Plan Creator app</strong>. Select a beneficiary from the home screen to begin.</div>
+      </div>
+
+      <div class="interaction open">
+        <div class="interaction-header" onclick="toggle(this)">
+          <div class="step-badge badge-sage">1</div>
+          <div class="interaction-header-text">
+            <div class="interaction-title">You select a beneficiary</div>
+            <div class="interaction-subtitle">What loads when you tap a name</div>
+          </div>
+          <div class="chevron">▾</div>
+        </div>
+        <div class="interaction-body">
+          <div class="pipeline">
+            <div class="pipeline-step">The app reads <strong>Tab 1 (Beneficiary Database)</strong> to load the person's details — their household size, any dietary needs, and which collection group they belong to (Group 1 or Group 2).</div>
+            <div class="pipeline-step">It reads <strong>Tab 9 (Template Config)</strong> to find the correct default quantities for their household size — for example, a household of four people gets different amounts than a single adult.</div>
+            <div class="pipeline-step">It reads <strong>Tab 4 (Stock Ledger)</strong> to get the current list of all items, their sections, and section colours.</div>
+            <div class="pipeline-step">A pick plan is built showing every item with the suggested quantity already filled in. You can see the whole plan before saving anything.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="interaction">
+        <div class="interaction-header" onclick="toggle(this)">
+          <div class="step-badge badge-sage">2</div>
+          <div class="interaction-header-text">
+            <div class="interaction-title">You review and adjust quantities</div>
+            <div class="interaction-subtitle">Changing items before saving</div>
+          </div>
+          <div class="chevron">▾</div>
+        </div>
+        <div class="interaction-body">
+          <div class="pipeline">
+            <div class="pipeline-step">Each item shows its suggested quantity based on the template. You can change any quantity by tapping on it and typing a new number.</div>
+            <div class="pipeline-step">You can set an item to zero to exclude it from this pick — for example if you are out of that item or the beneficiary has asked not to receive it.</div>
+            <div class="pipeline-step">You set the scheduled date — the date the beneficiary is due to collect or receive their parcel.</div>
+          </div>
+          <div class="callout warning">
+            <div class="callout-icon">⚠️</div>
+            <div>If any quantities differ from the template, the app will show a <strong>Mismatch Notice</strong> before you save — a reminder that this pick differs from the standard. You can still go ahead and save as normal.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="interaction">
+        <div class="interaction-header" onclick="toggle(this)">
+          <div class="step-badge badge-sage">3</div>
+          <div class="interaction-header-text">
+            <div class="interaction-title">You tap Save Plan</div>
+            <div class="interaction-subtitle">What gets written to the spreadsheet</div>
+          </div>
+          <div class="chevron">▾</div>
+        </div>
+        <div class="interaction-body">
+          <div class="pipeline">
+            <div class="pipeline-step">A unique <strong>Pick Code</strong> is generated — for example <code>MAR26-042 (27)</code>. This is the reference for this pick. The number in brackets is the beneficiary's row number in the database.</div>
+            <div class="pipeline-step">For every item in the plan, the app writes one row to <strong>Tab 2 (Pick Plan)</strong>.</div>
+            <div class="pipeline-step">Each row contains: Pick Code, row number, beneficiary ref, first name, scheduled date, item name, section, quantity, item code. Status is set to <span class="pill pill-planned">Planned</span>.</div>
+            <div class="pipeline-step">Tab 4 (Stock Ledger) immediately updates the <strong>Committed</strong> figure (column G) to include these newly planned quantities.</div>
+          </div>
+          <div class="writes-to">
+            <span class="writes-tag tab">→ Tab 2: Pick Plan</span>
+            <span class="writes-tag auto">Auto: Pick Code generated</span>
+            <span class="writes-tag auto">Status set to Planned</span>
+            <span class="writes-tag note">Committed stock increases</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PICK STATUSES -->
+    <section class="doc-section" id="pickstatuses">
+      <div class="section-eyebrow">🔄 Status Journey</div>
+      <h2>The Pick Status Journey</h2>
+      <p class="section-lead">Every pick plan moves through a set of statuses from the moment it is created to when it is finished. Each status change updates the stock calculations.</p>
+      <hr class="section-rule">
+
+      <div class="interaction open">
+        <div class="interaction-header" onclick="toggle(this)">
+          <div class="step-badge badge-sage">📋</div>
+          <div class="interaction-header-text">
+            <div class="interaction-title">The five statuses and what they mean</div>
+            <div class="interaction-subtitle">And how each one affects the stock figures</div>
+          </div>
+          <div class="chevron">▾</div>
+        </div>
+        <div class="interaction-body">
+          <table class="status-table">
+            <thead><tr><th>Status</th><th>What it means</th><th>Effect on stock</th></tr></thead>
+            <tbody>
+              <tr>
+                <td><span class="pill pill-planned">Planned</span></td>
+                <td>The pick has been created but not yet packed. It is in the queue.</td>
+                <td>Counts as <strong>Committed</strong> stock — reserved but not yet taken off the shelf.</td>
+              </tr>
+              <tr>
+                <td><span class="pill pill-prepared">Prepared</span></td>
+                <td>The parcel has been packed and is sitting ready for collection.</td>
+                <td>Items are deducted from <strong>Physical</strong> stock. Removed from Committed.</td>
+              </tr>
+              <tr>
+                <td><span class="pill pill-collected">Collected</span></td>
+                <td>The beneficiary has come in and collected their parcel themselves.</td>
+                <td>Deducted from Physical stock (if not already done at Prepared stage). Removed from Committed.</td>
+              </tr>
+              <tr>
+                <td><span class="pill pill-complete">Complete</span></td>
+                <td>The pick is fully done — delivered, confirmed received, or closed off.</td>
+                <td>Deducted from Physical stock (if not already done). Pick is included in served history.</td>
+              </tr>
+              <tr>
+                <td><span class="pill pill-cancelled">Cancelled</span></td>
+                <td>The pick will not happen — beneficiary could not collect, or pick is no longer needed.</td>
+                <td>Released from Committed stock. Physical stock is unchanged — nothing was packed.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- PREPARED -->
+    <section class="doc-section" id="prepared">
+      <div class="section-eyebrow">✅ Status Change</div>
+      <h2>Marking a Pick as Prepared</h2>
+      <p class="section-lead">You mark a pick as Prepared when the parcel has been physically packed and is ready and waiting on the shelf for the beneficiary to collect.</p>
+      <hr class="section-rule">
+
+      <div class="interaction open">
+        <div class="interaction-header" onclick="toggle(this)">
+          <div class="step-badge badge-amber">→</div>
+          <div class="interaction-header-text">
+            <div class="interaction-title">You tap "Prepared" on a pick in the Plan Creator</div>
+            <div class="interaction-subtitle">Exactly what happens when you change the status</div>
+          </div>
+          <div class="chevron">▾</div>
+        </div>
+        <div class="interaction-body">
+          <div class="pipeline">
+            <div class="pipeline-step">The app updates the <strong>Status</strong> column in Tab 2 (Pick Plan) from <span class="pill pill-planned">Planned</span> to <span class="pill pill-prepared">Prepared</span> for all rows belonging to this pick code.</div>
+            <div class="pipeline-step">The <strong>Status Changed Date</strong> column (column M) is filled in with today's date and time automatically.</div>
+            <div class="pipeline-step">The <strong>Packed By</strong> field (column F) is filled in automatically with the name of the person who is signed in to the app.</div>
+            <div class="pipeline-step">Tab 4 (Stock Ledger) recalculates: these item quantities are now deducted from <strong>Physical Stock</strong> (column F) and removed from <strong>Committed</strong> (column G).</div>
+          </div>
+          <div class="writes-to">
+            <span class="writes-tag tab">→ Tab 2: Pick Plan (status updated)</span>
+            <span class="writes-tag auto">Auto: Status Changed Date filled</span>
+            <span class="writes-tag auto">Auto: Packed By filled</span>
+            <span class="writes-tag note">Physical stock decreases</span>
+          </div>
+          <div class="callout info">
+            <div class="callout-icon">💡</div>
+            <div>Once marked Prepared, the stock is treated as used. The Stock Ledger will show these items as no longer available — even though the parcel has not yet been collected. This is the correct behaviour: the stock has physically left the shelf.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- COLLECTED -->
+    <section class="doc-section" id="collected">
+      <div class="section-eyebrow">📬 Status Change</div>
+      <h2>Marking a Pick as Collected</h2>
+      <p class="section-lead">You mark a pick as Collected when the beneficiary has come in and taken their parcel away themselves — a collection rather than a delivery.</p>
+      <hr class="section-rule">
+
+      <div class="interaction open">
+        <div class="interaction-header" onclick="toggle(this)">
+          <div class="step-badge badge-green">→</div>
+          <div class="interaction-header-text">
+            <div class="interaction-title">You tap "Collected" on a pick</div>
+            <div class="interaction-subtitle">What happens in the spreadsheet</div>
+          </div>
+          <div class="chevron">▾</div>
+        </div>
+        <div class="interaction-body">
+          <div class="pipeline">
+            <div class="pipeline-step">The app updates the Status column in Tab 2 to <span class="pill pill-collected">Collected</span> for all rows in this pick code.</div>
+            <div class="pipeline-step">The Status Changed Date (column M) is updated to now.</div>
+            <div class="pipeline-step">If the pick was previously <span class="pill pill-planned">Planned</span> (it was never marked Prepared), the items are deducted from Physical Stock at this point — because they have now physically left the building.</div>
+            <div class="pipeline-step">If the pick was already marked <span class="pill pill-prepared">Prepared</span>, the stock was already deducted. This status change just moves it to the next stage in the journey.</div>
+          </div>
+          <div class="writes-to">
+            <span class="writes-tag tab">→ Tab 2: Pick Plan (status updated)</span>
+            <span class="writes-tag auto">Auto: Status Changed Date updated</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- COMPLETE -->
+    <section class="doc-section" id="complete">
+      <div class="section-eyebrow">🏁 Status Change</div>
+      <h2>Marking a Pick as Complete</h2>
+      <p class="section-lead">Complete means the pick is fully finished — the parcel has been delivered, confirmed received, or the whole process is done in whatever way applies to that beneficiary.</p>
+      <hr class="section-rule">
+
+      <div class="interaction open">
+        <div class="interaction-header" onclick="toggle(this)">
+          <div class="step-badge badge-green">✓</div>
+          <div class="interaction-header-text">
+            <div class="interaction-title">You tap "Complete" on a pick</div>
+            <div class="interaction-subtitle">What happens in the spreadsheet</div>
+          </div>
+          <div class="chevron">▾</div>
+        </div>
+        <div class="interaction-body">
+          <div class="pipeline">
+            <div class="pipeline-step">The app updates the Status column in Tab 2 to <span class="pill pill-complete">Complete</span> for all rows in this pick code.</div>
+            <div class="pipeline-step">The Status Changed Date (column M) is updated to now.</div>
+            <div class="pipeline-step">If the pick was still at <span class="pill pill-planned">Planned</span> status (was never Prepared or Collected), the items are deducted from Physical Stock now.</div>
+            <div class="pipeline-step">The pick will now appear in the <strong>Served This Month</strong> view and historical pick records on the Dashboard.</div>
+          </div>
+          <div class="writes-to">
+            <span class="writes-tag tab">→ Tab 2: Pick Plan (status updated)</span>
+            <span class="writes-tag good">Appears in served history</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CANCEL -->
+    <section class="doc-section" id="cancel">
+      <div class="section-eyebrow">❌ Status Change</div>
+      <h2>Cancelling a Pick</h2>
+      <p class="section-lead">If a beneficiary cannot collect, or a pick is no longer needed for any reason, you cancel it. This releases the reserved stock back into the available pool immediately.</p>
+      <hr class="section-rule">
+
+      <div class="interaction open">
+        <div class="interaction-header" onclick="toggle(this)">
+          <div class="step-badge badge-red">✕</div>
+          <div class="interaction-header-text">
+            <div class="interaction-title">You tap "Cancelled" on a pick</div>
+            <div class="interaction-subtitle">What happens to stock when a pick is cancelled</div>
+          </div>
+          <div class="chevron">▾</div>
+        </div>
+        <div class="interaction-body">
+          <div class="pipeline">
+            <div class="pipeline-step">The app updates the Status column in Tab 2 to <span class="pill pill-cancelled">Cancelled</span> for all rows in this pick code.</div>
+            <div class="pipeline-step">The Status Changed Date (column M) is updated.</div>
+            <div class="pipeline-step">Because Cancelled picks are not counted in the Committed calculation, the quantities are immediately released. Tab 4's Committed figure (column G) goes down, freeing up that stock for other picks.</div>
+            <div class="pipeline-step">Physical stock is <em>not</em> changed — the items were never packed or taken off the shelf.</div>
+          </div>
+          <div class="writes-to">
+            <span class="writes-tag tab">→ Tab 2: Pick Plan (status updated)</span>
+            <span class="writes-tag good">Committed stock released</span>
+            <span class="writes-tag auto">Physical stock unchanged</span>
+          </div>
+          <div class="callout danger">
+            <div class="callout-icon">⚠️</div>
+            <div><strong>Important:</strong> If a pick was already marked <strong>Prepared</strong> before being cancelled, the stock has already been deducted from the physical count — because the parcel was packed. In that case, you should do a fresh stock take to bring the figure back up to the correct level.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- AMEND -->
+    <section class="doc-section" id="amend">
+      <div class="section-eyebrow">✏️ Amendments</div>
+      <h2>Amending a Pick</h2>
+      <p class="section-lead">If you need to change the quantities in a pick after it has been saved — for example if an item is out of stock — you can use the Amend function in the Plan Creator app.</p>
+      <hr class="section-rule">
+
+      <div class="interaction open">
+        <div class="interaction-header" onclick="toggle(this)">
+          <div class="step-badge badge-blue">✏️</div>
+          <div class="interaction-header-text">
+            <div class="interaction-title">You open the Amend panel</div>
+            <div class="interaction-subtitle">What you can change and what gets recorded</div>
+          </div>
+          <div class="chevron">▾</div>
+        </div>
+        <div class="interaction-body">
+          <div class="pipeline">
+            <div class="pipeline-step">Tap the expand arrow on any pick in the Plan Creator to open its detail view, then tap <strong>Amend</strong>.</div>
+            <div class="pipeline-step">You can change the quantity for any item in the pick. You can also add a note to explain the reason for the change.</div>
+            <div class="pipeline-step">When you save, the app updates the Qty column (column L) in Tab 2 for each amended row.</div>
+            <div class="pipeline-step">A record of the amendment is also saved to <strong>Tab 8 (Post-Pick Audit Log)</strong> with the updated quantity, your name, and the reason given.</div>
+            <div class="pipeline-step">Tab 4 recalculates — the Committed or Physical stock figures update to reflect the new quantities.</div>
+          </div>
+          <div class="writes-to">
+            <span class="writes-tag tab">→ Tab 2: Pick Plan (qty updated)</span>
+            <span class="writes-tag tab">→ Tab 8: Post-Pick Audit Log</span>
+            <span class="writes-tag auto">Timestamp and user name recorded</span>
+            <span class="writes-tag note">Stock recalculates with new qty</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- DASHBOARD -->
+    <section class="doc-section" id="dashboard">
+      <div class="section-eyebrow">🖥️ Dashboard</div>
+      <h2>The Dashboard</h2>
+      <p class="section-lead">The Dashboard gives a live overview of everything happening across the system. It reads from the spreadsheet in real time. Nothing in the Dashboard can be edited — it is a read-only view.</p>
+      <hr class="section-rule">
+
+      <div class="interaction open">
+        <div class="interaction-header" onclick="toggle(this)">
+          <div class="step-badge badge-sage">🗓️</div>
+          <div class="interaction-header-text">
+            <div class="interaction-title">The day strip at the top</div>
+            <div class="interaction-subtitle">How selecting a day controls what you see</div>
+          </div>
+          <div class="chevron">▾</div>
+        </div>
+        <div class="interaction-body">
+          <div class="pipeline">
+            <div class="pipeline-step">At the top of the Dashboard is a 7-day strip showing the days of this week. Today is highlighted.</div>
+            <div class="pipeline-step">Tapping a different day updates the whole dashboard — the overview cards, the picks list, and the day heading all change to show that day's information.</div>
+            <div class="pipeline-step">The top bar greeting updates too — for example: <em>"Good Morning — Wednesday 25 Mar"</em>. The picks count in the top bar also updates to show the selected day's total.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="interaction">
+        <div class="interaction-header" onclick="toggle(this)">
+          <div class="step-badge badge-sage">📊</div>
+          <div class="interaction-header-text">
+            <div class="interaction-title">The four overview cards</div>
+            <div class="interaction-subtitle">What each card on the main screen shows</div>
+          </div>
+          <div class="chevron">▾</div>
+        </div>
+        <div class="interaction-body">
+          <table class="status-table">
+            <thead><tr><th>Card</th><th>What it shows</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Parcels — [Selected Day]</strong></td><td>How many collections and how many deliveries are scheduled for the day you have selected in the strip.</td></tr>
+              <tr><td><strong>Picks and Preparation</strong></td><td>How many picks need preparing today, how many are already ready, a progress bar showing completion, and a warning flag if any picks are overdue.</td></tr>
+              <tr><td><strong>Stock Snapshot</strong></td><td>A live summary of items that are critical (🔴 below minimum) or low (🟡 getting low), shown with colour-coded dots. Tap "View all stock" to see the full list.</td></tr>
+              <tr><td><strong>Deliveries In — Today</strong></td><td>Any confirmed deliveries that were logged as received today.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="interaction">
+        <div class="interaction-header" onclick="toggle(this)">
+          <div class="step-badge badge-blue">📅</div>
+          <div class="interaction-header-text">
+            <div class="interaction-title">The Forecast view in the Dashboard</div>
+            <div class="interaction-subtitle">How to use the 8-week grid</div>
+          </div>
+          <div class="chevron">▾</div>
+        </div>
+        <div class="interaction-body">
+          <div class="pipeline">
+            <div class="pipeline-step">Tap <strong>📅 Forecast</strong> in the bottom navigation bar to open the 8-week forecast grid.</div>
+            <div class="pipeline-step">The current week's column is highlighted with a coloured left border so you can find it instantly.</div>
+            <div class="pipeline-step">Items are grouped by section with dark header bands between them, matching the same layout as the other views.</div>
+            <div class="pipeline-step">Cells highlighted in red mean that week's predicted stock falls below the minimum threshold. Amber cells mean stock will be getting low.</div>
+            <div class="pipeline-step">Hover over any cell (on a computer) to see a tooltip showing exactly which picks are deducting stock that week (shown in amber) and which deliveries are adding to it (shown in green).</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="interaction">
+        <div class="interaction-header" onclick="toggle(this)">
+          <div class="step-badge badge-sage">🏷️</div>
+          <div class="interaction-header-text">
+            <div class="interaction-title">The navigation badges</div>
+            <div class="interaction-subtitle">The numbers next to the nav icons</div>
+          </div>
+          <div class="chevron">▾</div>
+        </div>
+        <div class="interaction-body">
+          <table class="status-table">
+            <thead><tr><th>Badge</th><th>What it means</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Stock — e.g. 3🔴 or 2🟡</strong></td><td>How many items are currently below minimum (red) or low (amber). The badge turns purple if there are critical items.</td></tr>
+              <tr><td><strong>Pick Plan — e.g. 12 +3⚠</strong></td><td>Total active picks for today, plus a warning count if any picks are overdue. The warning count turns purple if there are overdue picks.</td></tr>
+              <tr><td><strong>Forecast — 8W</strong></td><td>Always shows 8W to indicate the 8-week forecast is available.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- BACKUP FORM -->
+    <section class="doc-section" id="backup">
+      <div class="section-eyebrow">🆘 Emergency</div>
+      <h2>Emergency Backup Form</h2>
+      <p class="section-lead">The Backup Form is for emergencies only — for example if the main apps are unavailable, the internet is down, or you cannot sign in to Google. It lets you log stock takes and deliveries in a simplified way.</p>
+      <hr class="section-rule">
+
+      <div class="callout danger">
+        <div class="callout-icon">🆘</div>
+        <div><strong>Only use this form if the main apps are not working.</strong> It writes directly to the spreadsheet with fewer safety checks. Use the Plan Creator and Delivery Log apps for all normal day-to-day operations.</div>
+      </div>
+
+      <div class="interaction open">
+        <div class="interaction-header" onclick="toggle(this)">
+          <div class="step-badge badge-red">!</div>
+          <div class="interaction-header-text">
+            <div class="interaction-title">What the Backup Form can do</div>
+            <div class="interaction-subtitle">Its two emergency functions</div>
+          </div>
+          <div class="chevron">▾</div>
+        </div>
+        <div class="interaction-body">
+          <table class="status-table">
+            <thead><tr><th>Mode</th><th>What it does</th><th>Writes to</th></tr></thead>
+            <tbody>
+              <tr>
+                <td><strong>Emergency Stock Take</strong></td>
+                <td>Enter counted quantities for any items. Works exactly like the normal stock take but through the simplified form.</td>
+                <td>Tab 11 (Stock Take Log)</td>
+              </tr>
+              <tr>
+                <td><strong>Emergency Delivery Log</strong></td>
+                <td>Record a delivery that has arrived. Enter the source, donor, and quantities received.</td>
+                <td>Tab 5 (Delivery Log)</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="callout warning" style="margin-top:12px;">
+            <div class="callout-icon">⚠️</div>
+            <div>The Backup Form loads its item list and source list directly from the live spreadsheet, so it is always up to date even in an emergency. It still requires a Google sign-in to work.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ITEM CODES -->
+    <section class="doc-section" id="itemcodes">
+      <div class="section-eyebrow">🔑 Reference</div>
+      <h2>Item Codes</h2>
+      <p class="section-lead">Every item in the system has a unique code. These codes are used behind the scenes to make sure all calculations are accurate — even if an item's display name is ever slightly changed.</p>
+      <hr class="section-rule">
+
+      <div class="interaction open">
+        <div class="interaction-header" onclick="toggle(this)">
+          <div class="step-badge badge-grey">🔑</div>
+          <div class="interaction-header-text">
+            <div class="interaction-title">How item codes work and the naming convention</div>
+            <div class="interaction-subtitle">Why they exist and how they are structured</div>
+          </div>
+          <div class="chevron">▾</div>
+        </div>
+        <div class="interaction-body">
+          <p style="font-size:14px;color:var(--text-mid);margin-bottom:12px;">Item codes follow a <strong>prefix + number</strong> format. Each section of the stock list has its own prefix:</p>
+          <table class="status-table">
+            <thead><tr><th>Prefix</th><th>Section</th><th>Example codes</th></tr></thead>
+            <tbody>
+              <tr><td><code>BRK</code></td><td>Breakfast and Drinks</td><td>BRK-001, BRK-002, BRK-003...</td></tr>
+              <tr><td><code>TIN</code></td><td>Tinned Goods</td><td>TIN-001, TIN-002, TIN-003...</td></tr>
+              <tr><td><code>STC</code></td><td>Store Cupboard</td><td>STC-001, STC-002, STC-003...</td></tr>
+              <tr><td><code>FFV</code></td><td>Free From / Vegan / Vegetarian</td><td>FFV-001, FFV-002...</td></tr>
+              <tr><td><code>TOI</code></td><td>Toiletries</td><td>TOI-001, TOI-002...</td></tr>
+              <tr><td><code>BAB</code></td><td>Baby Products</td><td>BAB-001, BAB-002...</td></tr>
+              <tr><td><code>CLN</code></td><td>Cleaning Products</td><td>CLN-001, CLN-002...</td></tr>
+            </tbody>
+          </table>
+          <div class="callout info">
+            <div class="callout-icon">💡</div>
+            <div>Item codes are stored in Tab 4 (Stock Ledger) column B and written to every other tab automatically by the apps. You never need to type them yourself — the system handles everything. You will see them in Tab 2, Tab 5, and Tab 11 as confirmation that the record has linked correctly.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PASSWORDS -->
+    <section class="doc-section" id="passwords">
+      <div class="section-eyebrow">🔒 Security</div>
+      <h2>Sheet Protection</h2>
+      <p class="section-lead">Most tabs in the spreadsheet are protected (locked). This stops accidental edits and keeps the data clean and accurate. The apps write to the protected tabs on your behalf.</p>
+      <hr class="section-rule">
+
+      <div class="interaction open">
+        <div class="interaction-header" onclick="toggle(this)">
+          <div class="step-badge badge-grey">🔒</div>
+          <div class="interaction-header-text">
+            <div class="interaction-title">What is locked and what you can edit directly</div>
+            <div class="interaction-subtitle">A summary of which cells you can type into in the spreadsheet</div>
+          </div>
+          <div class="chevron">▾</div>
+        </div>
+        <div class="interaction-body">
+          <table class="status-table">
+            <thead><tr><th>Tab</th><th>What you can edit directly</th></tr></thead>
+            <tbody>
+              <tr><td><strong>4 — Stock Ledger</strong></td><td>Only column E (Min Threshold). You can change the minimum stock level for each item here whenever needed.</td></tr>
+              <tr><td><strong>9 — Template Config</strong></td><td>Columns D to I — the quantity values per household size. Change these to update the default pack amounts across all future picks.</td></tr>
+              <tr><td><strong>10 — Reference Data</strong></td><td>Rows 4 onwards. Add or edit donor names and delivery sources here.</td></tr>
+              <tr><td><strong>1 — Beneficiary Database</strong></td><td>Most columns except Ref No. (column A, which is auto-set). Dropdown menus are provided for Group, C/D, PR/DR, Frequency, Status, Dietary, and Allergies.</td></tr>
+              <tr><td><strong>All other tabs</strong></td><td>Fully locked. Written only by the apps. If you need to correct data in these tabs, speak to the system administrator.</td></tr>
+            </tbody>
+          </table>
+          <div class="callout info">
+            <div class="callout-icon">💡</div>
+            <div>The admin password for protected sheets is available from the OBA team. It should only be used by the system administrator and not shared outside the operations team.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div style="margin-top:48px;padding:32px;background:var(--sage-faint);border-radius:14px;border:1px solid var(--border);text-align:center;">
+      <div style="font-size:24px;margin-bottom:8px;">📖</div>
+      <div style="font-family:'DM Serif Display',serif;font-size:20px;color:var(--sage-dark);margin-bottom:6px;">End of System Guide</div>
+      <div style="font-size:13px;color:var(--text-soft);">OBA Operations Suite — v2 &nbsp;·&nbsp; Last updated March 2026</div>
+    </div>
+
+  </main>
+</div>
+
+<script>
+  function toggle(header) {
+    header.closest('.interaction').classList.toggle('open');
+  }
+  const sections = document.querySelectorAll('.doc-section');
+  const links = document.querySelectorAll('.sidebar a');
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        links.forEach(l => l.classList.remove('active'));
+        const m = document.querySelector('.sidebar a[href="#' + e.target.id + '"]');
+        if (m) m.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-20% 0px -70% 0px' });
+  sections.forEach(s => obs.observe(s));
+</script>
+</body>
+</html>

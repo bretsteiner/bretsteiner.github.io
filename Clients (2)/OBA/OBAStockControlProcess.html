@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Food Bank Journey</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@900&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+:root {
+        --brand-navy: #1a2f4a;
+        --brand-coral: #ff6f61;
+        --brand-teal: #00bcd4;
+        --brand-light: #fef2f2;
+        --brand-white: #ffffff;
+        --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        --bg-dark: #1a2f4a;
+        --text-light: #f7f8f9;
+        --accent-coral: #ff6f61;
+        --space-md: 1rem;
+        --space-xl: 2rem;
+        --space-2xl: 3rem;
+        --radius-md: 0.75rem;
+        --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+
+body {
+        font-family: 'Roboto', sans-serif;
+        background-color: #f0f4f8;
+        background-image: radial-gradient(var(--brand-teal) 0.5px, transparent 0.5px);
+        background-size: 30px 30px;
+        margin: 0;
+        padding: 0; /* Removed padding here to allow full-width elements */
+        color: var(--brand-navy);
+        overflow-x: hidden; /* Prevents horizontal scroll from full-width footer */
+    }
+
+        header {
+            text-align: center;
+            margin-bottom: 80px;
+        }
+
+        h1 {
+            font-family: 'Inter', sans-serif;
+            font-weight: 900;
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            color: var(--brand-navy);
+            margin: 0;
+            text-transform: uppercase;
+            line-height: 0.9;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: var(--brand-coral);
+            font-weight: 700;
+            margin-top: 10px;
+        }
+
+        /* The Winding Journey Container */
+        .journey-container {
+            max-width: 900px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        /* The Central Path Line */
+        .journey-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            width: 4px;
+            border-left: 4px dashed var(--brand-navy);
+            opacity: 0.2;
+            transform: translateX(-50%);
+            z-index: 0;
+        }
+
+        .checkpoint {
+            position: relative;
+            width: 100%;
+            margin-bottom: 100px;
+            display: flex;
+            justify-content: center;
+            z-index: 1;
+        }
+
+        /* Alternating layout */
+        .checkpoint:nth-child(even) { flex-direction: row-reverse; }
+
+.content-box {
+    width: 45%;
+    background: var(--brand-white);
+    /* INCREASED TOP PADDING FROM 30px TO 50px */
+    padding: 50px 30px 30px 30px; 
+    border-radius: 2rem;
+    box-shadow: var(--shadow-lg);
+    position: relative;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    border: 3px solid transparent;
+}
+
+        .content-box:hover {
+            transform: scale(1.05) rotate(1deg);
+            border-color: var(--brand-teal);
+        }
+
+    .icon-circle {
+    width: 70px;
+    height: 70px;
+    background: var(--brand-navy);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 30px;
+    position: absolute;
+    /* RAISED HIGHER OFF THE CARD */
+    top: -45px; 
+    left: 25px;
+    border: 4px solid var(--brand-white);
+    box-shadow: 0 10px 15px rgba(0,0,0,0.1);
+    z-index: 10;
+}
+
+.checkpoint:nth-child(even) .icon-circle {
+    left: auto;
+    right: 25px;
+}
+
+.step-tag {
+    font-family: 'Inter';
+    font-weight: 900;
+    color: var(--brand-coral);
+    font-size: 0.8rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    /* ADDED MARGIN TO PUSH AWAY FROM ICON */
+    margin-bottom: 5px; 
+    display: block; 
+}
+
+/* Fix for Step 07 which has no icon currently */
+.checkpoint:last-child .content-box {
+    padding-top: 30px;
+}
+
+        h3 {
+            margin: 10px 0;
+            font-family: 'Inter';
+            font-size: 1.5rem;
+        }
+
+        p {
+            font-size: 0.95rem;
+            color: #4b5563;
+            margin-bottom: 0;
+        }
+
+        /* Special Highlights */
+        .alert-box {
+            background: var(--brand-light);
+            border: 2px dashed var(--brand-coral);
+            padding: 10px;
+            border-radius: 1rem;
+            margin-top: 15px;
+            font-size: 0.85rem;
+            color: var(--brand-coral);
+            font-weight: 700;
+        }
+
+        /* Animations */
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+
+        .floating { animation: float 4s ease-in-out infinite; }
+
+        @media (max-width: 768px) {
+            .journey-container::before { left: 20px; }
+            .checkpoint { justify-content: flex-start; padding-left: 50px; }
+            .checkpoint:nth-child(even) { flex-direction: row; }
+            .content-box { width: 90%; }
+        }
+        /* Layout for the Sub-Boxes within the Journey Card */
+.child-box-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(0,0,0,0.05);
+}
+
+.sub-box {
+    background: var(--brand-light); /* Polite Red/Pink */
+    padding: 15px;
+    border-radius: var(--radius-sm);
+    border-top: 4px solid var(--brand-coral);
+    position: relative;
+}
+
+.sub-box.teal-border {
+    border-top-color: var(--brand-teal);
+}
+
+.sub-num {
+    position: absolute;
+    top: -10px;
+    right: 10px;
+    background: var(--brand-navy);
+    color: white;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    font-size: 0.7rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 900;
+}
+
+.sub-box h4 {
+    font-family: 'Inter';
+    font-size: 0.75rem;
+    margin: 0 0 5px 0;
+    color: var(--brand-navy);
+    text-transform: uppercase;
+}
+
+.sub-box p {
+    font-size: 0.7rem;
+    line-height: 1.3;
+    margin: 0;
+}
+
+/* Responsive fix for small screens */
+@media (max-width: 600px) {
+    .child-box-grid {
+        grid-template-columns: 1fr;
+    }
+}
+/* result node */
+.result-node {
+        grid-column: 1 / -1; /* Spans across all 3 child box columns */
+        background: var(--brand-light);
+        color: white;
+        margin-top: 25px;
+        padding: 20px;
+        border-radius: var(--radius-sm);
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        border-left: 8px solid var(--brand-teal);
+        box-shadow: var(--shadow-md);
+        position: relative;
+    }
+
+    /* Animated connector from the child boxes to the result */
+    .result-node::before {
+        content: '';
+        position: absolute;
+        top: -25px;
+        left: 50%;
+        width: 2px;
+        height: 25px;
+        background: var(--brand-light);
+        opacity: 0.5;
+    }
+
+    .result-icon {
+        font-size: 2rem;
+        background: rgba(255,255,255,0.1);
+        width: 50px;
+        height: 50px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+    }
+
+    .result-text h4 {
+        font-family: 'Inter';
+        font-weight: 900;
+        margin: 0;
+        color: var(--brand-teal);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .result-text p {
+        margin: 5px 0 0 0;
+        font-size: 0.9rem;
+        opacity: 0.9;
+    }
+    /* Mini Hero Styles */
+/* MINI HERO - Dark Background & White Text */
+/* Update the Mini Hero for vertical centering and left alignment */
+.minihero {
+  background: var(--brand-navy) !important;
+  color: var(--brand-white) !important;
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* Vertically centers the content */
+  align-items: flex-start;  /* Left aligns the content */
+  min-height: 15vh;        
+  text-align: left;        /* Left justifies the text */
+  padding: var(--space-xl) 10%; /* Provides a margin from the left edge */
+}
+
+.minihero h2 {
+  font-family: 'Inter', sans-serif !important; /* Fixes the font to match the bold style */
+  font-weight: 900;
+  font-size: 2rem;
+  margin: 0;
+  color: var(--brand-white) !important;
+}
+
+.minihero .sub-heading {
+  font-family: 'Inter', sans-serif;
+  font-weight: 700;
+  margin-top: 5px;
+  color: var(--brand-white) !important;
+} 
+
+/* Center the Main Title Section and add space before Step 1 */
+section.align--centered {
+    text-align: center;
+    padding: 60px 0 100px 0; /* Added significant bottom padding (100px) */
+}
+/* ========================================
+   Footer
+======================================== */
+.footer {
+  background: var(--bg-dark);
+  color: var(--text-light);
+  padding: var(--space-2xl) 0;
+  
+  /* These lines allow the footer to ignore the body's 20px padding */
+  width: 100vw;
+  position: relative;
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
+}
+
+/* Ensure the content inside the footer stays aligned with your content */
+.footer .container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.footer__top {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xl);
+  align-items: center;
+  margin-bottom: var(--space-2xl);
+}
+
+@media (min-width: 768px) {
+  .footer__top {
+    flex-direction: row;
+    justify-content: space-between;
+  }
+}
+
+.footer__brand {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+}
+
+.footer__name {
+  font-weight: 900;
+  font-size: 1.125rem;
+}
+
+.footer__title {
+  font-size: 0.875rem;
+  opacity: 0.7;
+}
+
+.footer__separator {
+  opacity: 0.3;
+}
+
+.footer__social {
+  display: flex;
+  gap: var(--space-md);
+}
+
+.footer__social-link {
+  width: 2.75rem;
+  height: 2.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-md);
+  color: white;
+  transition: background var(--transition-fast), transform var(--transition-fast);
+}
+
+.footer__social-link:hover {
+  background: var(--accent-coral);
+  transform: translateY(-2px);
+}
+
+.footer__bottom {
+  padding-top: var(--space-2xl);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  text-align: center;
+}
+
+.footer__copyright {
+  font-size: 0.875rem;
+  opacity: 0.7;
+  margin-bottom: 0;
+}
+/* Utility classes used in the HTML above */
+.accent--attention {
+  color: var(--accent-coral);
+}
+
+.sub-heading {
+  font-weight: 700;
+  line-height: 1;
+  margin-top: 0;
+}
+
+.container {
+  width: 100%;
+  max-width: var(--container-max);
+  margin: 0 auto;
+  padding: 0 var(--space-lg);
+}
+    </style>
+</head>
+<body>
+  <header class="minihero" id="top">
+      <section>
+        <h2 class="type--black">Bret Steiner</h2>
+        <h3 class="sub-heading type--black">
+          Product <span class="accent--attention">Accelerator</span>
+        </h3>
+      </section>
+  </header>
+
+
+<section class="align--centered">
+        <div class="floating" style="font-size: 3rem;">📦</div>
+        <h1>The Journey of a Pack</h1>
+        <div class="subtitle">From Warehouse Shelves to Happy Families</div>
+<br><BR>
+</section>
+    <div class="journey-container">
+ <!-- Step 1  -->       
+<div class="checkpoint">
+    <div class="content-box main-stage-card">
+        <div class="icon-circle">📦</div>
+        <div class="step-tag">Step 01</div>
+        <h3>The Great Intake</h3>
+        <p>We track by <strong>Category & Weight</strong> to keep the warehouse moving fast. No individual barcodes, just bulk efficiency.</p>
+
+        <div class="child-box-grid">
+            <div class="sub-box">
+                <div class="sub-num">1</div>
+                <h4>Categorize</h4>
+                <p>Group items into families like "Pulses" or "Tinned Veg."</p>
+            </div>
+            
+            <div class="sub-box teal-border">
+                <div class="sub-num">2</div>
+                <h4>Weigh-In</h4>
+                <p>Place the category crate on the scale for a total Kg count.</p>
+            </div>
+            
+            <div class="sub-box">
+                <div class="sub-num">3</div>
+                <h4>Log Entries</h4>
+                <p>Record Weight + Category into the Stock Entry tab.</p>
+            </div>
+        </div>
+        <div class="result-node fade-up">
+    <div class="result-icon">✅</div>
+    <div class="result-text">
+        <h4>Provisions Ready</h4>
+        <p>Stock is reconciled, categories are filled, and the warehouse is <strong>ready for distribution.</strong></p>
+    </div>
+</div>
+    </div>
+</div>
+
+
+<!-- Step 2 A warm Welcome -->
+<div class="checkpoint">
+    <div class="content-box main-stage-card">
+        <div class="icon-circle">👋</div>
+        <div class="step-tag">Step 02</div>
+        <h3>A Warm Welcome</h3>
+        <p>The Referral Process: We sit down with our neighbors to understand their unique needs and bring them into the family.</p>
+
+        <div class="child-box-grid">
+            <div class="sub-box">
+                <div class="sub-num">1</div>
+                <h4>Family Count</h4>
+                <p>We log the total humans: How many adults? How many children?</p>
+            </div>
+            
+            <div class="sub-box teal-border">
+                <div class="sub-num">2</div>
+                <h4>Preferences</h4>
+                <p>Crucial check for <strong>Dietary Needs</strong> (Allergies, Halal, Veg) and <strong>Pets</strong>.</p>
+            </div>
+            
+            <div class="sub-box">
+                <div class="sub-num">3</div>
+                <h4>Registration</h4>
+                <p>Data is entered into the <strong>Beneficiary Database</strong> to set up the rotation.</p>
+            </div>
+        </div>
+
+        <div class="result-node fade-up">
+            <div class="result-icon">👤</div>
+            <div class="result-text">
+                <h4>New Beneficiary Record</h4>
+                <p>A unique <strong>Hero ID</strong> is born. The system is now ready to calculate their first pack.</p>
+            </div>
+        </div>
+    </div>
+</div>
+ <!-- Step 3  -->       
+
+<div class="checkpoint">
+    <div class="content-box main-stage-card">
+        <div class="icon-circle">🗓️</div>
+        <div class="step-tag">Step 03</div>
+        <h3>The Master Plan</h3>
+        <p>The system runs a "Logic Check" against our 36 formula templates to design a bespoke 3-month support roadmap.</p>
+
+        <div class="child-box-grid">
+            <div class="sub-box">
+                <div class="sub-num">1</div>
+                <h4>The Magic Math</h4>
+                <p>System maps <strong>Household Size + Diet</strong> against 36 unique provision templates. This will be manually checked and edited.</p>
+            </div>
+            
+            <div class="sub-box teal-border">
+                <div class="sub-num">2</div>
+                <h4>Collection Dates</h4>
+                <p>Calculates all collection slots for the next <strong>90 days</strong> (extendable if needed).</p>
+            </div>
+            
+            <div class="sub-box">
+                <div class="sub-num">3</div>
+                <h4>The First Pack</h4>
+                <p>Since the interview is live, the <strong>first collection date</strong> is set to "Today."</p>
+            </div>
+        </div>
+
+        <div class="result-node fade-up">
+            <div class="result-icon">📋</div>
+            <div class="result-text">
+                <h4>3-Month Provision Plan</h4>
+                <p>We now know exactly <strong>what</strong> to pack and <strong>when</strong> to pack it for the next 12 weeks.</p>
+            </div>
+        </div>
+    </div>
+</div>
+ <!-- Step 4  -->       
+
+<div class="checkpoint">
+    <div class="content-box main-stage-card">
+        <div class="icon-circle">🛒</div>
+        <div class="step-tag">Step 04</div>
+        <h3>The Treasure Hunt</h3>
+        <p>Turning the plan into a package! We use reusable tools to guide our volunteers through the warehouse shelves.</p>
+
+        <div class="child-box-grid">
+            <div class="sub-box">
+                <div class="sub-num">1</div>
+                <h4>The Laminated Guide</h4>
+                <p>Grab the template card matching the beneficiary type. Add uniue pick ID, beneficiary name & manual tweaks with a dry-wipe marker.</p>
+            </div>
+            
+            <div class="sub-box teal-border">
+                <div class="sub-num">2</div>
+                <h4>Box Filling</h4>
+                <p>Volunteer follows the card, placing items in the container. Ticks are made directly on the laminate!</p>
+            </div>
+            
+            <div class="sub-box">
+                <div class="sub-num">3</div>
+                <h4>Identify & Hold</h4>
+                <p>Boxes are labeled. If for a future date, a paper slip is added and the box joins the 'Waiting' stack.</p>
+            </div>
+            <div class="sub-box">
+                <div class="sub-num">4</div>
+                <h4>Update Stock</h4>
+                <p>The laminated sheets are collected and the unique number from each one is entered into stock control acconting for any changes to the plan.</p>
+            </div>
+        </div>
+
+        <div class="result-node fade-up">
+            <div class="result-icon">📦</div>
+            <div class="result-text">
+                <h4>Packaged & Ready</h4>
+                <p>The physical parcel is now complete, clearly labeled, and waiting in the <strong>Distribution Zone.</strong> The picked stock is no longer listed in the stock control</p>
+            </div>
+        </div>
+    </div>
+</div>
+ <!-- Step 5  -->       
+
+<div class="checkpoint">
+    <div class="content-box main-stage-card">
+        <div class="icon-circle">🏠</div>
+        <div class="step-tag">Step 05</div>
+        <h3>The Handover & Loop-back</h3>
+        <p>The final mile! We combine the prepared pack with fresh goods and close the loop on our data.</p>
+
+        <div class="child-box-grid">
+            <div class="sub-box teal-border">
+                <div class="sub-num">1</div>
+                <h4>Distribution</h4>
+                <p>Hand over the packed bin plus fresh/frozen items (not practical to log).</p>
+            </div>
+            
+            <div class="sub-box">
+                <div class="sub-num">2</div>
+                <h4>The "Un-taken" Bin</h4>
+                <p>If a family declines an item, it goes into the Restock Bin. No item is wasted!</p>
+            </div>
+            
+            <div class="sub-box">
+                <div class="sub-num">3</div>
+                <h4>Shift Reconciliation</h4>
+                <p>At shift-end, we count the restock bin by category and log it as "Inbound," just like Step One.</p>
+            </div>
+        </div>
+
+        <div class="result-node fade-up">
+            <div class="result-icon">🔄</div>
+            <div class="result-text">
+                <h4>System Reconciled</h4>
+                <p>The family is supported, and the <strong>Stock Control</strong> is perfectly accurate for the next team.</p>
+            </div>
+        </div>
+    </div>
+</div>
+ <!-- Step 6  -->       
+<div class="checkpoint">
+            <div class="content-box main-stage-card">
+                <div class="icon-circle">📊</div>
+                <div class="step-tag">Step 06</div>
+                <h3>Reporting & Alerts</h3>
+                <p>Data-driven insights to manage donor relationships and prevent stockouts.</p>
+                <div class="child-box-grid">
+                    <div class="sub-box"><div class="sub-num">1</div><h4>Donation Reports</h4><p>Total weights received per Donor and in total over custom time periods.</p></div>
+                    <div class="sub-box teal-border"><div class="sub-num">2</div><h4>Low Stock Alerts</h4><p>Calculated based on current weight minus estimated 3-month provisioning.<a href="http://bretsteiner.com/stockcontrol.html">Low Stock Report</a><p></div>
+                    <div class="sub-box"><div class="sub-num">3</div><h4>Proactive Plan</h4><p>Visualizing upcoming deficits to trigger donation requests early.</p></div>
+                </div>
+                <div class="result-node">
+                    <div style="font-size: 2rem;">📈</div>
+                    <div class="result-text">
+                        <h4>Intelligent Oversight</h4>
+                        <p>Management has total visibility of incoming generosity and outgoing demand.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="checkpoint">
+            <div class="content-box main-stage-card" style="border-left-color: var(--brand-coral);">
+               <!-- <div class="icon-circle" style="background: var(--brand-coral);">🛡️</div>-->
+                <div class="step-tag">Step 07</div>
+                <h3>Plan B (Resilience)</h3>
+                <p>Offline operational capability to ensure service never stops if the digital system fails.</p>
+                <div class="child-box-grid">
+                    <div class="sub-box"><div class="sub-num">1</div><h4>Analog Pick</h4><p>Use laminated cards with hand-written demographics and IDs.</p></div>
+                    <div class="sub-box teal-border"><div class="sub-num">2</div><h4>Label Power</h4><p>Standalone label printers speed up manual marking of laminate sheets.</p></div>
+                    <div class="sub-box"><div class="sub-num">3</div><h4>Occasional Print</h4><p>Emergency printer for unique template changes when stock fluctuates.</p></div>
+                </div>
+                <div class="result-node" style="background: var(--brand-light);">
+                    <div style="font-size: 2rem;">💪</div>
+                    <div class="result-text">
+                        <h4>Guaranteed Continuity</h4>
+                        <p>The community is served regardless of technology uptime or system status.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+<!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer__top">
+        <div class="footer__brand">
+          <span class="footer__name">Bret Steiner</span>
+          <span class="footer__separator">|</span>
+          <span class="footer__title">Product Accelerator</span>
+        </div>
+
+        <nav class="footer__social">
+          <a href="mailto:bretsteiner@gmail.com" class="footer__social-link" aria-label="Email">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+          </a>
+          <a href="https://www.linkedin.com/in/bretsteiner/" target="_blank" rel="noopener noreferrer" class="footer__social-link" aria-label="LinkedIn">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+          </a>
+        </nav>
+      </div>
+
+      <div class="footer__bottom">
+        <p class="footer__copyright">&copy; 2026 Bret Steiner. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>

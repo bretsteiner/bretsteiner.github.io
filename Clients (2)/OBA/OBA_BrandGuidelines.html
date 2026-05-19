@@ -1,0 +1,1753 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Olive Branch Aid — Brand Guidelines</title>
+<link href="https://fonts.googleapis.com/css2?family=Alegreya+Sans:wght@400;700;900&family=DM+Sans:wght@300;400;500;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+
+/* =============================================
+   TOKENS
+   ============================================= */
+:root {
+  --green:    #708400;
+  --moss:     #323d06;
+  --purple:   #8E1C5E;
+  --cream:    #e7ead0;
+  --cream-d:  #d8dbc0;
+  --white:    #ffffff;
+  --slate:    #5a6340;
+  --ink:      #1a1f0a;
+  --amber:    #c47a00;
+}
+
+/* =============================================
+   RESET + BASE
+   ============================================= */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--cream);
+  color: var(--ink);
+  line-height: 1.6;
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  min-height: 100vh;
+}
+
+/* =============================================
+   SIDEBAR
+   ============================================= */
+.sidebar {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+  background: var(--moss);
+  padding: 0 0 40px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(112,132,0,.4) transparent;
+}
+
+.sidebar-brand {
+  padding: 28px 24px 22px;
+  border-bottom: 1px solid rgba(231,234,208,.1);
+}
+
+.sidebar-brand .logo {
+  font-family: 'Alegreya Sans', sans-serif;
+  font-weight: 900;
+  font-size: 1.05rem;
+  color: var(--cream);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.sidebar-brand .logo span { color: rgba(231,234,208,.3); font-weight: 400; }
+
+.sidebar-brand .tagline {
+  font-family: 'DM Mono', monospace;
+  font-size: .55rem;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: rgba(231,234,208,.35);
+  margin-top: 6px;
+}
+
+.nav-group-label {
+  font-family: 'DM Mono', monospace;
+  font-size: .52rem;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: rgba(231,234,208,.28);
+  padding: 20px 24px 6px;
+}
+
+.nav-link {
+  display: block;
+  padding: 8px 24px;
+  font-size: .8rem;
+  font-weight: 500;
+  color: rgba(231,234,208,.5);
+  text-decoration: none;
+  border-left: 2px solid transparent;
+  transition: color .15s, background .15s, border-color .15s;
+}
+
+.nav-link:hover {
+  color: var(--cream);
+  background: rgba(112,132,0,.15);
+  border-left-color: var(--green);
+}
+
+/* =============================================
+   MAIN CONTENT
+   ============================================= */
+main { min-width: 0; }
+
+/* =============================================
+   HEADER
+   ============================================= */
+.page-header {
+  background: var(--moss);
+  padding: 64px 64px 56px;
+  position: relative;
+  overflow: hidden;
+}
+
+.page-header::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 75% 40%, rgba(112,132,0,.25) 0%, transparent 55%),
+    radial-gradient(ellipse at 15% 90%, rgba(142,28,94,.12) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+.page-header .eyebrow {
+  font-family: 'DM Mono', monospace;
+  font-size: .6rem;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: rgba(231,234,208,.4);
+  margin-bottom: 14px;
+  position: relative;
+}
+
+.page-header h1 {
+  font-family: 'Alegreya Sans', sans-serif;
+  font-weight: 900;
+  font-size: 3rem;
+  color: var(--cream);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  line-height: 1;
+  position: relative;
+}
+
+.page-header h1 em {
+  color: var(--green);
+  font-style: normal;
+}
+
+.page-header .desc {
+  font-size: .95rem;
+  color: rgba(231,234,208,.55);
+  margin-top: 14px;
+  max-width: 500px;
+  line-height: 1.7;
+  position: relative;
+}
+
+/* =============================================
+   SECTIONS
+   ============================================= */
+.section {
+  padding: 52px 64px;
+  border-bottom: 1px solid var(--cream-d);
+}
+
+.section:last-of-type { border-bottom: none; }
+
+.section-label {
+  font-family: 'DM Mono', monospace;
+  font-size: .58rem;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--slate);
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.section-label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--cream-d);
+}
+
+.section h2 {
+  font-family: 'Alegreya Sans', sans-serif;
+  font-weight: 900;
+  font-size: 1.7rem;
+  color: var(--moss);
+  text-transform: uppercase;
+  letter-spacing: .5px;
+  margin-bottom: 28px;
+}
+
+.section h3 {
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 700;
+  font-size: .92rem;
+  color: var(--moss);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin: 32px 0 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--cream-d);
+}
+
+.section p {
+  font-size: .88rem;
+  color: var(--slate);
+  margin-bottom: 16px;
+  max-width: 640px;
+  line-height: 1.7;
+}
+
+/* =============================================
+   DEMO ROWS
+   ============================================= */
+.demo {
+  background: var(--white);
+  border: 1.5px solid var(--cream-d);
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+
+.demo-label {
+  background: var(--cream);
+  border-bottom: 1px solid var(--cream-d);
+  padding: 7px 16px;
+  font-family: 'DM Mono', monospace;
+  font-size: .58rem;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--slate);
+}
+
+.demo-area {
+  padding: 24px 22px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: flex-start;
+}
+
+.demo-area.col   { flex-direction: column; }
+.demo-area.cream { background: var(--cream); }
+.demo-area.moss  { background: var(--moss); }
+
+.demo-code {
+  background: #1a1f0a;
+  border-top: 1px solid rgba(231,234,208,.07);
+  padding: 14px 20px;
+  font-family: 'DM Mono', monospace;
+  font-size: .7rem;
+  color: rgba(231,234,208,.6);
+  line-height: 1.8;
+  overflow-x: auto;
+  white-space: pre;
+}
+
+/* =============================================
+   COLOUR SWATCHES
+   ============================================= */
+.swatch-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.swatch {
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1.5px solid var(--cream-d);
+  box-shadow: 0 2px 8px rgba(50,61,6,.06);
+  transition: transform .2s;
+}
+
+.swatch:hover { transform: translateY(-3px); }
+
+.swatch-color { height: 72px; }
+
+.swatch-meta {
+  background: white;
+  padding: 9px 11px;
+}
+
+.swatch-meta .name {
+  font-weight: 700;
+  font-size: .78rem;
+  color: var(--moss);
+}
+
+.swatch-meta .hex {
+  font-family: 'DM Mono', monospace;
+  font-size: .65rem;
+  color: var(--slate);
+  margin-top: 2px;
+}
+
+.swatch-meta .use {
+  font-size: .67rem;
+  color: var(--slate);
+  margin-top: 3px;
+  line-height: 1.4;
+}
+
+/* =============================================
+   TYPOGRAPHY SPECIMENS
+   ============================================= */
+.type-row {
+  border-left: 3px solid var(--green);
+  padding: 10px 16px;
+  margin: 8px 0;
+  background: var(--cream);
+  border-radius: 0 6px 6px 0;
+}
+
+.type-row .meta {
+  font-family: 'DM Mono', monospace;
+  font-size: .57rem;
+  color: var(--slate);
+  letter-spacing: 1px;
+  margin-bottom: 4px;
+  text-transform: uppercase;
+}
+
+.t-display {
+  font-family: 'Alegreya Sans', sans-serif;
+  font-weight: 900;
+  font-size: 2.8rem;
+  color: var(--green);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  line-height: 1;
+}
+
+.t-h2 {
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 700;
+  font-size: 1.9rem;
+  color: var(--moss);
+}
+
+.t-h3 {
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 700;
+  font-size: 1.3rem;
+  color: var(--moss);
+}
+
+.t-body {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 1rem;
+  color: var(--ink);
+  line-height: 1.7;
+}
+
+.t-caption {
+  font-family: 'DM Sans', sans-serif;
+  font-size: .83rem;
+  color: var(--slate);
+}
+
+.t-mono {
+  font-family: 'DM Mono', monospace;
+  font-size: .82rem;
+  color: var(--green);
+}
+
+.t-label {
+  font-family: 'DM Mono', monospace;
+  font-size: .58rem;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--slate);
+}
+
+/* =============================================
+   BUTTONS
+   ============================================= */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 20px;
+  border-radius: 999px;
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 700;
+  font-size: .8rem;
+  text-decoration: none;
+  cursor: pointer;
+  border: none;
+  transition: transform .2s, box-shadow .2s, background .2s;
+  white-space: nowrap;
+  letter-spacing: .2px;
+}
+
+.btn:hover { transform: translateY(-2px); }
+
+.btn-primary {
+  background: var(--purple);
+  color: white;
+  box-shadow: 0 4px 14px rgba(142,28,94,.28);
+}
+.btn-primary:hover { background: #a0206e; box-shadow: 0 6px 22px rgba(142,28,94,.38); }
+
+.btn-green {
+  background: var(--green);
+  color: white;
+  box-shadow: 0 4px 14px rgba(112,132,0,.28);
+}
+.btn-green:hover { background: #7e9600; }
+
+.btn-outline {
+  background: transparent;
+  color: var(--moss);
+  border: 2px solid var(--moss);
+}
+.btn-outline:hover { background: var(--moss); color: var(--cream); }
+
+.btn-cream {
+  background: var(--cream);
+  color: var(--moss);
+  box-shadow: 0 2px 8px rgba(50,61,6,.1);
+}
+.btn-cream:hover { background: white; }
+
+.btn-ghost {
+  background: rgba(231,234,208,.12);
+  color: var(--cream);
+  border: 1px solid rgba(231,234,208,.22);
+}
+.btn-ghost:hover { background: rgba(231,234,208,.2); }
+
+.btn-sm { padding: 6px 14px; font-size: .72rem; }
+.btn-lg { padding: 13px 28px; font-size: .9rem; }
+
+/* =============================================
+   CARDS
+   ============================================= */
+.card {
+  background: white;
+  border: 1.5px solid var(--cream-d);
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(50,61,6,.07);
+  transition: transform .2s, box-shadow .2s;
+}
+
+.card:hover { transform: translateY(-3px); box-shadow: 0 12px 32px rgba(50,61,6,.14); }
+
+.card .card-title {
+  font-family: 'Alegreya Sans', sans-serif;
+  font-weight: 700;
+  font-size: .88rem;
+  text-transform: uppercase;
+  letter-spacing: .5px;
+  color: var(--moss);
+  margin-bottom: 7px;
+}
+
+.card .card-body { font-size: .82rem; color: var(--slate); line-height: 1.6; }
+
+.card-accent         { border-left: 4px solid var(--green); border-radius: 0 10px 10px 0; }
+.card-accent.purple  { border-left-color: var(--purple); }
+.card-accent.amber   { border-left-color: var(--amber); }
+
+.card-dark {
+  background: var(--moss);
+  border-color: transparent;
+}
+.card-dark .card-title { color: var(--cream); }
+.card-dark .card-body  { color: rgba(231,234,208,.65); }
+
+.card-cream { background: var(--cream); }
+
+/* stat card */
+.stat-card {
+  text-align: center;
+  padding: 22px 18px;
+  position: relative;
+  overflow: hidden;
+}
+.stat-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: var(--green);
+}
+.stat-card.purple::before { background: var(--purple); }
+.stat-card.amber::before  { background: var(--amber); }
+.stat-card.moss::before   { background: var(--moss); }
+
+.stat-card .stat-num {
+  font-family: 'Alegreya Sans', sans-serif;
+  font-weight: 900;
+  font-size: 2.6rem;
+  color: var(--moss);
+  line-height: 1;
+}
+
+.stat-card .stat-label {
+  font-family: 'DM Mono', monospace;
+  font-size: .57rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--slate);
+  margin-top: 6px;
+}
+
+/* pick row */
+.pick-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 11px 15px;
+  background: var(--cream);
+  border: 1px solid var(--cream-d);
+  border-radius: 8px;
+  transition: background .2s, border-color .2s;
+}
+.pick-row:hover { background: white; border-color: var(--green); }
+.pick-code { font-family: 'DM Mono', monospace; font-size: .7rem; color: var(--green); font-weight: 500; width: 88px; flex-shrink: 0; }
+.pick-name { flex: 1; font-size: .82rem; font-weight: 600; color: var(--moss); }
+.pick-date { font-family: 'DM Mono', monospace; font-size: .63rem; color: var(--slate); }
+
+/* =============================================
+   PILLS
+   ============================================= */
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-family: 'DM Mono', monospace;
+  font-size: .6rem;
+  font-weight: 500;
+  letter-spacing: .5px;
+  text-transform: uppercase;
+}
+
+.dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; flex-shrink: 0; }
+
+.pill-ok     { background: #eaf2d0; color: var(--moss); }
+.pill-warn   { background: #fdf5d0; color: #7a6800; }
+.pill-crit   { background: #f7eef4; color: var(--purple); }
+.pill-info   { background: #f0f4e0; color: var(--green); }
+.pill-slate  { background: var(--cream-d); color: var(--slate); }
+.pill-moss   { background: var(--moss); color: var(--cream); }
+.pill-green  { background: var(--green); color: white; }
+.pill-purple { background: var(--purple); color: white; }
+
+/* =============================================
+   FORM INPUTS
+   ============================================= */
+.field { display: flex; flex-direction: column; gap: 5px; }
+
+.field label {
+  font-family: 'DM Mono', monospace;
+  font-size: .58rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--slate);
+}
+
+.field input,
+.field select,
+.field textarea {
+  background: var(--cream);
+  border: 1.5px solid var(--cream-d);
+  border-radius: 6px;
+  padding: 9px 12px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: .84rem;
+  color: var(--ink);
+  outline: none;
+  transition: border-color .18s, background .18s, box-shadow .18s;
+}
+
+.field input:focus,
+.field select:focus,
+.field textarea:focus {
+  border-color: var(--green);
+  background: white;
+  box-shadow: 0 0 0 3px rgba(112,132,0,.12);
+}
+
+.field input.filled { background: #f0f4e0; border-color: var(--green); }
+.field input.error  { border-color: var(--purple); background: #fdf0f7; }
+.field .err-msg     { font-family: 'DM Mono', monospace; font-size: .62rem; color: var(--purple); }
+.field textarea     { resize: vertical; min-height: 80px; }
+
+/* =============================================
+   TABLE
+   ============================================= */
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: .82rem;
+  box-shadow: 0 2px 8px rgba(50,61,6,.07);
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1.5px solid var(--cream-d);
+}
+
+.data-table th {
+  background: var(--moss);
+  color: var(--cream);
+  padding: 10px 14px;
+  font-family: 'DM Mono', monospace;
+  font-size: .58rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  font-weight: 500;
+  text-align: left;
+}
+
+.data-table td {
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--cream-d);
+  color: var(--ink);
+}
+
+.data-table tr:last-child td             { border-bottom: none; }
+.data-table tr:nth-child(even) td        { background: var(--cream); }
+.data-table tr:hover td                  { background: rgba(112,132,0,.04); }
+.data-table .ref { font-family: 'DM Mono', monospace; color: var(--green); font-size: .73rem; }
+
+/* =============================================
+   CALLOUTS
+   ============================================= */
+.callout {
+  padding: 13px 17px;
+  border-radius: 8px;
+  border-left: 4px solid;
+  font-size: .84rem;
+  line-height: 1.65;
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
+
+.callout .icon { font-size: 1rem; flex-shrink: 0; margin-top: 2px; }
+
+.callout-tip    { background: #f0f4e0; border-color: var(--green);  color: var(--moss); }
+.callout-warn   { background: #fdf5d0; border-color: var(--amber);  color: #7a5000; }
+.callout-alert  { background: #f7eef4; border-color: var(--purple); color: var(--purple); }
+.callout-info   { background: var(--cream); border-color: var(--slate); color: var(--slate); }
+.callout-strong { background: var(--moss); border-color: var(--green); color: var(--cream); }
+
+/* =============================================
+   RAG PROGRESS BARS
+   ============================================= */
+.rag-row { display: flex; align-items: center; gap: 12px; margin: 5px 0; }
+
+.rag-label {
+  font-family: 'DM Mono', monospace;
+  font-size: .66rem;
+  color: var(--slate);
+  width: 130px;
+  flex-shrink: 0;
+}
+
+.rag-track {
+  flex: 1;
+  height: 8px;
+  background: var(--cream-d);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.rag-fill { height: 100%; border-radius: 4px; }
+.rag-green  { background: var(--green); }
+.rag-amber  { background: var(--amber); }
+.rag-red    { background: var(--purple); }
+
+.rag-weeks {
+  font-family: 'DM Mono', monospace;
+  font-size: .63rem;
+  color: var(--slate);
+  width: 40px;
+  text-align: right;
+}
+
+/* =============================================
+   NAV SPECIMENS
+   ============================================= */
+.nav-specimen {
+  background: var(--green);
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 52px;
+  border-radius: 8px;
+  flex: 1;
+}
+
+.nav-spec-brand {
+  font-family: 'Alegreya Sans', sans-serif;
+  font-weight: 900;
+  font-size: 1rem;
+  color: var(--cream);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.nav-spec-brand span { color: rgba(231,234,208,.32); font-weight: 400; }
+
+.nav-sub {
+  font-family: 'DM Mono', monospace;
+  font-size: .52rem;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: rgba(231,234,208,.4);
+}
+
+.tab-nav-specimen {
+  background: var(--moss);
+  display: flex;
+  border-bottom: 3px solid var(--green);
+  border-radius: 0 0 8px 8px;
+  overflow-x: auto;
+  padding: 0 12px;
+}
+
+.tab-item {
+  padding: 10px 15px;
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 700;
+  font-size: .73rem;
+  color: rgba(231,234,208,.42);
+  border-bottom: 3px solid transparent;
+  margin-bottom: -3px;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.tab-item.active {
+  color: var(--cream);
+  border-bottom-color: var(--green);
+  background: rgba(112,132,0,.1);
+}
+
+/* =============================================
+   LOGO LOCKUPS
+   ============================================= */
+.lockup {
+  padding: 20px 22px;
+  border-radius: 8px;
+  border: 1.5px solid var(--cream-d);
+  text-align: center;
+  flex: 1;
+  min-width: 150px;
+}
+
+.lockup-name {
+  font-family: 'Alegreya Sans', sans-serif;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  line-height: 1.05;
+}
+
+.lockup-rule { width: 36px; height: 3px; border-radius: 2px; margin: 8px auto; }
+
+.lockup-sub {
+  font-family: 'DM Mono', monospace;
+  font-size: .52rem;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+}
+
+.lockup-lg .lockup-name { font-size: 1.85rem; }
+.lockup-md .lockup-name { font-size: 1.3rem; }
+.lockup-sm .lockup-name { font-size: 1rem; }
+
+.lockup-on-green { background: var(--green); border-color: transparent; }
+.lockup-on-green .lockup-name { color: var(--cream); }
+.lockup-on-green .lockup-rule { background: rgba(231,234,208,.35); }
+.lockup-on-green .lockup-sub  { color: rgba(231,234,208,.45); }
+
+.lockup-on-moss { background: var(--moss); border-color: transparent; }
+.lockup-on-moss .lockup-name { color: var(--cream); }
+.lockup-on-moss .lockup-rule { background: var(--green); }
+.lockup-on-moss .lockup-sub  { color: rgba(231,234,208,.4); }
+
+.lockup-on-cream { background: var(--cream); }
+.lockup-on-cream .lockup-name { color: var(--moss); }
+.lockup-on-cream .lockup-rule { background: var(--green); }
+.lockup-on-cream .lockup-sub  { color: var(--slate); }
+
+.lockup-on-white { background: white; }
+.lockup-on-white .lockup-name { color: var(--moss); }
+.lockup-on-white .lockup-rule { background: var(--green); }
+.lockup-on-white .lockup-sub  { color: var(--slate); }
+
+/* =============================================
+   SPACING SCALE
+   ============================================= */
+.space-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 5px 0;
+  border-bottom: 1px solid var(--cream);
+}
+.space-bar { background: var(--green); height: 9px; border-radius: 3px; opacity: .8; flex-shrink: 0; }
+.space-name { font-family: 'DM Mono', monospace; font-size: .65rem; color: var(--slate); }
+
+/* =============================================
+   VAR REFERENCE TABLE
+   ============================================= */
+.var-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+
+.var-group-title {
+  font-family: 'DM Mono', monospace;
+  font-size: .58rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--slate);
+  margin-bottom: 10px;
+  padding-bottom: 7px;
+  border-bottom: 1px solid var(--cream-d);
+}
+
+.var-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 5px 0;
+  border-bottom: 1px solid var(--cream);
+  gap: 8px;
+}
+
+.var-name { font-family: 'DM Mono', monospace; font-size: .69rem; color: var(--green); }
+.var-right { display: flex; align-items: center; gap: 8px; }
+.var-val   { font-size: .73rem; color: var(--slate); font-family: 'DM Mono', monospace; }
+.var-swatch { width: 16px; height: 16px; border-radius: 4px; border: 1px solid var(--cream-d); flex-shrink: 0; }
+
+/* =============================================
+   FOOTER
+   ============================================= */
+.page-footer {
+  background: var(--moss);
+  padding: 28px 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 14px;
+}
+
+.footer-brand {
+  font-family: 'Alegreya Sans', sans-serif;
+  font-weight: 900;
+  font-size: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--cream);
+}
+
+.footer-brand span { color: rgba(231,234,208,.3); font-weight: 400; }
+
+.footer-meta {
+  font-family: 'DM Mono', monospace;
+  font-size: .57rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: rgba(231,234,208,.35);
+}
+
+/* =============================================
+   UTILITIES
+   ============================================= */
+.flex-row { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+.flex-col  { display: flex; flex-direction: column; gap: 10px; }
+.w-full    { width: 100%; }
+.mt-sm     { margin-top: 8px; }
+
+@media (max-width: 860px) {
+  body { grid-template-columns: 1fr; }
+  .sidebar { display: none; }
+  .page-header, .section { padding-left: 28px; padding-right: 28px; }
+  .page-footer { padding-left: 28px; padding-right: 28px; }
+  .var-grid { grid-template-columns: 1fr; }
+}
+
+</style>
+</head>
+<body>
+
+<!-- ==============================
+     SIDEBAR
+     ============================== -->
+<nav class="sidebar">
+  <div class="sidebar-brand">
+    <div class="logo">Olive Branch <span>/</span> Aid</div>
+    <div class="tagline">Brand Guidelines</div>
+  </div>
+
+  <div class="nav-group-label">Foundation</div>
+  <a href="#identity"   class="nav-link">&#127807; Brand Identity</a>
+  <a href="#typography" class="nav-link">Aa Typography</a>
+  <a href="#colours"    class="nav-link">&#9632; Colours</a>
+  <a href="#spacing"    class="nav-link">&#8594; Spacing &amp; Radius</a>
+
+  <div class="nav-group-label">Components</div>
+  <a href="#buttons"    class="nav-link">&#9711; Buttons</a>
+  <a href="#cards"      class="nav-link">&#9649; Cards</a>
+  <a href="#pills"      class="nav-link">&#9673; Pills &amp; Badges</a>
+  <a href="#forms"      class="nav-link">&#9998; Form Inputs</a>
+  <a href="#tables"     class="nav-link">&#9776; Tables</a>
+  <a href="#callouts"   class="nav-link">&#9656; Callouts &amp; Alerts</a>
+  <a href="#data"       class="nav-link">&#9646; Data &amp; Progress</a>
+
+  <div class="nav-group-label">Structure</div>
+  <a href="#navigation" class="nav-link">&#8801; Navigation</a>
+  <a href="#variables"  class="nav-link">{} CSS Variables</a>
+</nav>
+
+<!-- ==============================
+     MAIN
+     ============================== -->
+<main>
+
+  <!-- PAGE HEADER -->
+  <header class="page-header">
+    <div class="eyebrow">Olive Branch Aid &middot; Visual Identity System</div>
+    <h1>Brand <em>Guidelines</em></h1>
+    <p class="desc">Complete reference for typography, colour, components and patterns used across the OBA Dashboard, Plan Creator and Google Sheets.</p>
+  </header>
+
+
+  <!-- ============================
+       BRAND IDENTITY
+       ============================ -->
+  <section class="section" id="identity">
+    <div class="section-label">Foundation</div>
+    <h2>Brand Identity</h2>
+
+    <h3>Logo Lockup</h3>
+    <p>The logo always uses Alegreya Sans Black. The slash separator is the only element that can be reduced in opacity. A horizontal rule separates the wordmark from the product subtitle.</p>
+
+    <div class="demo">
+      <div class="demo-label">All backgrounds</div>
+      <div class="demo-area cream" style="gap:14px;flex-wrap:wrap;align-items:flex-end;">
+        <div class="lockup lockup-lg lockup-on-green">
+          <div class="lockup-name">Olive Branch / Aid</div>
+          <div class="lockup-rule"></div>
+          <div class="lockup-sub">Operations Suite</div>
+        </div>
+        <div class="lockup lockup-md lockup-on-moss">
+          <div class="lockup-name">Olive Branch / Aid</div>
+          <div class="lockup-rule"></div>
+          <div class="lockup-sub">Operations Suite</div>
+        </div>
+        <div class="lockup lockup-sm lockup-on-cream">
+          <div class="lockup-name">Olive Branch / Aid</div>
+          <div class="lockup-rule"></div>
+          <div class="lockup-sub">Operations Suite</div>
+        </div>
+        <div class="lockup lockup-sm lockup-on-white">
+          <div class="lockup-name">Olive Branch / Aid</div>
+          <div class="lockup-rule"></div>
+          <div class="lockup-sub">Operations Suite</div>
+        </div>
+      </div>
+      <div class="demo-code">/* Logo structure */
+&lt;div class="brand"&gt;
+  &lt;div class="brand-logo"&gt;Olive Branch &lt;span&gt;/&lt;/span&gt; Aid&lt;/div&gt;
+  &lt;div class="brand-rule"&gt;&lt;/div&gt;
+  &lt;div class="brand-sub"&gt;Operations Suite&lt;/div&gt;
+&lt;/div&gt;</div>
+    </div>
+
+    <h3>Brand Voice</h3>
+    <div class="demo">
+      <div class="demo-area col" style="gap:8px;">
+        <div class="callout callout-tip">
+          <span class="icon">&#10003;</span>
+          <div><strong>Warm and practical.</strong> OBA tools should feel reassuring and efficient &mdash; never clinical or corporate. Use plain language, not jargon.</div>
+        </div>
+        <div class="callout callout-info">
+          <span class="icon">&#10003;</span>
+          <div><strong>Dignified and discreet.</strong> Beneficiary data is displayed with care. Avoid alarmist language around sensitive information.</div>
+        </div>
+        <div class="callout callout-warn">
+          <span class="icon">&#10007;</span>
+          <div><strong>Never cold or bureaucratic.</strong> Avoid &ldquo;user record&rdquo;, &ldquo;null value&rdquo;, &ldquo;data entry required&rdquo;. Prefer &ldquo;beneficiary&rdquo;, &ldquo;no information yet&rdquo;, &ldquo;add details&rdquo;.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ============================
+       TYPOGRAPHY
+       ============================ -->
+  <section class="section" id="typography">
+    <div class="section-label">Foundation</div>
+    <h2>Typography</h2>
+
+    <p>Three fonts make up the OBA type system. Alegreya Sans for display headlines, DM Sans for all body and UI text, and DM Mono for codes, labels and data.</p>
+
+    <div class="demo">
+      <div class="demo-label">Type scale</div>
+      <div class="demo-area col" style="gap:0;">
+        <div class="type-row">
+          <div class="meta">H1 &middot; Alegreya Sans Black 900 &middot; 50px &middot; Uppercase &middot; #708400</div>
+          <div class="t-display">Primary Headline</div>
+        </div>
+        <div class="type-row">
+          <div class="meta">H2 &middot; DM Sans Bold 700 &middot; 32px &middot; #323d06</div>
+          <div class="t-h2">Secondary Headline</div>
+        </div>
+        <div class="type-row">
+          <div class="meta">H3 &middot; DM Sans Bold 700 &middot; 22px &middot; #323d06</div>
+          <div class="t-h3">Section Title</div>
+        </div>
+        <div class="type-row">
+          <div class="meta">Body &middot; DM Sans Regular 400 &middot; 16px &middot; #1a1f0a &middot; line-height 1.7</div>
+          <div class="t-body">OBA tools support vulnerable people across the community with food, toiletries and essential supplies. Clear, warm language in all communications.</div>
+        </div>
+        <div class="type-row">
+          <div class="meta">Caption &middot; DM Sans 400 &middot; 14px &middot; #5a6340</div>
+          <div class="t-caption">Supporting caption &mdash; last updated, record counts, secondary labels and metadata.</div>
+        </div>
+        <div class="type-row">
+          <div class="meta">Mono &middot; DM Mono 400 &middot; 13px &middot; #708400</div>
+          <div class="t-mono">BEN-0042 &middot; Tab 2 &middot; 2025-03-14 &middot; Pick Code</div>
+        </div>
+        <div class="type-row">
+          <div class="meta">Label / Eyebrow &middot; DM Mono 400 &middot; 10px &middot; uppercase &middot; letter-spacing 3px</div>
+          <div class="t-label">Section Label &middot; Eyebrow Text &middot; Metadata</div>
+        </div>
+      </div>
+      <div class="demo-code">/* Google Fonts import */
+@import url('https://fonts.googleapis.com/css2?family=Alegreya+Sans:wght@400;700;900
+  &family=DM+Sans:wght@300;400;500;700&family=DM+Mono:wght@400;500&display=swap');
+
+h1 { font-family: 'Alegreya Sans'; font-weight: 900; font-size: 50px;
+     color: #708400; text-transform: uppercase; }
+h2 { font-family: 'DM Sans'; font-weight: 700; font-size: 32px; color: #323d06; }
+p  { font-family: 'DM Sans'; font-size: 16px; color: #1a1f0a; line-height: 1.7; }
+.mono { font-family: 'DM Mono', monospace; }</div>
+    </div>
+  </section>
+
+
+  <!-- ============================
+       COLOURS
+       ============================ -->
+  <section class="section" id="colours">
+    <div class="section-label">Foundation</div>
+    <h2>Colours</h2>
+
+    <h3>Primary Palette</h3>
+    <div class="swatch-grid">
+      <div class="swatch">
+        <div class="swatch-color" style="background:#708400;"></div>
+        <div class="swatch-meta">
+          <div class="name">Primary Green</div>
+          <div class="hex">#708400 &middot; --green</div>
+          <div class="use">Headers, active states, progress fills</div>
+        </div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background:#323d06;"></div>
+        <div class="swatch-meta">
+          <div class="name">Dark Moss</div>
+          <div class="hex">#323d06 &middot; --moss</div>
+          <div class="use">Nav bars, panel headers, hero sections</div>
+        </div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background:#8E1C5E;"></div>
+        <div class="swatch-meta">
+          <div class="name">Action Purple</div>
+          <div class="hex">#8E1C5E &middot; --purple</div>
+          <div class="use">Primary CTA buttons, critical alerts</div>
+        </div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background:#e7ead0; outline:1px solid #d8dbc0; outline-offset:-1px;"></div>
+        <div class="swatch-meta">
+          <div class="name">Brand Cream</div>
+          <div class="hex">#e7ead0 &middot; --cream</div>
+          <div class="use">Page background, card rows, input fields</div>
+        </div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background:#d8dbc0;"></div>
+        <div class="swatch-meta">
+          <div class="name">Cream Dark</div>
+          <div class="hex">#d8dbc0 &middot; --cream-d</div>
+          <div class="use">Borders, dividers, inactive elements</div>
+        </div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background:#5a6340;"></div>
+        <div class="swatch-meta">
+          <div class="name">Slate</div>
+          <div class="hex">#5a6340 &middot; --slate</div>
+          <div class="use">Secondary text, labels, metadata</div>
+        </div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background:#1a1f0a;"></div>
+        <div class="swatch-meta">
+          <div class="name">Ink</div>
+          <div class="hex">#1a1f0a &middot; --ink</div>
+          <div class="use">Body text on light backgrounds</div>
+        </div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background:#c47a00;"></div>
+        <div class="swatch-meta">
+          <div class="name">Amber</div>
+          <div class="hex">#c47a00 &middot; --amber</div>
+          <div class="use">Warnings, low stock, pending states</div>
+        </div>
+      </div>
+    </div>
+
+    <h3>Functional Tints</h3>
+    <p>These lighter tints are used for pill backgrounds and row highlights. Never use them as full page backgrounds.</p>
+    <div class="swatch-grid">
+      <div class="swatch">
+        <div class="swatch-color" style="background:#eaf2d0;"></div>
+        <div class="swatch-meta"><div class="name">Success Tint</div><div class="hex">#eaf2d0</div><div class="use">Active, complete, well stocked</div></div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background:#fdf5d0;"></div>
+        <div class="swatch-meta"><div class="name">Warning Tint</div><div class="hex">#fdf5d0</div><div class="use">Planned, low stock, pending</div></div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background:#f7eef4;"></div>
+        <div class="swatch-meta"><div class="name">Critical Tint</div><div class="hex">#f7eef4</div><div class="use">Overdue, critical, errors</div></div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background:#f0f4e0;"></div>
+        <div class="swatch-meta"><div class="name">Tip Tint</div><div class="hex">#f0f4e0</div><div class="use">Tip callouts, info backgrounds</div></div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ============================
+       SPACING & RADIUS
+       ============================ -->
+  <section class="section" id="spacing">
+    <div class="section-label">Foundation</div>
+    <h2>Spacing &amp; Radius</h2>
+
+    <h3>Spacing Scale</h3>
+    <div class="demo">
+      <div class="demo-area col" style="gap:4px;padding:20px;">
+        <div class="space-row"><div class="space-bar" style="width:4px;"></div><div class="space-name">--space-2xs &middot; 4px</div></div>
+        <div class="space-row"><div class="space-bar" style="width:8px;"></div><div class="space-name">--space-xs &middot; 8px</div></div>
+        <div class="space-row"><div class="space-bar" style="width:12px;"></div><div class="space-name">--space-sm &middot; 12px</div></div>
+        <div class="space-row"><div class="space-bar" style="width:16px;"></div><div class="space-name">--space-md &middot; 16px</div></div>
+        <div class="space-row"><div class="space-bar" style="width:24px;"></div><div class="space-name">--space-lg &middot; 24px</div></div>
+        <div class="space-row"><div class="space-bar" style="width:32px;"></div><div class="space-name">--space-xl &middot; 32px</div></div>
+        <div class="space-row"><div class="space-bar" style="width:48px;"></div><div class="space-name">--space-2xl &middot; 48px</div></div>
+        <div class="space-row"><div class="space-bar" style="width:64px;"></div><div class="space-name">--space-3xl &middot; 64px</div></div>
+        <div class="space-row"><div class="space-bar" style="width:96px;"></div><div class="space-name">--space-4xl &middot; 96px</div></div>
+      </div>
+    </div>
+
+    <h3>Border Radius</h3>
+    <div class="demo">
+      <div class="demo-area" style="gap:20px;align-items:flex-end;">
+        <div style="text-align:center;">
+          <div style="width:60px;height:40px;background:var(--green);border-radius:.5rem;"></div>
+          <div class="t-label" style="margin-top:6px;">sm &middot; .5rem</div>
+        </div>
+        <div style="text-align:center;">
+          <div style="width:60px;height:40px;background:var(--green);border-radius:.75rem;"></div>
+          <div class="t-label" style="margin-top:6px;">md &middot; .75rem</div>
+        </div>
+        <div style="text-align:center;">
+          <div style="width:60px;height:40px;background:var(--green);border-radius:1rem;"></div>
+          <div class="t-label" style="margin-top:6px;">lg &middot; 1rem</div>
+        </div>
+        <div style="text-align:center;">
+          <div style="width:60px;height:40px;background:var(--green);border-radius:1.5rem;"></div>
+          <div class="t-label" style="margin-top:6px;">xl &middot; 1.5rem</div>
+        </div>
+        <div style="text-align:center;">
+          <div style="width:60px;height:40px;background:var(--green);border-radius:999px;"></div>
+          <div class="t-label" style="margin-top:6px;">full &middot; 999px</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ============================
+       BUTTONS
+       ============================ -->
+  <section class="section" id="buttons">
+    <div class="section-label">Components</div>
+    <h2>Buttons</h2>
+
+    <h3>Variants</h3>
+    <div class="demo">
+      <div class="demo-label">On light background</div>
+      <div class="demo-area">
+        <a href="#" class="btn btn-primary">Save Plan</a>
+        <a href="#" class="btn btn-green">Apply Template</a>
+        <a href="#" class="btn btn-outline">Cancel</a>
+        <a href="#" class="btn btn-cream">Export</a>
+      </div>
+      <div class="demo-label">On dark (moss / green) background</div>
+      <div class="demo-area moss">
+        <a href="#" class="btn btn-primary">Save Plan</a>
+        <a href="#" class="btn btn-cream">Export</a>
+        <a href="#" class="btn btn-ghost">Cancel</a>
+      </div>
+      <div class="demo-code">&lt;a class="btn btn-primary"&gt;Save Plan&lt;/a&gt;       /* purple CTA */
+&lt;a class="btn btn-green"&gt;Apply Template&lt;/a&gt;  /* green action */
+&lt;a class="btn btn-outline"&gt;Cancel&lt;/a&gt;         /* outline on light */
+&lt;a class="btn btn-cream"&gt;Export&lt;/a&gt;           /* cream secondary */
+&lt;a class="btn btn-ghost"&gt;Cancel&lt;/a&gt;           /* ghost on dark bg */</div>
+    </div>
+
+    <h3>Sizes</h3>
+    <div class="demo">
+      <div class="demo-area" style="align-items:center;">
+        <a href="#" class="btn btn-primary btn-sm">Small</a>
+        <a href="#" class="btn btn-primary">Default</a>
+        <a href="#" class="btn btn-primary btn-lg">Large</a>
+      </div>
+      <div class="demo-code">&lt;a class="btn btn-primary btn-sm"&gt;Small&lt;/a&gt;
+&lt;a class="btn btn-primary"&gt;Default&lt;/a&gt;
+&lt;a class="btn btn-primary btn-lg"&gt;Large&lt;/a&gt;</div>
+    </div>
+  </section>
+
+
+  <!-- ============================
+       CARDS
+       ============================ -->
+  <section class="section" id="cards">
+    <div class="section-label">Components</div>
+    <h2>Cards</h2>
+
+    <h3>Base Variants</h3>
+    <div class="demo">
+      <div class="demo-area cream" style="flex-wrap:wrap;gap:12px;">
+        <div class="card" style="flex:1;min-width:180px;">
+          <div class="card-title">Default Card</div>
+          <div class="card-body">White surface, cream border. Lifts on hover. Used for panels and content containers.</div>
+        </div>
+        <div class="card card-cream" style="flex:1;min-width:180px;">
+          <div class="card-title">Cream Card</div>
+          <div class="card-body">Cream surface for secondary panels and alternating content blocks.</div>
+        </div>
+        <div class="card card-dark" style="flex:1;min-width:180px;">
+          <div class="card-title">Dark Card</div>
+          <div class="card-body">Moss background for hero panels and featured content areas.</div>
+        </div>
+      </div>
+      <div class="demo-code">&lt;div class="card"&gt;White card&lt;/div&gt;
+&lt;div class="card card-cream"&gt;Cream card&lt;/div&gt;
+&lt;div class="card card-dark"&gt;Moss / dark card&lt;/div&gt;</div>
+    </div>
+
+    <h3>Accent Cards</h3>
+    <div class="demo">
+      <div class="demo-area cream" style="flex-wrap:wrap;gap:12px;">
+        <div class="card card-accent" style="flex:1;min-width:170px;">
+          <div class="card-title">Green Accent</div>
+          <div class="card-body">Positive status, active items, completed picks.</div>
+        </div>
+        <div class="card card-accent purple" style="flex:1;min-width:170px;">
+          <div class="card-title">Purple Accent</div>
+          <div class="card-body">Delivery items, actions requiring attention.</div>
+        </div>
+        <div class="card card-accent amber" style="flex:1;min-width:170px;">
+          <div class="card-title">Amber Accent</div>
+          <div class="card-body">Warnings, low stock, pending review.</div>
+        </div>
+      </div>
+      <div class="demo-code">&lt;div class="card card-accent"&gt;Green (collection)&lt;/div&gt;
+&lt;div class="card card-accent purple"&gt;Purple (delivery)&lt;/div&gt;
+&lt;div class="card card-accent amber"&gt;Amber (warning)&lt;/div&gt;</div>
+    </div>
+
+    <h3>Stat Cards</h3>
+    <div class="demo">
+      <div class="demo-area cream" style="flex-wrap:wrap;gap:12px;">
+        <div class="card stat-card" style="flex:1;min-width:120px;">
+          <div class="stat-num">42</div>
+          <div class="stat-label">Active Bens</div>
+        </div>
+        <div class="card stat-card purple" style="flex:1;min-width:120px;">
+          <div class="stat-num">3</div>
+          <div class="stat-label">Overdue</div>
+        </div>
+        <div class="card stat-card amber" style="flex:1;min-width:120px;">
+          <div class="stat-num">7</div>
+          <div class="stat-label">Low Stock</div>
+        </div>
+        <div class="card stat-card moss" style="flex:1;min-width:120px;">
+          <div class="stat-num">284</div>
+          <div class="stat-label">Parcels Served</div>
+        </div>
+      </div>
+      <div class="demo-code">&lt;div class="card stat-card"&gt;        /* green top bar */
+&lt;div class="card stat-card purple"&gt; /* purple top bar */
+&lt;div class="card stat-card amber"&gt;  /* amber top bar */
+&lt;div class="card stat-card moss"&gt;   /* moss top bar */</div>
+    </div>
+
+    <h3>Pick Row</h3>
+    <div class="demo">
+      <div class="demo-area col" style="gap:6px;">
+        <div class="pick-row">
+          <div class="pick-code">BEN-0042</div>
+          <div class="pick-name">Smith Family</div>
+          <div class="pick-date">12 Mar</div>
+          <span class="pill pill-ok"><span class="dot"></span>Complete</span>
+        </div>
+        <div class="pick-row">
+          <div class="pick-code">BEN-0089</div>
+          <div class="pick-name">Jones Household</div>
+          <div class="pick-date">14 Mar</div>
+          <span class="pill pill-warn"><span class="dot"></span>Planned</span>
+        </div>
+        <div class="pick-row" style="border-color:rgba(142,28,94,.3);background:#f7eef4;">
+          <div class="pick-code">BEN-0031</div>
+          <div class="pick-name">Ahmed Family</div>
+          <div class="pick-date" style="color:var(--purple);">08 Mar</div>
+          <span class="pill pill-crit"><span class="dot"></span>Overdue</span>
+        </div>
+      </div>
+      <div class="demo-code">&lt;div class="pick-row"&gt;
+  &lt;div class="pick-code"&gt;BEN-0042&lt;/div&gt;
+  &lt;div class="pick-name"&gt;Smith Family&lt;/div&gt;
+  &lt;div class="pick-date"&gt;12 Mar&lt;/div&gt;
+  &lt;span class="pill pill-ok"&gt;&lt;span class="dot"&gt;&lt;/span&gt;Complete&lt;/span&gt;
+&lt;/div&gt;</div>
+    </div>
+  </section>
+
+
+  <!-- ============================
+       PILLS
+       ============================ -->
+  <section class="section" id="pills">
+    <div class="section-label">Components</div>
+    <h2>Pills &amp; Badges</h2>
+
+    <div class="demo">
+      <div class="demo-label">All pill variants</div>
+      <div class="demo-area" style="flex-wrap:wrap;gap:8px;">
+        <span class="pill pill-ok"><span class="dot"></span>Complete</span>
+        <span class="pill pill-warn"><span class="dot"></span>Planned</span>
+        <span class="pill pill-crit"><span class="dot"></span>Overdue</span>
+        <span class="pill pill-info"><span class="dot"></span>Active</span>
+        <span class="pill pill-slate">Inactive</span>
+        <span class="pill pill-moss">Group 1</span>
+        <span class="pill pill-green">Well Stocked</span>
+        <span class="pill pill-purple">Critical</span>
+      </div>
+      <div class="demo-label">On moss background</div>
+      <div class="demo-area moss" style="flex-wrap:wrap;gap:8px;">
+        <span class="pill pill-ok"><span class="dot"></span>Complete</span>
+        <span class="pill pill-warn"><span class="dot"></span>Planned</span>
+        <span class="pill pill-crit"><span class="dot"></span>Overdue</span>
+        <span class="pill pill-green">Well Stocked</span>
+        <span class="pill pill-purple">Critical</span>
+      </div>
+      <div class="demo-code">&lt;span class="pill pill-ok"&gt;&lt;span class="dot"&gt;&lt;/span&gt;Complete&lt;/span&gt;
+&lt;span class="pill pill-warn"&gt;&lt;span class="dot"&gt;&lt;/span&gt;Planned&lt;/span&gt;
+&lt;span class="pill pill-crit"&gt;&lt;span class="dot"&gt;&lt;/span&gt;Overdue&lt;/span&gt;
+&lt;span class="pill pill-info"&gt;Active&lt;/span&gt;
+&lt;span class="pill pill-slate"&gt;Inactive&lt;/span&gt;
+&lt;span class="pill pill-moss"&gt;Group 1&lt;/span&gt;</div>
+    </div>
+  </section>
+
+
+  <!-- ============================
+       FORMS
+       ============================ -->
+  <section class="section" id="forms">
+    <div class="section-label">Components</div>
+    <h2>Form Inputs</h2>
+
+    <div class="demo">
+      <div class="demo-area col" style="gap:14px;max-width:460px;">
+        <div class="field">
+          <label>Beneficiary Name</label>
+          <input type="text" placeholder="e.g. Smith Family">
+        </div>
+        <div class="field">
+          <label>Pick Date</label>
+          <input type="text" value="2025-03-14" class="filled">
+        </div>
+        <div class="field">
+          <label>Dietary Requirements</label>
+          <input type="text" value="Gluten free, no pork" class="error">
+          <span class="err-msg">Please verify before packing</span>
+        </div>
+        <div class="field">
+          <label>Group</label>
+          <select>
+            <option>Group 1</option>
+            <option>Group 2</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Notes</label>
+          <textarea placeholder="Any special instructions..."></textarea>
+        </div>
+      </div>
+      <div class="demo-code">&lt;div class="field"&gt;
+  &lt;label&gt;Beneficiary Name&lt;/label&gt;
+  &lt;input type="text" placeholder="e.g. Smith Family"&gt;
+&lt;/div&gt;
+
+/* State modifiers */
+input.filled  /* pre-filled / confirmed value — green border */
+input.error   /* validation error — purple border */</div>
+    </div>
+  </section>
+
+
+  <!-- ============================
+       TABLES
+       ============================ -->
+  <section class="section" id="tables">
+    <div class="section-label">Components</div>
+    <h2>Tables</h2>
+
+    <div class="demo">
+      <div class="demo-area col" style="padding:16px;">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Ref</th>
+              <th>Name</th>
+              <th>Household</th>
+              <th>C / D</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="ref">BEN-0042</td>
+              <td style="font-weight:600;color:var(--moss)">Smith Family</td>
+              <td style="font-family:'DM Mono',monospace;font-size:.75rem">4 (2A &middot; 2C)</td>
+              <td>Collection</td>
+              <td><span class="pill pill-info" style="font-size:.57rem">Active</span></td>
+            </tr>
+            <tr>
+              <td class="ref">BEN-0089</td>
+              <td style="font-weight:600;color:var(--moss)">Jones Household</td>
+              <td style="font-family:'DM Mono',monospace;font-size:.75rem">2 (2A &middot; 0C)</td>
+              <td>Delivery</td>
+              <td><span class="pill pill-info" style="font-size:.57rem">Active</span></td>
+            </tr>
+            <tr>
+              <td class="ref">BEN-0031</td>
+              <td style="font-weight:600;color:var(--moss)">Ahmed Family</td>
+              <td style="font-family:'DM Mono',monospace;font-size:.75rem">5 (2A &middot; 3C)</td>
+              <td>Collection</td>
+              <td><span class="pill pill-slate" style="font-size:.57rem">Paused</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="demo-code">&lt;table class="data-table"&gt;
+  &lt;thead&gt;&lt;tr&gt;&lt;th&gt;Ref&lt;/th&gt;&lt;th&gt;Name&lt;/th&gt;...&lt;/tr&gt;&lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;&lt;td class="ref"&gt;BEN-0042&lt;/td&gt;...&lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;</div>
+    </div>
+  </section>
+
+
+  <!-- ============================
+       CALLOUTS
+       ============================ -->
+  <section class="section" id="callouts">
+    <div class="section-label">Components</div>
+    <h2>Callouts &amp; Alerts</h2>
+
+    <div class="demo">
+      <div class="demo-label">All callout variants</div>
+      <div class="demo-area col" style="gap:8px;">
+        <div class="callout callout-tip">
+          <span class="icon">&#128161;</span>
+          <div><strong>Tip.</strong> All picks scheduled for today have been completed ahead of schedule.</div>
+        </div>
+        <div class="callout callout-warn">
+          <span class="icon">&#9888;&#65039;</span>
+          <div><strong>Low stock warning.</strong> Tinned tomatoes have fewer than 2 weeks remaining. Consider placing a reorder.</div>
+        </div>
+        <div class="callout callout-alert">
+          <span class="icon">&#128680;</span>
+          <div><strong>Overdue pick.</strong> BEN-0042 (Smith Family) was scheduled for 8 March and has not been marked complete.</div>
+        </div>
+        <div class="callout callout-info">
+          <span class="icon">&#8505;&#65039;</span>
+          <div>This beneficiary has dietary requirements on record. Check the notes column before packing.</div>
+        </div>
+        <div class="callout callout-strong">
+          <span class="icon">&#10003;</span>
+          <div><strong>All done.</strong> No overdue picks &mdash; great work this week, team.</div>
+        </div>
+      </div>
+      <div class="demo-code">&lt;div class="callout callout-tip"&gt;...&lt;/div&gt;     /* green / tip */
+&lt;div class="callout callout-warn"&gt;...&lt;/div&gt;    /* amber / warning */
+&lt;div class="callout callout-alert"&gt;...&lt;/div&gt;   /* purple / critical */
+&lt;div class="callout callout-info"&gt;...&lt;/div&gt;    /* slate / info */
+&lt;div class="callout callout-strong"&gt;...&lt;/div&gt;  /* moss / positive */</div>
+    </div>
+  </section>
+
+
+  <!-- ============================
+       DATA & PROGRESS
+       ============================ -->
+  <section class="section" id="data">
+    <div class="section-label">Components</div>
+    <h2>Data &amp; Progress</h2>
+
+    <h3>RAG Progress Bars</h3>
+    <p>Used on the Stock Levels tab. Green = 4+ weeks, amber = 2&ndash;4 weeks, purple = under 2 weeks (critical).</p>
+    <div class="demo">
+      <div class="demo-area col" style="gap:4px;padding:20px;">
+        <div class="rag-row">
+          <div class="rag-label">Pasta (500g)</div>
+          <div class="rag-track"><div class="rag-fill rag-green" style="width:82%"></div></div>
+          <div class="rag-weeks">8 wks</div>
+        </div>
+        <div class="rag-row">
+          <div class="rag-label">Tinned tomatoes</div>
+          <div class="rag-track"><div class="rag-fill rag-amber" style="width:33%"></div></div>
+          <div class="rag-weeks">3 wks</div>
+        </div>
+        <div class="rag-row">
+          <div class="rag-label">Baked beans</div>
+          <div class="rag-track"><div class="rag-fill rag-red" style="width:12%"></div></div>
+          <div class="rag-weeks">1 wk</div>
+        </div>
+        <div class="rag-row">
+          <div class="rag-label">Rice (1kg)</div>
+          <div class="rag-track"><div class="rag-fill rag-green" style="width:100%"></div></div>
+          <div class="rag-weeks">12+ wks</div>
+        </div>
+      </div>
+      <div class="demo-code">&lt;div class="rag-row"&gt;
+  &lt;div class="rag-label"&gt;Item name&lt;/div&gt;
+  &lt;div class="rag-track"&gt;
+    &lt;div class="rag-fill rag-green" style="width:82%"&gt;&lt;/div&gt;
+  &lt;/div&gt;
+  &lt;div class="rag-weeks"&gt;8 wks&lt;/div&gt;
+&lt;/div&gt;
+
+/* Colour classes */
+.rag-green  /* 4+ weeks — OK */
+.rag-amber  /* 2-4 weeks — Low */
+.rag-red    /* under 2 weeks — Critical */</div>
+    </div>
+  </section>
+
+
+  <!-- ============================
+       NAVIGATION
+       ============================ -->
+  <section class="section" id="navigation">
+    <div class="section-label">Structure</div>
+    <h2>Navigation</h2>
+
+    <h3>App Header</h3>
+    <div class="demo">
+      <div class="demo-label">Sticky header — 52px tall, green background</div>
+      <div class="demo-area" style="background:var(--cream-d);padding:12px;">
+        <div class="nav-specimen">
+          <div style="display:flex;align-items:center;gap:14px;">
+            <div class="nav-spec-brand">Olive Branch <span>/</span> Aid</div>
+            <div style="width:1px;height:24px;background:rgba(231,234,208,.2);"></div>
+            <div class="nav-sub">Operations Dashboard</div>
+          </div>
+          <div style="display:flex;gap:8px;">
+            <a href="#" class="btn btn-ghost btn-sm">&#8635; Refresh</a>
+            <a href="#" class="btn btn-cream btn-sm">Plan Creator</a>
+          </div>
+        </div>
+      </div>
+      <div class="demo-code">&lt;header&gt;
+  &lt;div class="brand-logo"&gt;Olive Branch &lt;span&gt;/&lt;/span&gt; Aid&lt;/div&gt;
+  &lt;div class="brand-sub"&gt;Operations Dashboard&lt;/div&gt;
+  &lt;div class="header-right"&gt;
+    &lt;button class="btn btn-ghost btn-sm"&gt;Refresh&lt;/button&gt;
+    &lt;button class="btn btn-cream btn-sm"&gt;Plan Creator&lt;/button&gt;
+  &lt;/div&gt;
+&lt;/header&gt;</div>
+    </div>
+
+    <h3>Tab Navigation</h3>
+    <div class="demo">
+      <div class="demo-label">Moss background, green active underline</div>
+      <div class="demo-area" style="padding:0;display:block;">
+        <div class="tab-nav-specimen">
+          <div class="tab-item active">&#127968; Overview</div>
+          <div class="tab-item">
+            &#128197; Pick Schedule
+            <span class="pill pill-green" style="font-size:.53rem;padding:1px 6px;">5 today</span>
+          </div>
+          <div class="tab-item">&#128101; Beneficiaries</div>
+          <div class="tab-item">
+            &#128230; Stock Levels
+            <span class="pill pill-crit" style="font-size:.53rem;padding:1px 6px;">2 critical</span>
+          </div>
+          <div class="tab-item">&#10003; Parcels Served</div>
+        </div>
+      </div>
+      <div class="demo-code">&lt;nav class="tab-nav"&gt;
+  &lt;button class="tab-item active"&gt;Overview&lt;/button&gt;
+  &lt;button class="tab-item"&gt;
+    Pick Schedule
+    &lt;span class="pill pill-green"&gt;5 today&lt;/span&gt;
+  &lt;/button&gt;
+  ...
+&lt;/nav&gt;
+
+/* Active state */
+.tab-item.active {
+  color: var(--cream);
+  border-bottom: 3px solid var(--green);
+  background: rgba(112,132,0,.1);
+}</div>
+    </div>
+  </section>
+
+
+  <!-- ============================
+       CSS VARIABLES
+       ============================ -->
+  <section class="section" id="variables">
+    <div class="section-label">Reference</div>
+    <h2>CSS Variables</h2>
+    <p>All tokens defined in <code style="font-family:'DM Mono',monospace;color:var(--green);font-size:.84rem;">:root</code>. Use these throughout all OBA tools for consistency.</p>
+
+    <div class="var-grid" style="margin-top:20px;">
+      <div>
+        <div class="var-group-title">Colours</div>
+        <div class="var-row"><span class="var-name">--green</span>    <div class="var-right"><span class="var-val">#708400</span><div class="var-swatch" style="background:#708400;"></div></div></div>
+        <div class="var-row"><span class="var-name">--moss</span>     <div class="var-right"><span class="var-val">#323d06</span><div class="var-swatch" style="background:#323d06;"></div></div></div>
+        <div class="var-row"><span class="var-name">--purple</span>   <div class="var-right"><span class="var-val">#8E1C5E</span><div class="var-swatch" style="background:#8E1C5E;"></div></div></div>
+        <div class="var-row"><span class="var-name">--cream</span>    <div class="var-right"><span class="var-val">#e7ead0</span><div class="var-swatch" style="background:#e7ead0;border:1px solid #d8dbc0;"></div></div></div>
+        <div class="var-row"><span class="var-name">--cream-d</span>  <div class="var-right"><span class="var-val">#d8dbc0</span><div class="var-swatch" style="background:#d8dbc0;"></div></div></div>
+        <div class="var-row"><span class="var-name">--slate</span>    <div class="var-right"><span class="var-val">#5a6340</span><div class="var-swatch" style="background:#5a6340;"></div></div></div>
+        <div class="var-row"><span class="var-name">--ink</span>      <div class="var-right"><span class="var-val">#1a1f0a</span><div class="var-swatch" style="background:#1a1f0a;"></div></div></div>
+        <div class="var-row"><span class="var-name">--amber</span>    <div class="var-right"><span class="var-val">#c47a00</span><div class="var-swatch" style="background:#c47a00;"></div></div></div>
+        <div class="var-row"><span class="var-name">--white</span>    <div class="var-right"><span class="var-val">#ffffff</span><div class="var-swatch" style="background:#fff;border:1px solid #d8dbc0;"></div></div></div>
+
+        <div class="var-group-title" style="margin-top:20px;">Spacing</div>
+        <div class="var-row"><span class="var-name">--space-2xs</span><span class="var-val">4px</span></div>
+        <div class="var-row"><span class="var-name">--space-xs</span> <span class="var-val">8px</span></div>
+        <div class="var-row"><span class="var-name">--space-sm</span> <span class="var-val">12px</span></div>
+        <div class="var-row"><span class="var-name">--space-md</span> <span class="var-val">16px</span></div>
+        <div class="var-row"><span class="var-name">--space-lg</span> <span class="var-val">24px</span></div>
+        <div class="var-row"><span class="var-name">--space-xl</span> <span class="var-val">32px</span></div>
+        <div class="var-row"><span class="var-name">--space-2xl</span><span class="var-val">48px</span></div>
+        <div class="var-row"><span class="var-name">--space-3xl</span><span class="var-val">64px</span></div>
+        <div class="var-row"><span class="var-name">--space-4xl</span><span class="var-val">96px</span></div>
+      </div>
+
+      <div>
+        <div class="var-group-title">Border Radius</div>
+        <div class="var-row"><span class="var-name">--radius-sm</span>  <span class="var-val">0.5rem</span></div>
+        <div class="var-row"><span class="var-name">--radius-md</span>  <span class="var-val">0.75rem</span></div>
+        <div class="var-row"><span class="var-name">--radius-lg</span>  <span class="var-val">1rem</span></div>
+        <div class="var-row"><span class="var-name">--radius-xl</span>  <span class="var-val">1.5rem</span></div>
+        <div class="var-row"><span class="var-name">--radius-full</span><span class="var-val">999px</span></div>
+
+        <div class="var-group-title" style="margin-top:20px;">Shadows</div>
+        <div class="var-row"><span class="var-name">--shadow-sm</span>   <span class="var-val">subtle lift</span></div>
+        <div class="var-row"><span class="var-name">--shadow-md</span>   <span class="var-val">card default</span></div>
+        <div class="var-row"><span class="var-name">--shadow-lg</span>   <span class="var-val">panel / modal</span></div>
+        <div class="var-row"><span class="var-name">--shadow-hover</span><span class="var-val">card hover</span></div>
+
+        <div class="var-group-title" style="margin-top:20px;">Transitions</div>
+        <div class="var-row"><span class="var-name">--t-fast</span>  <span class="var-val">150ms ease</span></div>
+        <div class="var-row"><span class="var-name">--t-base</span>  <span class="var-val">280ms ease</span></div>
+        <div class="var-row"><span class="var-name">--t-slow</span>  <span class="var-val">420ms ease</span></div>
+        <div class="var-row"><span class="var-name">--t-spring</span><span class="var-val">500ms spring</span></div>
+
+        <div class="var-group-title" style="margin-top:20px;">Tab Accent Colours</div>
+        <div class="var-row"><span class="var-name">1. Beneficiary DB</span><div class="var-right"><span class="var-val">#708400</span><div class="var-swatch" style="background:#708400;"></div></div></div>
+        <div class="var-row"><span class="var-name">2. Pick Plan</span>      <div class="var-right"><span class="var-val">#323d06</span><div class="var-swatch" style="background:#323d06;"></div></div></div>
+        <div class="var-row"><span class="var-name">3. Post-Pick</span>      <div class="var-right"><span class="var-val">#8E1C5E</span><div class="var-swatch" style="background:#8E1C5E;"></div></div></div>
+        <div class="var-row"><span class="var-name">4. Stock Ledger</span>   <div class="var-right"><span class="var-val">#c47a00</span><div class="var-swatch" style="background:#c47a00;"></div></div></div>
+        <div class="var-row"><span class="var-name">5. Donations</span>      <div class="var-right"><span class="var-val">#5a6340</span><div class="var-swatch" style="background:#5a6340;"></div></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="page-footer">
+    <div>
+      <div class="footer-brand">Olive Branch <span>/</span> Aid</div>
+      <div class="footer-meta" style="margin-top:4px;">Visual Identity System &middot; OBA Operations Suite</div>
+    </div>
+    <div class="footer-meta">Brand Guidelines &middot; All components</div>
+  </footer>
+
+</main>
+
+<script>
+/* Highlight active nav link on scroll */
+const links = document.querySelectorAll('.nav-link');
+const sections = document.querySelectorAll('section[id], header[id]');
+
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      links.forEach(l => l.style.removeProperty('color'));
+      links.forEach(l => l.classList.remove('active'));
+      const a = document.querySelector('.nav-link[href="#' + e.target.id + '"]');
+      if (a) a.classList.add('active');
+    }
+  });
+}, { threshold: 0.2, rootMargin: '-5% 0px -65% 0px' });
+
+sections.forEach(s => obs.observe(s));
+</script>
+
+</body>
+</html>

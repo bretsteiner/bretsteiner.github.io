@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OBA - Referral Onboarding Process</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@900&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --brand-navy: #1a2f4a;
+            --brand-coral: #ff6f61;
+            --brand-teal: #00bcd4;
+            --brand-babyblue: #81d2f6;
+            --brand-light: #fef2f2;
+            --brand-white: #ffffff;
+            --abandon--red: #9c1313;
+            --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            --bg-dark: #1a2f4a;
+            --text-light: #f7f8f9;
+            --accent-coral: #ff6f61;
+            --space-md: 1rem;
+            --space-xl: 2rem;
+            --space-2xl: 3rem;
+            --radius-md: 0.75rem;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f0f4f8;
+            background-image: radial-gradient(var(--brand-teal) 0.5px, transparent 0.5px);
+            background-size: 30px 30px;
+            margin: 0;
+            color: var(--brand-navy);
+        }
+
+        /* HEADER */
+        header.minihero {
+            background: var(--brand-navy);
+            color: var(--brand-white);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            min-height: 15vh;
+            padding: 1.5rem 10%;
+        }
+
+        .header-logo { height: 60px; width: auto; background-color: white; border-radius: 1em; padding: 0.8em; }
+        .minihero h2 { font-family: 'Inter', sans-serif; font-weight: 900; font-size: 1.8rem; margin: 0; }
+        .sub-heading { font-weight: 700; margin-top: 5px; color: var(--accent-coral); font-size: 1rem; }
+
+        /* HERO */
+        section.align--centered { text-align: center; padding: 60px 0 20px 0; }
+        h1 { font-family: 'Inter', sans-serif; font-weight: 900; font-size: clamp(2.5rem, 6vw, 4.5rem); text-transform: uppercase; line-height: 0.9; margin: 0; }
+        .subtitle { font-size: 1.2rem; color: var(--brand-coral); font-weight: 700; margin-top: 10px; }
+
+        /* JOURNEY CONTAINER & LINE */
+        .journey-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+            padding: 60px 20px;
+        }
+
+        .journey-container::before {
+            content: '';
+            position: absolute;
+            left: calc(20px + 40px + 42.5px); 
+            top: 150px;
+            bottom: 100px;
+            width: 4px;
+            background: repeating-linear-gradient(to bottom, var(--brand-teal), var(--brand-teal) 15px, transparent 15px, transparent 30px);
+            z-index: 1;
+        }
+
+        .track-labels {
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            gap: 40px;
+            margin-bottom: 60px;
+            position: relative;
+            z-index: 3;
+        }
+
+        .label-pill {
+            background: var(--brand-navy);
+            color: white;
+            padding: 15px;
+            border-radius: 50px;
+            text-align: center;
+            font-family: 'Inter';
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-size: 0.9rem;
+            box-shadow: var(--shadow-lg);
+        }
+
+        /* DUAL ROW STRUCTURE */
+        .dual-step-row {
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            gap: 40px;
+            margin-bottom: 40px;
+            position: relative;
+        }
+
+        /* STACKING COLUMN FOR LOGISTICS */
+        .side-column-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            justify-content: flex-start;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* CARDS */
+        .main-stage-card {
+            background: var(--brand-white);
+            padding: 60px 40px 40px 40px;
+            border-radius: 2.5rem;
+            box-shadow: var(--shadow-lg);
+            position: relative;
+            z-index: 2;
+        }
+
+        .icon-circle {
+            width: 85px; height: 85px;
+            background: var(--brand-navy);
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 40px;
+            position: absolute; top: -42px; left: 40px;
+            border: 6px solid var(--brand-white);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            z-index: 5;
+        }
+
+        .data-card {
+            background: #eef2f7; padding: 30px; border-radius: 2.5rem;
+            border: 2px dashed var(--brand-teal);
+        }
+
+        .abandon-card {
+            background: #fdf2f2; padding: 30px; border-radius: 2.5rem;
+            border: 2px dashed var(--abandon--red);
+        }
+
+        .step-tag { font-family: 'Inter'; font-weight: 900; color: var(--brand-coral); font-size: 0.8rem; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 10px;}
+        .sentiment-badge { display: inline-block; background: var(--brand-light); padding: 8px 16px; border-radius: 50px; font-weight: 700; font-size: 0.85rem; margin: 15px 0; border: 1px solid #ffe2de; }
+        .tracking-badge { display: inline-block; background: var(--brand-babyblue); padding: 8px 16px; border-radius: 50px; font-weight: 700; font-size: 0.85rem; margin: 5px 0; border: 1px solid #373ecf; }
+
+        .time-header { font-family: 'Inter'; font-weight: 900; color: var(--brand-teal); font-size: 1.1rem; margin-bottom: 15px; display: flex; align-items: center; gap: 10px; }
+        .abandon-header { font-family: 'Inter'; font-weight: 900; color: var(--abandon--red); font-size: 1.1rem; margin-bottom: 15px; display: flex; align-items: center; gap: 10px; }
+
+        .data-item label { display: block; font-family: 'Inter'; font-weight: 900; font-size: 0.75rem; text-transform: uppercase; color: #718096; margin-top: 15px; }
+        .data-item span { font-size: 0.9rem; color: var(--brand-navy); }
+
+        /* CHILD BOX GRID */
+        .child-box-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; margin: 25px 0; }
+        .sub-box { background: #f8fafc; padding: 20px; border-radius: 1.2rem; border-top: 5px solid var(--brand-coral); }
+        .sub-box.teal-top { border-top-color: var(--brand-teal); }
+        .sub-box h4 { margin: 0 0 8px 0; font-family: 'Inter'; font-size: 0.85rem; text-transform: uppercase; }
+        .sub-box p { margin: 0; font-size: 0.8rem; line-height: 1.5; color: #4a5568; }
+
+        .result-node { background: var(--brand-navy); color: white; padding: 20px 25px; border-radius: 1.2rem; display: flex; align-items: center; gap: 20px; margin-top: 20px; }
+        .result-text h4 { margin: 0; font-family: 'Inter'; color: var(--brand-teal); text-transform: uppercase; font-size: 0.9rem; }
+        .result-text p { margin: 5px 0 0 0; font-size: 0.85rem; opacity: 0.9; }
+
+        /* WAIT BLOCK */
+        .wait-block { grid-column: 1 / -1; text-align: center; padding: 20px 0 60px 0; position: relative; z-index: 2; }
+        .wait-pill { background: var(--brand-coral); color: white; padding: 10px 30px; border-radius: 50px; font-weight: 900; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; }
+
+        /* FOOTER */
+        .footer { background-color: var(--bg-dark); color: var(--text-light); padding: var(--space-2xl) 0; margin-top: 100px; }
+        .footer__top { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 0 var(--space-xl); }
+
+        @media (max-width: 1000px) {
+            .journey-container::before { display: none; }
+            .track-labels, .dual-step-row { grid-template-columns: 1fr; }
+            .icon-circle { left: 50%; transform: translateX(-50%); }
+            header.minihero { flex-direction: column; text-align: center; }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="minihero">
+        <div class="header-text">
+            <h2>Bret Steiner</h2>
+            <h3 class="sub-heading">Product <span style="color:white">Accelerator</span></h3>
+        </div>
+        <img src="https://olivebranchaid.org/wp-content/uploads/2023/08/logo3.svg" alt="Olive Branch Aid Logo" class="header-logo">
+    </header>
+
+    <section class="align--centered">
+        <div style="font-size: 4rem; margin-bottom: 10px;">🏘️</div>
+        <h1>The Referral Onboarding Journey</h1>
+        <div class="subtitle">A path from vulnerability to community support</div>
+    </section>
+
+    <div class="journey-container">
+        
+        <div class="track-labels">
+            <div class="label-pill">The Human Experience</div>
+            <div class="label-pill" style="background: var(--brand-teal);">System Logistics</div>
+        </div>
+
+        <div class="dual-step-row">
+            <div class="main-stage-card">
+                <div class="icon-circle">📩</div>
+                <div class="step-tag">Step 01</div>
+                <h3>Initial Reach Out</h3>
+                <div class="sentiment-badge">Feeling: 😟 Overwhelmed but Hopeful</div><br>
+                <div class="tracking-badge">Application Status: 📝 Referred</div>
+                <p>Potential Beneficiaries or their support network reach out through trusted channels to enter the OBA safety net. We ensure every entry point is warm and accessible.</p>
+                
+                <div class="child-box-grid">
+                    <div class="sub-box">
+                        <h4>Professional</h4>
+                        <p>GPs or social workers refer via the secure portal.</p>
+                    </div>
+                    <div class="sub-box teal-top">
+                        <h4>Direct</h4>
+                        <p>Individuals reaching out via the OBA website.</p>
+                    </div>
+                    <div class="sub-box">
+                        <h4>Extension</h4>
+                        <p>Members seeking to renew their 3-month cycle.</p>
+                    </div>
+                </div>
+
+                <div class="result-node">
+                    <div class="result-icon">📥</div>
+                    <div class="result-text">
+                        <h4>Centralized Intake</h4>
+                        <p>Data flows into the <strong>Applications</strong> master sheet. The Beneficiary name will show up on the Referrals needing attention list.</p>
+                    </div> 
+                </div>
+            </div>
+
+            <div class="side-column-grid">
+                <div class="data-card">
+                    <div class="time-header">⏳ 20 Mins Processing</div>
+                    <div class="data-item">
+                        <label>Captured Fields</label>
+                        <span>Name, Contact, Address, Borough, Household Size.</span>
+                    </div>
+                    <div class="data-item">
+                        <label>Required Docs</label>
+                        <span>Referral ID or Basic Proof of Residency. Application tracked.</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="wait-block">
+            <span class="wait-pill">⏳ Queue Time: 24 - 48 Hours for Triage Review</span>
+        </div>
+
+        <div class="dual-step-row">
+            <div class="main-stage-card">
+                <div class="icon-circle">⚖️</div>
+                <div class="step-tag">Step 02</div>
+                <h3>Application Review</h3>
+                <div class="sentiment-badge">Feeling: ⏳ Patiently Waiting</div><br>
+                <div class="tracking-badge">Application Status: 📝 Referred</div>
+                <p>OBA staff uses the <strong>Applications Dashboard</strong> to cross-reference data and prioritise support. At this stage a decision is made if the application is valid.</p>
+                
+                <div class="child-box-grid">
+                    <div class="sub-box teal-top">
+                        <h4>Validity Check</h4>
+                        <p>✅ Verifying borough eligibility and weeding out duplicates.</p>
+                        <p>✅ In catchment area/borough</p>
+                        <p>✅ New SU</p>
+                    </div>
+                    <div class="sub-box">
+                        <h4>Person Match</h4>
+                        <p>Checking if the beneficiary has an existing history in our system. And if there has been ✅ 6 months + since last referral.</p>
+                    </div>
+                    <div class="sub-box">
+                        <h4>Arrange Meeting</h4>
+                        <p>Arrange onboarding meeting with the beneficiary via a phonecall.</p>
+                    </div>
+                </div>
+
+                <div class="result-node" style="background: var(--brand-teal);">
+                    <div class="result-icon">📧</div>
+                    <div class="result-text">
+                        <h4 style="color: white;">Meeting Arranged</h4>
+                        <p>Questions: How are meetings arranged? F2F or online? How do they respond/receive reminders?</p>
+                        <p>Onboarding meeting is scheduled.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="side-column-grid">
+                <div class="data-card">
+                    <div class="time-header">⏱️ 10 Mins Processing</div>
+                    <div class="data-item">
+                        <label>Status Update</label>
+                        <span>Application Status changed to "Pending Meeting" in Dashboard.</span>
+                    </div>
+                    <div class="data-item">
+                        <label>Data Action</label>
+                        <span>Internal ID assignment and "Person Match" flag activated. What data is captured?</span>
+                    </div>
+                </div>
+                <div class="abandon-card">
+                    <div class="abandon-header">⛔ Application Rejected</div>
+                    <div class="data-item">
+                        <label>Email Explanation</label>
+                        <span>Beneficiary receives an explanatory e-mail.</span>
+                    </div>
+                    <div class="data-item">
+                        <label>Data Action</label>
+                        <span>What data is stored or deleted in the system?</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="wait-block">
+            <span class="wait-pill">⏳ Logistics: 3 - 5 Days to Coordinate</span>
+        </div>
+
+        <div class="dual-step-row">
+            <div class="main-stage-card">
+                <div class="icon-circle">🤝</div>
+                <div class="step-tag">Step 03</div>
+                <h3>Onboarding Meetings</h3>
+                <div class="sentiment-badge">Feeling: 😌 Heard & Validated</div><br>
+                <div class="tracking-badge">Application Status: 📝 Onboarding</div>
+                <p>We meet up to three times to deeply understand the household's unique story and specific requirements.</p>
+                
+                <div class="child-box-grid">
+                    <div class="sub-box">
+                        <h4>Needs Discovery</h4>
+                        <p>Detailing dietary needs, allergies, and household preferences.</p>
+                    </div>
+                    <div class="sub-box teal-top">
+                        <h4>Documents</h4>
+                        <p>Collect, record and store documents. Proof of ID, Address and Eligibility.</p>
+                    </div>
+                    <div class="sub-box teal-top">
+                        <h4>Wellbeing</h4>
+                        <p>Offer Wellbeing advice and support. Arrange follow up if needed.</p>
+                    </div>
+                    <div class="sub-box teal-top">
+                        <h4>Distribution</h4>
+                        <p>Create Food Plan and Collection/Delivery Schedule.</p>
+                    </div>
+                </div>
+
+                <div class="result-node">
+                    <div class="result-icon">📂</div>
+                    <div class="result-text">
+                        <h4>Profile Completed</h4>
+                        <p>Beneficiary moves into the permanent <strong>People</strong> spreadsheet (database).</p>
+                        <p>Log requirements for Well-being and Distribution.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="side-column-grid">
+                <div class="data-card">
+                    <div class="time-header">⏱️ 45 Mins per Session</div>
+                    <div class="data-item">
+                        <label>Metadata Depth</label>
+                        <span>Ethnicity, Age Groups, Allergic Triggers, Group preferences.</span>
+                    </div>
+                    <div class="data-item">
+                        <label>Required Docs</label>
+                        <span>Photo ID, Proof of Address, Income Verification.</span>
+                    </div>
+                </div>
+                <div class="abandon-card">
+                    <div class="abandon-header">🤷 IF THEY DONT SHOW</div>
+                    <div class="data-item">
+                        <label>Reschedule Meeting</label>
+                        <span>Rearrange meeting up to three times before sending an e-mail.</span>
+                    </div>
+                    <div class="data-item">
+                        <label>Data</label>
+                        <span>What data is kept or logged at this stage?</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="wait-block">
+            <span class="wait-pill">⏳ Finalizing: 48 Hours for Activation</span>
+        </div>
+
+        <div class="dual-step-row">
+            <div class="main-stage-card">
+                <div class="icon-circle">🧡</div>
+                <div class="step-tag">Step 04</div>
+                <h3>Active Community Care</h3>
+                <div class="sentiment-badge">Feeling: 💪 Empowered & Supported</div><br>
+                <div class="tracking-badge">Application Status: ✨ Active</div>
+                <p>The Beneficiary is now an active <strong>OBA Beneficiary</strong>, fully integrated into our weekly community rhythm.</p>
+                
+                <div class="child-box-grid">
+                    <div class="sub-box teal-top">
+                        <h4>Wellbeing Path</h4>
+                        <p>Enrolled in support groups designed for personal growth.</p>
+                    </div>
+                    <div class="sub-box">
+                        <h4>Operational Flow</h4>
+                        <p>Visible in daily delivery lists and collection schedules.</p>
+                    </div>
+                </div>
+
+                <div class="result-node" style="background: var(--brand-coral);">
+                    <div class="result-icon">✨</div>
+                    <div class="result-text">
+                        <h4 style="color: white;">Support Cycle Live</h4>
+                        <p>Welcome letter sent confirming 3 months of tailored care.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="side-column-grid">
+                <div class="data-card">
+                    <div class="time-header">⏱️ 3-Month Cycle</div>
+                    <div class="data-item">
+                        <label>Operational Data</label>
+                        <span>Person ID, Group Assignment, Start/Expiry Dates.</span>
+                    </div>
+                    <div class="data-item">
+                        <label>Visibility</label>
+                        <span>Read-only sync to Wellbeing and C&D Operational Tables.</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <footer class="footer">
+        <div class="footer__top">
+            <div class="footer__brand">
+                <span style="font-family:'Inter'; font-weight:900; font-size:1.5rem;">Bret Steiner</span>
+                <span style="margin: 0 15px; color:rgba(255,255,255,0.3);">|</span>
+                <span style="color:var(--brand-coral); font-weight:700; text-transform:uppercase; font-size:0.85rem;">Product Accelerator</span>
+            </div>
+            <div class="footer__social" style="display:flex; gap:20px;">
+                <a href="mailto:bretsteiner@gmail.com" style="color:white; text-decoration:none;">Email</a>
+                <a href="https://www.linkedin.com/in/bretsteiner/" target="_blank" style="color:white; text-decoration:none;">LinkedIn</a>
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>

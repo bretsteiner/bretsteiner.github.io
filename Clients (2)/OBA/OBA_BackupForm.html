@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OBA Backup Entry Form</title>
+<style>
+  :root {
+    --nav:#1E2A1A; --sage:#4A7C59; --sage-lt:#EAF2ED; --sage-dk:#2E5438;
+    --page:#F5F6F0; --ink:#1E2118; --body:#3A3D31; --muted:#6B7060;
+    --line:#E2E4DA; --white:#FFFFFF; --gold:#C07800; --red:#B03030;
+    --red-lt:#FCEAEA; --amber:#FFE5B4;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'Arial',sans-serif;background:var(--page);color:var(--ink);font-size:14px;}
+  .nav{background:var(--nav);padding:14px 20px;display:flex;align-items:center;gap:12px;}
+  .nav img{height:32px;filter:brightness(0) invert(1);opacity:.9;}
+  .nav h1{color:var(--white);font-size:1rem;font-weight:700;}
+  .nav .badge{background:rgba(255,255,255,.15);color:var(--white);font-size:.7rem;
+    padding:3px 8px;border-radius:10px;margin-left:4px;}
+  .warn{background:#FFF3CD;border-left:4px solid var(--gold);padding:12px 16px;
+    margin:16px;border-radius:4px;font-size:.82rem;color:var(--body);}
+  .warn strong{color:var(--gold);}
+  .container{max-width:700px;margin:0 auto;padding:16px;}
+  .card{background:var(--white);border-radius:8px;border:1px solid var(--line);
+    margin-bottom:16px;overflow:hidden;}
+  .card-hdr{background:var(--sage);color:var(--white);padding:12px 16px;
+    font-weight:700;font-size:.9rem;display:flex;align-items:center;gap:8px;}
+  .card-body{padding:16px;}
+  .field{margin-bottom:12px;}
+  .field label{display:block;font-size:.78rem;font-weight:700;color:var(--muted);
+    text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px;}
+  .field label .req{color:var(--red);}
+  .field input,.field select,.field textarea{width:100%;padding:8px 10px;
+    border:1.5px solid var(--line);border-radius:6px;font-size:.88rem;
+    background:var(--white);color:var(--ink);transition:border-color .15s;}
+  .field input:focus,.field select:focus,.field textarea:focus{
+    outline:none;border-color:var(--sage);}
+  .field .hint{font-size:.72rem;color:var(--muted);margin-top:3px;font-style:italic;}
+  .row2{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+  .tabs{display:flex;gap:2px;margin-bottom:16px;}
+  .tab{flex:1;padding:10px;text-align:center;background:var(--sage-lt);
+    border:1.5px solid var(--line);border-radius:6px;cursor:pointer;
+    font-weight:700;font-size:.82rem;color:var(--muted);transition:all .15s;}
+  .tab.active{background:var(--sage);color:var(--white);border-color:var(--sage);}
+  .form-section{display:none;}
+  .form-section.active{display:block;}
+  /* Item grid */
+  .items-wrap{max-height:360px;overflow-y:auto;border:1.5px solid var(--line);border-radius:6px;}
+  .sec-hdr{padding:8px 12px;font-size:.72rem;font-weight:700;color:var(--white);
+    cursor:pointer;display:flex;justify-content:space-between;}
+  .items-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));
+    padding:8px;gap:6px;}
+  .item-cell{display:flex;align-items:center;gap:6px;padding:4px 6px;
+    border:1px solid var(--line);border-radius:4px;background:var(--page);}
+  .item-cell input{width:54px;padding:3px 5px;font-size:.78rem;text-align:center;
+    border:1.5px solid var(--line);border-radius:4px;flex-shrink:0;}
+  .item-cell input.has-val{background:var(--sage-lt);border-color:var(--sage);
+    font-weight:700;color:var(--sage-dk);}
+  .item-cell .iname{font-size:.72rem;color:var(--body);line-height:1.2;}
+  .btn{padding:10px 20px;border:none;border-radius:6px;font-size:.85rem;
+    font-weight:700;cursor:pointer;transition:all .15s;}
+  .btn-green{background:var(--sage);color:var(--white);}
+  .btn-green:hover{background:var(--sage-dk);}
+  .btn-outline{background:transparent;border:1.5px solid var(--sage);color:var(--sage);}
+  .btn:disabled{opacity:.5;cursor:not-allowed;}
+  .btns{display:flex;gap:8px;justify-content:flex-end;padding-top:12px;
+    border-top:1px solid var(--line);margin-top:12px;}
+  .toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);
+    background:var(--sage-dk);color:var(--white);padding:10px 20px;
+    border-radius:20px;font-size:.82rem;font-weight:700;display:none;z-index:999;}
+  .toast.error{background:var(--red);}
+  .status-bar{text-align:center;padding:8px;font-size:.78rem;color:var(--muted);}
+  .status-bar.ok{color:var(--sage);font-weight:700;}
+  .status-bar.err{color:var(--red);}
+  #login-screen{padding:40px 20px;text-align:center;}
+  #login-screen h2{color:var(--nav);margin-bottom:8px;}
+  #login-screen p{color:var(--muted);font-size:.85rem;margin-bottom:20px;}
+  .login-field{max-width:320px;margin:0 auto 12px;}
+  .login-field input{width:100%;padding:10px 12px;border:1.5px solid var(--line);
+    border-radius:6px;font-size:.9rem;}
+  .collapsed .items-grid{display:none;}
+</style>
+</head>
+<body>
+
+<div class="nav">
+  <img src="https://olivebranchaid.org/wp-content/uploads/2023/08/logo3.svg" alt="OBA">
+  <h1>Backup Entry Form <span class="badge">⚠ Emergency Use Only</span></h1>
+</div>
+
+<div class="warn">
+  <strong>⚠ This form is for emergency use only</strong> — use it only when the main
+  Stock Control or Plan Creator apps are unavailable. All entries write directly to the
+  Google Sheet. Ensure item names are selected from the dropdown (not typed) to avoid
+  mismatches with the Stock Ledger.
+</div>
+
+<div class="container">
+
+  <!-- Login -->
+  <div id="login-screen">
+    <h2>Sign In</h2>
+    <p>Enter the Google Sheet ID and your name to continue.<br>
+       You must have Editor access to the sheet.</p>
+    <div class="login-field">
+      <input type="text" id="sheet-id-input" placeholder="Google Sheet ID"
+             value="129xUmLALy4Pk_vnKSSrUl5dfT88nKjTMUnsFJ4VwZxk">
+    </div>
+    <div class="login-field">
+      <input type="text" id="user-name-input" placeholder="Your name">
+    </div>
+    <div class="login-field">
+      <button class="btn btn-green" onclick="doLogin()" style="width:100%;">
+        Connect to Sheet
+      </button>
+    </div>
+    <div id="login-status" class="status-bar"></div>
+  </div>
+
+  <!-- Main form (hidden until login) -->
+  <div id="main-form" style="display:none;">
+    <div id="user-bar" class="status-bar ok"></div>
+
+    <div class="tabs">
+      <div class="tab active" onclick="switchTab('stocktake')">📊 Stock Take</div>
+      <div class="tab" onclick="switchTab('delivery')">🚚 Delivery</div>
+    </div>
+
+    <!-- STOCK TAKE -->
+    <div id="tab-stocktake" class="form-section active">
+      <div class="card">
+        <div class="card-hdr">📊 Manual Stock Take</div>
+        <div class="card-body">
+          <p style="font-size:.8rem;color:var(--muted);margin-bottom:12px;">
+            Enter the physical count for each item. Leave blank if not counted.
+            This will be written to Tab 11 Stock Take Log.
+          </p>
+          <div id="st-items-wrap" class="items-wrap">
+            <div style="padding:20px;text-align:center;color:var(--muted);">Loading items…</div>
+          </div>
+          <div id="st-summary" style="font-size:.75rem;color:var(--sage);margin-top:6px;"></div>
+          <div class="btns">
+            <button class="btn btn-outline" onclick="clearGrid('st')">Clear All</button>
+            <button class="btn btn-green" id="btn-save-st" onclick="saveStocktake()">
+              💾 Save Stock Take
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DELIVERY -->
+    <div id="tab-delivery" class="form-section">
+      <div class="card">
+        <div class="card-hdr">🚚 Log Delivery</div>
+        <div class="card-body">
+          <div class="row2">
+            <div class="field">
+              <label>Source <span class="req">*</span></label>
+              <select id="del-source">
+                <option value="">— Select —</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>Donor / Organisation</label>
+              <select id="del-donor">
+                <option value="">— Optional —</option>
+              </select>
+            </div>
+          </div>
+          <div class="row2">
+            <div class="field">
+              <label>Received Date <span class="req">*</span></label>
+              <input type="date" id="del-date">
+            </div>
+            <div class="field">
+              <label>Weight (kg)</label>
+              <input type="number" id="del-weight" min="0" step="0.1" placeholder="Optional">
+            </div>
+          </div>
+          <div class="field">
+            <label>Notes</label>
+            <input type="text" id="del-notes" placeholder="Any notes about this delivery">
+          </div>
+          <div class="field" style="margin-top:8px;">
+            <label>Item Quantities <span class="req">*</span> (at least one required)</label>
+            <div id="del-items-wrap" class="items-wrap" style="margin-top:4px;">
+              <div style="padding:20px;text-align:center;color:var(--muted);">Loading items…</div>
+            </div>
+            <div id="del-summary" style="font-size:.75rem;color:var(--sage);margin-top:6px;"></div>
+          </div>
+          <div class="btns">
+            <button class="btn btn-outline" onclick="clearGrid('del')">Clear All</button>
+            <button class="btn btn-green" id="btn-save-del" onclick="saveDelivery()">
+              💾 Save Delivery
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+// ── Config ──────────────────────────────────────────────────────────
+const CLIENT_ID = '592083298024-82q4vcie6rualiooaiqgn43rvmb3jvhr.apps.googleusercontent.com';
+const SCOPES    = 'https://www.googleapis.com/auth/spreadsheets';
+const LEDGER_TAB  = '4. Stock Ledger';
+const LOG_TAB     = '5. Delivery Log';
+const ST_TAB      = '11. Stock Take Log';
+const REF_TAB     = '10. Reference Data';
+
+let SHEET_ID = '';
+let currentUser = '';
+let accessToken = null;
+
+// Item catalogue — loaded from Tab 4 (no hardcoding)
+let ITEM_SECTIONS = [];
+let ITEM_CODE_MAP = {};
+let ITEM_SECTION_MAP = {};
+
+// ── Auth ──────────────────────────────────────────────────────────
+async function getToken() {
+  if (accessToken) return accessToken;
+  return new Promise((res, rej) => {
+    google.accounts.oauth2.initTokenClient({
+      client_id: CLIENT_ID,
+      scope: SCOPES,
+      callback: (resp) => {
+        if (resp.error) return rej(resp.error);
+        accessToken = resp.access_token;
+        res(accessToken);
+      }
+    }).requestAccessToken();
+  });
+}
+
+async function fetchSheetRange(range) {
+  const token = await getToken();
+  const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${encodeURIComponent(range)}`;
+  const r = await fetch(url, { headers: { Authorization: 'Bearer ' + token } });
+  if (!r.ok) throw new Error('Sheet read failed');
+  return (await r.json()).values || [];
+}
+
+async function appendRows(tab, rows) {
+  const token = await getToken();
+  const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${encodeURIComponent(tab)}:append?valueInputOption=USER_ENTERED&insertDataOption=INSERT_ROWS`;
+  const r = await fetch(url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token },
+    body: JSON.stringify({ values: rows })
+  });
+  if (!r.ok) { const e = await r.json(); throw new Error(e.error?.message || 'Append failed'); }
+}
+
+// ── Item catalogue from sheet ────────────────────────────────────
+async function loadCatalogue() {
+  const rows = await fetchSheetRange(LEDGER_TAB + '!A1:E200');
+  const secMap = {}, secOrder = [];
+  ITEM_CODE_MAP = {}; ITEM_SECTION_MAP = {};
+
+  rows.forEach(row => {
+    const name = (row[0]||'').trim(), code = (row[1]||'').trim();
+    const colour = (row[2]||'').trim(), sec = (row[3]||'').trim();
+    if (!name || name.startsWith('ℹ️') || name.startsWith('📦') || name === 'Item Category') return;
+    if (code && sec) {
+      if (!secMap[sec]) { secMap[sec] = { name:sec, color:colour||'#4A7C59', items:[] }; secOrder.push(sec); }
+      secMap[sec].items.push(name);
+      ITEM_CODE_MAP[name] = code;
+      ITEM_SECTION_MAP[name] = sec;
+    }
+  });
+  ITEM_SECTIONS = secOrder.filter(s=>secMap[s]?.items.length>0).map(s=>secMap[s]);
+  return ITEM_SECTIONS;
+}
+
+async function loadRefData() {
+  // Reads Tab 10: A=Sources, C=Donors
+  try {
+    const rows = await fetchSheetRange(REF_TAB + '!A4:I50');  // start row 4: skip title, note, header
+    const sources = [], donors = [];
+    rows.forEach(row => {
+      if (row[0]) sources.push(row[0]);
+      if (row[2]) donors.push(row[2]);
+    });
+    const srcSel = document.getElementById('del-source');
+    sources.forEach(s => { const o=document.createElement('option'); o.value=s; o.textContent=s; srcSel.appendChild(o); });
+    const donSel = document.getElementById('del-donor');
+    donors.forEach(d => { const o=document.createElement('option'); o.value=d; o.textContent=d; donSel.appendChild(o); });
+  } catch(e) { console.warn('Ref data load failed:', e); }
+}
+
+// ── Login ─────────────────────────────────────────────────────────
+async function doLogin() {
+  const sheetId = document.getElementById('sheet-id-input').value.trim();
+  const userName = document.getElementById('user-name-input').value.trim();
+  if (!sheetId || !userName) { document.getElementById('login-status').textContent = 'Please enter both Sheet ID and your name.'; return; }
+  SHEET_ID = sheetId; currentUser = userName;
+  document.getElementById('login-status').textContent = 'Connecting…';
+  try {
+    await loadCatalogue();
+    await loadRefData();
+    buildGrid('st', 'st-items-wrap');
+    buildGrid('del', 'del-items-wrap');
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('main-form').style.display = 'block';
+    document.getElementById('user-bar').textContent = `✓ Connected as ${userName}`;
+    document.getElementById('del-date').value = new Date().toISOString().slice(0,10);
+    toast('✓ Sheet connected. ' + ITEM_SECTIONS.reduce((t,s)=>t+s.items.length,0) + ' items loaded.');
+  } catch(e) {
+    document.getElementById('login-status').className='status-bar err';
+    document.getElementById('login-status').textContent = 'Error: ' + e.message;
+  }
+}
+
+// ── Grid builder ──────────────────────────────────────────────────
+function buildGrid(prefix, wrapperId) {
+  const wrap = document.getElementById(wrapperId); if (!wrap) return;
+  let html = '';
+  ITEM_SECTIONS.forEach((sec, si) => {
+    const bg = sec.color || '#4A7C59';
+    html += `<div class="sec-block" id="${prefix}-sec-${si}">
+      <div class="sec-hdr" style="background:${bg}" onclick="toggleSec('${prefix}',${si})">
+        <span>${sec.name}</span><span id="${prefix}-sc-${si}"></span>
+      </div>
+      <div class="items-grid">`;
+    sec.items.forEach((item, ii) => {
+      html += `<div class="item-cell">
+        <input type="number" id="${prefix}-qty-${si}_${ii}"
+          min="0" max="9999" placeholder="–"
+          oninput="onQty('${prefix}',${si},${ii},this)" onfocus="this.select()">
+        <span class="iname">${esc(item)}</span>
+      </div>`;
+    });
+    html += '</div></div>';
+  });
+  wrap.innerHTML = html;
+}
+function toggleSec(p,si) { document.getElementById(`${p}-sec-${si}`).classList.toggle('collapsed'); }
+function onQty(p,si,ii,inp) {
+  const v=parseInt(inp.value)||0;
+  inp.classList.toggle('has-val',v>0);
+  updateSummary(p);
+}
+function updateSummary(p) {
+  let cats=0,units=0;
+  ITEM_SECTIONS.forEach((sec,si)=>sec.items.forEach((_,ii)=>{
+    const v=parseInt(document.getElementById(`${p}-qty-${si}_${ii}`)?.value)||0;
+    if(v>0){cats++;units+=v;}
+  }));
+  const el=document.getElementById(`${p}-summary`);
+  if(el) el.textContent=cats>0?`${cats} item type${cats>1?'s':''} · ${units} units entered`:'';
+}
+function clearGrid(p) {
+  ITEM_SECTIONS.forEach((sec,si)=>sec.items.forEach((_,ii)=>{
+    const el=document.getElementById(`${p}-qty-${si}_${ii}`);
+    if(el){el.value='';el.classList.remove('has-val');}
+  }));
+  updateSummary(p);
+}
+function getGridItems(p) {
+  const out=[];
+  ITEM_SECTIONS.forEach((sec,si)=>sec.items.forEach((name,ii)=>{
+    const v=parseInt(document.getElementById(`${p}-qty-${si}_${ii}`)?.value)||0;
+    if(v>0) out.push({name, section:sec.name, qty:v});
+  }));
+  return out;
+}
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+
+// ── Tab switching ─────────────────────────────────────────────────
+function switchTab(t) {
+  document.querySelectorAll('.tab').forEach((el,i)=>el.classList.toggle('active',['stocktake','delivery'][i]===t));
+  document.querySelectorAll('.form-section').forEach(el=>el.classList.remove('active'));
+  document.getElementById(`tab-${t}`).classList.add('active');
+}
+
+// ── Save: Stock Take ─────────────────────────────────────────────
+async function saveStocktake() {
+  const items = getGridItems('st');
+  if (!items.length) { toast('Please count at least one item.', true); return; }
+  const btn = document.getElementById('btn-save-st');
+  btn.disabled=true; btn.textContent='Saving…';
+  try {
+    const now = new Date();
+    const stId = `ST-${now.toISOString().slice(0,10)}-${Date.now().toString().slice(-6)}`;
+    const total = items.length;
+    const refWithTotal = `${stId} (${total})`;
+    const rows = items.map((item,i) => [
+      refWithTotal,                    // A: Stock Take ID
+      i+1,                             // B: Row
+      now.toISOString(),               // C: Date & Time (full datetime)
+      currentUser,                     // D: User
+      item.name,                       // E: Item Category
+      item.section,                    // F: Section
+      item.qty,                        // G: Quantity
+      ITEM_CODE_MAP[item.name]||''     // H: Item Code
+    ]);
+    await appendRows(ST_TAB, rows);
+    toast(`✓ Stock take saved — ${total} item${total>1?'s':''}.`);
+    clearGrid('st');
+  } catch(e) {
+    toast('Save failed: ' + e.message, true);
+  } finally {
+    btn.disabled=false; btn.textContent='💾 Save Stock Take';
+  }
+}
+
+// ── Save: Delivery ────────────────────────────────────────────────
+async function saveDelivery() {
+  const source = document.getElementById('del-source').value;
+  const date   = document.getElementById('del-date').value;
+  const items  = getGridItems('del');
+  if (!source) { toast('Please select a source.', true); return; }
+  if (!date)   { toast('Please enter a received date.', true); return; }
+  if (!items.length) { toast('Please enter at least one item quantity.', true); return; }
+  const btn = document.getElementById('btn-save-del');
+  btn.disabled=true; btn.textContent='Saving…';
+  try {
+    const donor  = document.getElementById('del-donor').value;
+    const weight = document.getElementById('del-weight').value;
+    const notes  = document.getElementById('del-notes').value;
+    const delId  = `DEL-BCK-${Date.now()}`;
+    const refWithTotal = `${delId} (${items.length})`;
+    const rows = items.map((item,i) => [
+      refWithTotal,                    // A: Delivery Ref
+      i+1,                             // B: Row
+      source,                          // C: Source
+      donor,                           // D: Donor
+      date,                            // E: Expected Date (= received for confirmed)
+      date,                            // F: Received Date
+      '',                              // G: Confirmed? (formula auto-populates)
+      i===0?(weight||''):'',           // H: Weight
+      item.name,                       // I: Item Category
+      item.section,                    // J: Section
+      item.qty,                        // K: Quantity
+      i===0?(notes||''):'',            // L: Notes
+      ITEM_CODE_MAP[item.name]||''     // M: Item Code
+    ]);
+    await appendRows(LOG_TAB, rows);
+    toast(`✓ Delivery saved — ${items.length} item${items.length>1?'s':''}.`);
+    clearGrid('del');
+    document.getElementById('del-notes').value='';
+    document.getElementById('del-weight').value='';
+  } catch(e) {
+    toast('Save failed: ' + e.message, true);
+  } finally {
+    btn.disabled=false; btn.textContent='💾 Save Delivery';
+  }
+}
+
+// ── Toast ─────────────────────────────────────────────────────────
+function toast(msg, isError=false) {
+  const el=document.getElementById('toast');
+  el.textContent=msg; el.className='toast'+(isError?' error':'');
+  el.style.display='block';
+  setTimeout(()=>el.style.display='none',3500);
+}
+</script>
+<!-- Google Identity Services -->
+<script src="https://accounts.google.com/gsi/client" async></script>
+</body>
+</html>

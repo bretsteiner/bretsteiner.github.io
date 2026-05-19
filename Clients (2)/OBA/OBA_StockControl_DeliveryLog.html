@@ -1,0 +1,3248 @@
+<!--const SHEET_ID       = "1e3IJz5V9zEZaJEVz9vAtRcD7tOE_vvgBrDKsJmdYbj4";   // ← OBA Hosted Sheet
+const SHEET_ID       = "129xUmLALy4Pk_vnKSSrUl5dfT88nKjTMUnsFJ4VwZxk";   // ← bretsteiner Hosted Sheet
+const API_KEY        = "AIzaSyDcSfGmEJBdl5AHuVfHokLk7MIzJD2DTvE";    // ← BretSteiner API Key
+const CLIENT_ID      = "592083298024-82q4vcie6rualiooaiqgn43rvmb3jvhr.apps.googleusercontent.com"; // ← BRETSteiner Google OAuth Client ID (see setup guide)-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Olive Branch Aid — Stock Control v1</title>
+<link rel="icon" type="image/svg+xml" href="https://olivebranchaid.org/wp-content/uploads/2023/08/logo3.svg">
+<link rel="shortcut icon" href="https://olivebranchaid.org/wp-content/uploads/2023/08/logo3.svg">
+<link href="https://fonts.googleapis.com/css2?family=Alegreya+Sans:wght@400;700;900&family=DM+Sans:wght@300;400;500;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════════════
+   OBA STOCK CONTROL — DESIGN SYSTEM
+   Friendly, light, easy on the eye.
+   Warm off-white base. Sage green accent only.
+   High contrast text. Generous space.
+═══════════════════════════════════════════════ */
+:root {
+  /* Page & surfaces */
+  --page:      #F5F6F0;   /* warm white-grey page */
+  --surface:   #FFFFFF;   /* cards */
+  --surface-2: #FAFAF7;   /* table rows, zebra */
+  --raised:    #F0F1EB;   /* inset / quiet zone */
+
+  /* Borders */
+  --line:      #E2E4DA;   /* dividers */
+  --line-mid:  #C8CABC;   /* form inputs */
+
+  /* Text — WCAG AA at all sizes */
+  --ink:       #1E2118;   /* headings, strong */
+  --body:      #3A3D31;   /* body copy */
+  --muted:     #6B7060;   /* labels, secondary */
+  --faint:     #9EA396;   /* placeholders */
+
+  /* Accent — sage green, used sparingly */
+  --sage:      #4A7C59;   /* primary action, active */
+  --sage-dk:   #2E5438;   /* hover */
+  --sage-lt:   #EAF2ED;   /* tint bg, hover fills */
+  --sage-ring: rgba(74,124,89,0.2);
+
+  /* Status colours */
+  --gold:      #C07800;   /* expected / amber */
+  --gold-lt:   #FDF3DC;
+  --red:       #B03030;   /* error / delete */
+  --red-lt:    #FCEAEA;
+
+  /* Nav — stays dark for contrast with accent buttons */
+  --nav:       #2A3328;
+  --nav-text:  #D4D9C8;
+  --nav-dim:   #7A8870;
+
+  /* Elevation */
+  --e1: 0 1px 3px rgba(30,33,24,0.07), 0 1px 2px rgba(30,33,24,0.04);
+  --e2: 0 2px 8px rgba(30,33,24,0.08), 0 1px 3px rgba(30,33,24,0.05);
+}
+
+/* ── RESET ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'DM Sans', system-ui, sans-serif;
+  font-size: 14px;
+  line-height: 1.6;
+  background: var(--page);
+  color: var(--body);
+  -webkit-font-smoothing: antialiased;
+}
+body::before { display: none; }
+
+/* ════════════════════════════════════════
+   NAV BAR
+════════════════════════════════════════ */
+header {
+  position: sticky; top: 0; z-index: 300;
+  background: var(--nav);
+  height: 50px; padding: 0 20px;
+  display: flex; align-items: center; justify-content: space-between;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  box-shadow: 0 2px 8px rgba(30,33,24,0.18);
+}
+.brand { display: flex; align-items: center; gap: 10px; }
+.brand-logo {
+  font-family: 'Alegreya Sans', sans-serif;
+  font-weight: 900; font-size: 1.05rem;
+  color: var(--nav-text); text-transform: uppercase; letter-spacing: 0.5px;
+}
+.brand-logo span { color: var(--nav-dim); }
+.brand-rule { width: 1px; height: 18px; background: rgba(255,255,255,0.1); }
+.brand-sub {
+  font-family: 'DM Mono', monospace; font-size: 0.6rem;
+  letter-spacing: 2px; text-transform: uppercase; color: var(--nav-dim);
+}
+.header-right { display: flex; align-items: center; gap: 8px; }
+.header-date {
+  font-family: 'DM Mono', monospace; font-size: 0.6rem;
+  color: var(--nav-dim); letter-spacing: 0.5px;
+}
+
+/* ════════════════════════════════════════
+   BUTTONS
+   Clear hierarchy: primary → outline → ghost
+════════════════════════════════════════ */
+.btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 8px 16px; border-radius: 6px;
+  font-family: 'DM Sans', sans-serif; font-size: 0.82rem; font-weight: 600;
+  cursor: pointer; border: 1.5px solid transparent;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+  white-space: nowrap; text-decoration: none; letter-spacing: 0.1px;
+}
+.btn:disabled { opacity: 0.45; cursor: not-allowed; }
+
+/* Primary */
+.btn-green  { background: var(--sage);  color: #fff; border-color: var(--sage); }
+.btn-green:hover:not(:disabled)  { background: var(--sage-dk); border-color: var(--sage-dk); }
+.btn-moss   { background: var(--ink);   color: #fff; border-color: var(--ink); }
+.btn-moss:hover:not(:disabled)   { background: #0e1209; }
+.btn-purple { background: var(--red);   color: #fff; border-color: var(--red); }
+.btn-purple:hover:not(:disabled) { background: #8a2020; }
+
+/* Secondary */
+.btn-outline {
+  background: var(--surface); color: var(--body);
+  border-color: var(--line-mid);
+}
+.btn-outline:hover:not(:disabled) {
+  border-color: var(--sage); color: var(--sage); background: var(--sage-lt);
+}
+
+/* Ghost — for nav bar only */
+.btn-ghost {
+  background: rgba(255,255,255,0.08); color: var(--nav-text);
+  border-color: rgba(255,255,255,0.12);
+}
+.btn-ghost:hover:not(:disabled) { background: rgba(255,255,255,0.14); }
+
+.btn-pill { border-radius: 100px; letter-spacing: 0.5px; }
+.btn-lg   { font-size: 0.88rem; padding: 10px 22px; }
+
+/* ════════════════════════════════════════
+   PAGE LAYOUT
+════════════════════════════════════════ */
+.page-wrap { max-width: 1020px; margin: 0 auto; padding: 24px 20px 100px; }
+.screen     { display: none; }
+.screen.active { display: block; }
+
+/* ════════════════════════════════════════
+   HOME SCREEN
+════════════════════════════════════════ */
+.home-hero {
+  background: var(--nav);
+  border-radius: 10px; padding: 20px 24px; margin-bottom: 20px;
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 16px; flex-wrap: wrap;
+  box-shadow: var(--e2);
+}
+.home-hero::after { display: none; }
+.home-hero h2 {
+  font-family: 'Alegreya Sans', sans-serif; font-weight: 900;
+  font-size: 1.3rem; color: var(--nav-text);
+  text-transform: uppercase; letter-spacing: 0.5px;
+}
+.home-hero p {
+  font-family: 'DM Mono', monospace; font-size: 0.6rem;
+  color: var(--nav-dim); letter-spacing: 1.5px; margin-top: 3px;
+  text-transform: uppercase;
+}
+.home-hero-actions { display: flex; gap: 8px; align-items: center; }
+
+/* Stats row — hidden (removed from DOM) */
+.stats-row { display: none; }
+.stat-card {}  .stat-label {}  .stat-val {}  .stat-sub {}
+
+/* ════════════════════════════════════════
+   HISTORY TABLE
+   Scannability: generous row height, strong
+   zebra, clear column hierarchy.
+════════════════════════════════════════ */
+.history-card {
+  background: var(--surface); border-radius: 10px;
+  border: 1px solid var(--line); box-shadow: var(--e1);
+  overflow: hidden;
+}
+.history-hdr {
+  padding: 14px 20px;
+  display: flex; align-items: center; justify-content: space-between;
+  border-bottom: 1px solid var(--line);
+  background: var(--surface);
+}
+.history-hdr-title {
+  font-size: 0.84rem; font-weight: 600; color: var(--ink);
+}
+.history-tbl { width: 100%; border-collapse: collapse; }
+.history-tbl th {
+  padding: 9px 16px; text-align: left;
+  font-family: 'DM Mono', monospace; font-size: 0.6rem;
+  font-weight: 500; letter-spacing: 1.5px; text-transform: uppercase;
+  color: var(--muted); background: var(--raised);
+  border-bottom: 1px solid var(--line);
+  white-space: nowrap;
+}
+.history-tbl td {
+  padding: 11px 16px; border-bottom: 1px solid var(--line);
+  vertical-align: middle; font-size: 0.84rem; color: var(--body);
+}
+.history-tbl tr:last-child td { border-bottom: none; }
+.history-tbl tr:nth-child(even) td { background: var(--surface-2); }
+.history-tbl tr:hover td { background: var(--sage-lt); transition: background 0.1s; }
+.tbl-code   { font-family: 'DM Mono', monospace; font-size: 0.78rem; color: var(--sage); font-weight: 600; }
+.tbl-source { font-weight: 600; color: var(--ink); }
+.tbl-weight { font-family: 'DM Mono', monospace; font-weight: 600; color: var(--ink); }
+
+/* Source pills — subtle, colour-coded */
+.source-pill {
+  display: inline-block; padding: 2px 8px; border-radius: 4px;
+  font-size: 0.72rem; font-weight: 600; white-space: nowrap;
+  letter-spacing: 0.2px;
+}
+.source-pill.trussell    { background: #E8EEF5; color: #1A3C6A; }
+.source-pill.donation    { background: var(--sage-lt); color: var(--sage-dk); }
+.source-pill.supermarket { background: #FDF3DC; color: #7A4A00; }
+.source-pill.community   { background: #F0EAFC; color: #4A1E80; }
+.source-pill.restock     { background: #E8F4E8; color: #1A501A; }
+.source-pill.other       { background: var(--raised); color: var(--muted); border: 1px solid var(--line); }
+
+.empty-history {
+  padding: 56px 20px; text-align: center; color: var(--faint);
+  font-size: 0.84rem; line-height: 2;
+}
+.empty-history .emoji { font-size: 2rem; display: block; margin-bottom: 8px; }
+
+/* ════════════════════════════════════════
+   FORM — STEPS INDICATOR
+   Simple, unobtrusive progress strip.
+════════════════════════════════════════ */
+.form-header {
+  background: var(--nav); border-radius: 10px;
+  padding: 16px 24px; margin-bottom: 16px;
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 16px; flex-wrap: wrap; box-shadow: var(--e2);
+}
+.form-header::after { display: none; }
+.form-header h2 {
+  font-family: 'Alegreya Sans', sans-serif; font-weight: 900;
+  font-size: 1.1rem; color: var(--nav-text);
+  text-transform: uppercase; letter-spacing: 0.5px;
+}
+.form-header p {
+  font-family: 'DM Mono', monospace; font-size: 0.6rem;
+  color: var(--nav-dim); letter-spacing: 1.5px; margin-top: 3px;
+}
+
+.steps-bar {
+  display: flex; align-items: stretch; margin-bottom: 16px;
+  background: var(--surface); border-radius: 8px;
+  border: 1px solid var(--line); box-shadow: var(--e1); overflow: hidden;
+}
+.step-item {
+  flex: 1; display: flex; align-items: center; gap: 10px;
+  padding: 12px 16px; border-right: 1px solid var(--line);
+  transition: background 0.15s;
+}
+.step-item:last-child { border-right: none; }
+/* Remove heavy chevrons */
+.step-item:not(:last-child)::after  { display: none; }
+.step-item:not(:last-child)::before { display: none; }
+.step-item.active::before           { display: none; }
+.step-item.active { background: var(--sage-lt); }
+.step-item.done   { background: var(--surface); }
+
+.step-num {
+  width: 22px; height: 22px; border-radius: 50%; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'DM Mono', monospace; font-size: 0.7rem; font-weight: 600;
+  background: var(--line); color: var(--muted); transition: all 0.15s;
+}
+.step-item.active .step-num { background: var(--sage); color: #fff; }
+.step-item.done   .step-num { background: var(--ink);  color: #fff; }
+
+.step-text { line-height: 1.3; }
+.step-label { font-weight: 600; font-size: 0.82rem; color: var(--muted); }
+.step-sub   { font-size: 0.7rem; color: var(--faint); margin-top: 1px; }
+.step-item.active .step-label { color: var(--sage-dk); font-weight: 700; }
+.step-item.done   .step-label { color: var(--body); }
+
+/* ════════════════════════════════════════
+   FORM CARDS
+   White surface, minimal header.
+   Title always visible. Content breathes.
+════════════════════════════════════════ */
+.form-card {
+  background: var(--surface); border-radius: 8px;
+  border: 1px solid var(--line); box-shadow: var(--e1);
+  overflow: hidden; margin-bottom: 12px;
+}
+.form-card-hdr {
+  padding: 10px 18px;
+  display: flex; align-items: center; gap: 8px;
+  border-bottom: 1px solid var(--line); background: var(--raised);
+}
+.form-card-hdr .fch-icon  { font-size: 0.9rem; }
+.form-card-hdr .fch-title {
+  font-size: 0.72rem; font-weight: 700; color: var(--ink);
+  text-transform: uppercase; letter-spacing: 1px;
+}
+.form-card-hdr .fch-sub {
+  margin-left: auto; font-size: 0.7rem; color: var(--muted);
+}
+.form-card-body { padding: 20px 18px; }
+
+/* ── FIELDS ── */
+.field-grid   { display: grid; gap: 16px; }
+.field-grid-2 { grid-template-columns: 1fr 1fr; }
+.field-grid-3 { grid-template-columns: 1fr 1fr 1fr; }
+@media (max-width: 680px) {
+  .field-grid-2, .field-grid-3 { grid-template-columns: 1fr; }
+}
+.field { display: flex; flex-direction: column; gap: 5px; }
+.field-label {
+  font-size: 0.72rem; font-weight: 600; color: var(--muted);
+  text-transform: uppercase; letter-spacing: 0.8px;
+}
+.field-label .req { color: var(--red); margin-left: 2px; }
+
+.field-input {
+  border: 1.5px solid var(--line-mid); border-radius: 6px;
+  padding: 9px 12px; font-family: 'DM Sans', sans-serif;
+  font-size: 0.88rem; color: var(--ink); background: var(--surface);
+  outline: none; width: 100%;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.field-input:focus {
+  border-color: var(--sage);
+  box-shadow: 0 0 0 3px var(--sage-ring);
+}
+.field-input::placeholder { color: var(--faint); }
+.field-input.readonly      { background: var(--raised); cursor: default; }
+.field-input.auto-populated{ color: var(--sage); font-weight: 600; }
+select.field-input { cursor: pointer; }
+textarea.field-input { min-height: 72px; resize: vertical; line-height: 1.5; }
+
+/* ── SOURCE SELECTOR ──
+   Large tap targets. Tick on select. No icon clutter.
+*/
+.source-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(148px, 1fr));
+  gap: 8px;
+}
+.source-opt {
+  border: 1.5px solid var(--line); border-radius: 8px;
+  padding: 12px 14px; cursor: pointer;
+  display: flex; flex-direction: column; gap: 3px;
+  background: var(--surface); position: relative;
+  transition: border-color 0.15s, background 0.15s;
+  min-height: 60px;
+}
+.source-opt:hover   { border-color: var(--sage); background: var(--sage-lt); }
+.source-opt.selected {
+  border-color: var(--sage); background: var(--sage-lt);
+  box-shadow: 0 0 0 2px var(--sage-ring);
+}
+.source-opt input[type=radio] { display: none; }
+.source-icon { display: none; }   /* remove emoji icons — text carries it */
+.source-name { font-size: 0.82rem; font-weight: 700; color: var(--ink); line-height: 1.3; }
+.source-desc { font-size: 0.7rem;  color: var(--muted); }
+.source-check {
+  position: absolute; top: 8px; right: 8px;
+  width: 16px; height: 16px; border-radius: 50%;
+  background: var(--sage); color: #fff;
+  font-size: 0.55rem; font-weight: 800;
+  display: none; align-items: center; justify-content: center;
+}
+.source-opt.selected .source-check { display: flex; }
+
+/* ── WEIGHT ── */
+.weight-wrap { display: flex; }
+.weight-input {
+  flex: 1; border: 1.5px solid var(--line-mid);
+  border-right: none; border-radius: 6px 0 0 6px;
+  padding: 9px 12px; font-family: 'DM Mono', monospace;
+  font-size: 1.05rem; font-weight: 700;
+  color: var(--ink); background: var(--surface);
+  outline: none; text-align: right;
+  transition: border-color 0.15s;
+}
+.weight-input:focus { border-color: var(--sage); }
+.weight-unit {
+  background: var(--raised); color: var(--muted);
+  padding: 9px 14px; border-radius: 0 6px 6px 0;
+  border: 1.5px solid var(--line-mid); border-left: none;
+  font-family: 'DM Mono', monospace; font-size: 0.78rem; font-weight: 600;
+  display: flex; align-items: center;
+}
+
+/* Delivery ID badge */
+.delivery-id-badge {
+  background: var(--raised); border-radius: 6px; padding: 12px 16px;
+  display: flex; align-items: center; gap: 16px; border: 1px solid var(--line);
+}
+.did-label { font-size: 0.65rem; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; }
+.did-val   { font-family: 'DM Mono', monospace; font-size: 1rem; font-weight: 700; color: var(--ink); margin-top: 2px; }
+
+/* ════════════════════════════════════════
+   ITEMS GRID — Step 2
+   Single-column list. Scan-friendly.
+   Filled rows pop with a green tint.
+════════════════════════════════════════ */
+.items-intro {
+  background: var(--surface); border: 1px solid var(--line);
+  border-radius: 6px; padding: 10px 14px; margin-bottom: 10px;
+  display: flex; align-items: center; gap: 8px;
+  font-size: 0.8rem; color: var(--muted);
+}
+.items-intro-icon { font-size: 1rem; }
+.items-intro-text strong { color: var(--body); }
+
+/* Sticky tally — white, minimal */
+.running-total {
+  position: sticky; top: 50px; z-index: 100;
+  background: var(--surface); border: 1px solid var(--line);
+  border-radius: 6px; padding: 8px 16px; margin-bottom: 10px;
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 16px; flex-wrap: wrap; box-shadow: var(--e1);
+}
+.rt-label { font-size: 0.65rem; color: var(--faint); text-transform: uppercase; letter-spacing: 1px; }
+.rt-val   { font-family: 'Alegreya Sans', sans-serif; font-weight: 900; font-size: 1.5rem; color: var(--sage); line-height: 1; }
+.rt-sub   { font-size: 0.7rem; color: var(--muted); }
+.running-total .rt-label { font-size: 0.65rem; color: var(--faint); }
+.running-total .rt-val   { color: var(--sage); }
+.running-total .rt-sub   { color: var(--muted); }
+.rt-items-tally { display: flex; gap: 14px; align-items: center; }
+.rt-item-count  { display: flex; flex-direction: column; align-items: center; gap: 1px; }
+
+/* Section headers — colour chip only, no heavy dark bar */
+.section-block { margin-bottom: 10px; border-radius: 8px; overflow: hidden; border: 1px solid var(--line); }
+.section-hdr {
+  padding: 9px 14px;
+  display: flex; align-items: center; justify-content: space-between;
+  cursor: pointer; user-select: none; transition: opacity 0.12s;
+}
+.section-hdr:hover { opacity: 0.88; }
+.section-hdr-left { display: flex; align-items: center; gap: 8px; }
+.section-hdr-name {
+  font-size: 0.68rem; font-weight: 700;
+  color: rgba(255,255,255,0.95); text-transform: uppercase; letter-spacing: 1.5px;
+}
+.section-hdr-count {
+  background: rgba(255,255,255,0.2); color: rgba(255,255,255,0.8);
+  padding: 1px 7px; border-radius: 10px;
+  font-family: 'DM Mono', monospace; font-size: 0.6rem;
+}
+.section-chevron { color: rgba(255,255,255,0.5); font-size: 0.72rem; transition: transform 0.18s; }
+.section-block.collapsed .section-chevron { transform: rotate(-90deg); }
+
+/* Item rows */
+.items-grid {
+  display: block; background: var(--surface);
+  border-top: 1px solid var(--line);
+}
+.section-block.collapsed .items-grid { display: none; }
+
+.item-cell {
+  display: flex; align-items: center;
+  padding: 0 16px; height: 42px;
+  border-bottom: 1px solid var(--line);
+  transition: background 0.1s; gap: 12px;
+}
+.item-cell:last-child { border-bottom: none; }
+.item-cell:hover     { background: #F4F8F0; }
+.item-cell.has-value { background: var(--sage-lt); }
+
+.item-name          { flex: 1; font-size: 0.84rem; color: var(--body); }
+.item-name.has-value{ font-weight: 600; color: var(--ink); }
+
+.item-qty {
+  width: 60px; height: 30px; flex-shrink: 0;
+  border: 1.5px solid var(--line-mid); border-radius: 5px;
+  font-family: 'DM Mono', monospace; font-size: 0.9rem; font-weight: 600;
+  color: var(--muted); text-align: center; background: var(--raised);
+  outline: none; transition: all 0.12s;
+}
+.item-qty:hover  { border-color: var(--sage); background: var(--surface); }
+.item-qty:focus  { border-color: var(--sage); background: var(--surface); box-shadow: 0 0 0 3px var(--sage-ring); color: var(--ink); }
+.item-qty.filled { background: var(--sage-lt); border-color: var(--sage); color: var(--sage-dk); font-weight: 700; }
+.item-unit { width: 16px; flex-shrink: 0; font-size: 0.6rem; color: var(--faint); text-align: center; }
+
+/* ════════════════════════════════════════
+   REVIEW — Step 3
+════════════════════════════════════════ */
+.review-banner {
+  background: var(--nav); border-radius: 10px; padding: 18px 22px; margin-bottom: 16px;
+  display: flex; align-items: center; gap: 14px; flex-wrap: wrap; box-shadow: var(--e2);
+}
+.review-banner .rb-icon  { font-size: 1.6rem; }
+.review-banner .rb-title {
+  font-family: 'Alegreya Sans', sans-serif; font-weight: 900;
+  font-size: 1.1rem; color: var(--nav-text); text-transform: uppercase;
+}
+.review-banner .rb-sub {
+  font-family: 'DM Mono', monospace; font-size: 0.6rem;
+  color: var(--nav-dim); margin-top: 2px; letter-spacing: 1px;
+}
+
+.review-meta-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 8px; margin-bottom: 16px;
+}
+.review-meta-card {
+  background: var(--surface); border: 1px solid var(--line);
+  border-radius: 7px; padding: 10px 14px;
+}
+.rmc-label { font-size: 0.65rem; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 3px; }
+.rmc-val   { font-weight: 700; font-size: 0.88rem; color: var(--ink); }
+
+.review-items-section { margin-bottom: 8px; }
+.review-sec-hdr {
+  padding: 8px 14px; font-size: 0.65rem; font-weight: 700;
+  letter-spacing: 1.5px; text-transform: uppercase;
+  color: rgba(255,255,255,0.95);
+  border-radius: 6px 6px 0 0;
+}
+.review-item-row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 9px 14px; font-size: 0.84rem; color: var(--body);
+  background: var(--surface);
+  border: 1px solid var(--line); border-top: none;
+}
+.review-item-row:last-child { border-radius: 0 0 6px 6px; }
+.review-item-qty { font-family: 'DM Mono', monospace; font-weight: 700; color: var(--sage); min-width: 36px; text-align: right; }
+
+/* ════════════════════════════════════════
+   SAVE FOOTER — always visible
+════════════════════════════════════════ */
+.save-footer {
+  position: sticky; bottom: 0; z-index: 200;
+  background: var(--surface); border-top: 1px solid var(--line);
+  padding: 10px 20px;
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 12px; flex-wrap: wrap;
+  box-shadow: 0 -2px 8px rgba(30,33,24,0.06);
+}
+.sf-info { font-size: 0.78rem; color: var(--muted); }
+.sf-info strong { color: var(--body); font-weight: 600; }
+.sf-btns { display: flex; gap: 8px; }
+
+/* ════════════════════════════════════════
+   TOAST
+════════════════════════════════════════ */
+.toast {
+  position: fixed; bottom: 68px; right: 16px;
+  background: var(--ink); color: var(--surface);
+  padding: 10px 16px; border-radius: 6px;
+  font-size: 0.8rem; font-weight: 600;
+  box-shadow: var(--e2); z-index: 999; max-width: 300px;
+  opacity: 0; transform: translateY(6px);
+  transition: opacity 0.18s, transform 0.18s;
+}
+.toast.show { opacity: 1; transform: translateY(0); }
+.toast.success { border-left: 3px solid var(--sage); }
+.toast.error   { border-left: 3px solid var(--red); }
+.toast.warn    { border-left: 3px solid var(--gold); }
+
+/* ════════════════════════════════════════
+   MODAL
+════════════════════════════════════════ */
+.modal-overlay {
+  display: none; position: fixed; inset: 0;
+  background: rgba(30,33,24,0.45); backdrop-filter: blur(3px);
+  z-index: 500; align-items: center; justify-content: center; padding: 20px;
+}
+.modal-overlay.show { display: flex; }
+.modal {
+  background: var(--surface); border-radius: 10px; padding: 24px;
+  max-width: 440px; width: 100%; box-shadow: var(--e2);
+  border: 1px solid var(--line);
+}
+.modal h3 {
+  font-family: 'Alegreya Sans', sans-serif; font-weight: 900;
+  font-size: 1.1rem; color: var(--ink); margin-bottom: 8px;
+}
+.modal p { font-size: 0.84rem; color: var(--muted); line-height: 1.7; margin-bottom: 18px; }
+.modal-btns { display: flex; gap: 8px; justify-content: flex-end; }
+
+/* ════════════════════════════════════════
+   DONOR PICKLIST
+════════════════════════════════════════ */
+.donor-wrap { position: relative; }
+.donor-input-row { display: flex; gap: 8px; }
+.donor-select {
+  flex: 1; border: 1.5px solid var(--line-mid); border-radius: 6px;
+  padding: 9px 32px 9px 12px; font-family: 'DM Sans', sans-serif;
+  font-size: 0.88rem; color: var(--ink); background: var(--surface);
+  outline: none; cursor: pointer; appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%236B7060' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 11px center;
+  transition: border-color 0.15s;
+}
+.donor-select:focus { border-color: var(--sage); box-shadow: 0 0 0 3px var(--sage-ring); }
+.donor-add-row { display: none; margin-top: 8px; gap: 8px; }
+.donor-add-row.visible { display: flex; }
+.donor-add-input {
+  flex: 1; border: 1.5px solid var(--sage); border-radius: 6px;
+  padding: 9px 12px; font-family: 'DM Sans', sans-serif;
+  font-size: 0.88rem; color: var(--ink); background: var(--surface); outline: none;
+}
+.donor-add-input:focus { box-shadow: 0 0 0 3px var(--sage-ring); }
+.donor-tag-hint { font-size: 0.7rem; color: var(--sage); margin-top: 4px; }
+
+/* ════════════════════════════════════════
+   EXPECTED DELIVERIES
+════════════════════════════════════════ */
+.expected-item {
+  display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
+  padding: 12px 18px; border-bottom: 1px solid var(--line);
+  transition: background 0.1s;
+}
+.expected-item:last-child { border-bottom: none; }
+.expected-item:hover { background: var(--raised); }
+
+.exp-date-badge {
+  background: var(--gold-lt); border: 1px solid #E0B060;
+  border-radius: 6px; padding: 6px 10px; text-align: center;
+  flex-shrink: 0; min-width: 52px;
+}
+.exp-date-day { font-family: 'Alegreya Sans', sans-serif; font-weight: 900; font-size: 1.3rem; color: var(--gold); line-height: 1; }
+.exp-date-mon { font-size: 0.6rem; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; }
+.exp-details  { flex: 1; min-width: 140px; }
+.exp-source   { font-weight: 700; font-size: 0.84rem; color: var(--ink); }
+.exp-donor    { font-size: 0.76rem; color: var(--muted); margin-top: 1px; }
+.exp-notes    { font-size: 0.72rem; color: var(--faint); font-style: italic; margin-top: 1px; }
+
+.exp-overdue { border-left: 3px solid var(--red); background: var(--red-lt); }
+.exp-overdue .exp-date-badge { background: var(--red-lt); border-color: #D08080; }
+.exp-overdue .exp-date-day   { color: var(--red); }
+.exp-today   { border-left: 3px solid var(--sage); background: var(--sage-lt); }
+.exp-actions { display: flex; gap: 6px; flex-shrink: 0; }
+
+/* ── PRINT ── */
+@media print {
+  * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+  body { background: white !important; }
+  header, .save-footer, .steps-bar, .running-total, .form-header, .home-hero { display: none !important; }
+  .print-only { display: block !important; }
+  @page { size: A4 portrait; margin: 12mm; }
+}
+.print-only { display: none; }
+
+.field-error { font-size:0.72rem; color:var(--red); margin-top:4px; font-weight:600; }
+.field-input.error, .weight-input.error, .donor-select.error, select.error {
+  border-color:var(--red) !important;
+  box-shadow:0 0 0 3px rgba(176,48,48,0.15) !important;
+}
+.item-cell { justify-content:flex-start; }
+.item-cell .item-qty  { flex-shrink:0; margin-right:12px; }
+.item-cell .item-name { flex:1; }
+
+/* Stock Take — diff highlights */
+.item-cell.st-over  { background:#FFF3DC; }
+.item-cell.st-under { background:#FCEAEA; }
+.item-cell.st-match { background:#EAF2ED; }
+.st-diff {
+  font-family:'DM Mono',monospace; font-size:0.7rem; font-weight:700;
+  min-width:52px; text-align:right; flex-shrink:0; padding-right:4px;
+}
+.st-diff.over  { color:var(--gold); }
+.st-diff.under { color:var(--red); }
+.st-diff.match { color:var(--sage); }
+.st-stored {
+  font-family:'DM Mono',monospace; font-size:0.68rem; color:var(--faint);
+  min-width:36px; text-align:right; flex-shrink:0;
+}
+
+.mm-missing { color:var(--red); }
+.mm-extra   { color:var(--gold); }
+.mm-ok      { color:var(--sage); }
+
+  /* Clickable expected delivery cards */
+  .expected-item { cursor: pointer; transition: background 0.12s, transform 0.1s; }
+  .expected-item:hover { background: rgba(112,132,0,0.06); transform: translateX(2px); }
+  .expected-item:focus { outline: 2px solid var(--primary-green); outline-offset: 2px; }
+  .exp-badge { font-size:0.6rem; font-weight:700; padding:2px 5px; border-radius:3px; margin-left:6px; }
+  .exp-badge-overdue { background:rgba(176,48,48,0.12); color:var(--red); }
+  .exp-badge-today   { background:rgba(74,124,89,0.12); color:var(--sage); }
+</style>
+</head>
+<body>
+
+<!-- ══ HEADER ══ -->
+<header>
+  <div class="brand">
+    <div class="brand-logo">
+      <img src="https://olivebranchaid.org/wp-content/uploads/2023/08/logo3.svg" alt="Olive Branch Aid"
+           style="height:26px;width:auto;filter:brightness(0) invert(1);opacity:0.92;">
+    </div>
+    <div class="brand-rule"></div>
+    <div class="brand-sub">Stock Control v1</div>
+  </div>
+  <div class="header-right">
+    <span class="header-date" id="header-date"></span>
+    <span id="user-badge" style="font-family:'DM Mono',monospace;font-size:0.6rem;padding:3px 9px;border-radius:3px;background:rgba(255,255,255,0.1);color:var(--nav-text);letter-spacing:0.5px;"></span>
+    <span id="sheet-status" style="font-family:'DM Mono',monospace;font-size:0.56rem;letter-spacing:1px;padding:3px 8px;border-radius:3px;background:rgba(255,255,255,0.06);color:var(--nav-dim);" title="Google Sheets status">⬤ Sheet not configured</span>
+    
+    <button class="btn btn-ghost" id="btn-new-delivery" onclick="startNewDelivery()" style="display:none;">+ Log Delivery</button>
+    <button class="btn btn-ghost" id="btn-back-home" onclick="goHome()" style="display:none;">← All Deliveries</button>
+  </div>
+</header>
+
+<div class="page-wrap">
+
+<!-- ══════════════════════════════════════
+     SCREEN 1: HOME / HISTORY
+══════════════════════════════════════ -->
+<div class="screen active" id="screen-home">
+
+  <div class="home-hero">
+    <div>
+      <h2>Stock Control</h2>
+      <p id="home-sub">Stock Control — Olive Branch Aid</p>
+    </div>
+    <div class="home-hero-actions">
+      <button class="btn btn-outline" onclick="showExpectedScreen()">📅 Expected</button>
+      <button class="btn btn-outline" onclick="startRestock()">↩ Restock</button>
+      <button class="btn btn-outline" onclick="startStocktake()">📋 Stock Take</button>
+      <button class="btn btn-green" onclick="startNewDelivery()">+ Log New Delivery</button>
+    </div>
+  </div>
+
+  <!-- Expected Deliveries section removed — see Expected Deliveries screen -->
+
+  <!-- History table -->
+  <div class="history-card">
+    <div class="history-hdr">
+      <span class="history-hdr-title">📦 Delivery History</span>
+      <button class="btn btn-ghost" style="font-size:0.68rem;padding:6px 12px;" onclick="exportCSV()">↓ Export CSV</button>
+    </div>
+    <div id="history-body">
+      <div class="empty-history">
+        <div class="emoji">📭</div>
+        <div>No deliveries logged yet.<br>Use <strong>+ Log New Delivery</strong> to get started.</div>
+      </div>
+    </div>
+  </div>
+
+
+
+</div><!-- end screen-home -->
+
+
+<!-- ══════════════════════════════════════════════════════
+     SCREEN: EXPECTED DELIVERIES
+     ══════════════════════════════════════════════════════ -->
+<div class="screen" id="screen-expected">
+  <div class="form-header" style="margin-bottom:16px;">
+    <h2>📅 Expected Deliveries</h2>
+    <p>Click any delivery to receive it and open the log form pre-filled.</p>
+  </div>
+  <div class="history-card" style="margin-bottom:16px;">
+    <div class="history-hdr">
+      <span class="history-hdr-title">Pending from sheet</span>
+      <button class="btn btn-ghost" style="font-size:0.68rem;padding:6px 12px;" onclick="loadExpected()">↻ Refresh</button>
+      <button class="btn btn-outline" style="font-size:0.68rem;padding:6px 12px;" onclick="startExpectedDelivery()">+ Add Expected</button>
+    </div>
+    <div id="expected-body">
+      <div class="empty-history" style="padding:32px 20px;">
+        <div class="emoji" style="font-size:2rem;">📭</div>
+        <div>No expected deliveries found.</div>
+      </div>
+    </div>
+  </div>
+  <div style="padding:0 16px 16px;">
+    <button class="btn btn-outline" onclick="goHome()">← Back</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     SCREEN 2: DELIVERY FORM (Steps 1 & 2)
+══════════════════════════════════════ -->
+<div class="screen" id="screen-form">
+
+  <div class="form-header">
+    <div>
+      <h2>Log New Delivery</h2>
+      <p id="form-header-sub">Complete all three steps to record the delivery</p>
+    </div>
+  </div>
+
+  <!-- Steps bar -->
+  <div class="steps-bar">
+    <div class="step-item active" id="step-tab-1">
+      <div class="step-num">1</div>
+      <div class="step-text">
+        <div class="step-label">Delivery Details</div>
+        <div class="step-sub">Source · Weight · Date</div>
+      </div>
+    </div>
+    <div class="step-item" id="step-tab-2">
+      <div class="step-num">2</div>
+      <div class="step-text">
+        <div class="step-label">Item Quantities</div>
+        <div class="step-sub">Log what was received</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── STEP 1: Delivery Details ── -->
+  <div id="step-1-content">
+
+    <div class="form-card">
+      <div class="form-card-hdr">
+        <span class="fch-icon">📋</span>
+        <span class="fch-title">Delivery Details</span>
+      </div>
+      <div class="form-card-body">
+        <div class="field-grid field-grid-2">
+
+          <div class="field">
+            <label class="field-label">Source <span class="req">*</span></label>
+            <div class="donor-wrap">
+              <div class="donor-input-row">
+                <select class="field-input" id="delivery-source-select" tabindex="1" onchange="selectSourceFromDropdown(this.value)">
+                  <option value="">— Select source —</option>
+                </select>
+                <button type="button" class="btn btn-outline" onclick="showAddSource()" style="padding:8px 12px;flex-shrink:0;">+ Add</button>
+              </div>
+              <div class="donor-add-row" id="source-add-row">
+                <input type="text" class="donor-add-input" id="source-new-input"
+                  placeholder="New source name…"
+                  onkeydown="if(event.key==='Enter'){event.preventDefault();saveNewSource();}">
+                <button type="button" class="btn btn-green" onclick="saveNewSource()">Save</button>
+                <button type="button" class="btn btn-outline" onclick="cancelAddSource()">✕</button>
+              </div>
+            </div>
+            <div id="source-error" class="field-error" style="display:none;">Please select a source</div>
+          </div>
+
+          <div class="field" id="donor-field-row">
+            <label class="field-label">Donor / Organisation</label>
+            <div class="donor-wrap">
+              <div class="donor-input-row">
+                <select class="donor-select" id="delivery-donor" tabindex="4" onchange="handleDonorChange(this)">
+                  <option value="">— Select donor —</option>
+                </select>
+                <button type="button" class="btn btn-outline" onclick="showAddDonor()" style="padding:8px 12px;flex-shrink:0;">+ Add</button>
+              </div>
+              <div class="donor-add-row" id="donor-add-row">
+                <input type="text" class="donor-add-input" id="donor-new-input" placeholder="New donor name…"
+                  onkeydown="if(event.key==='Enter'){event.preventDefault();saveNewDonor();}">
+                <button type="button" class="btn btn-green" onclick="saveNewDonor()">Save</button>
+                <button type="button" class="btn btn-outline" onclick="cancelAddDonor()">✕</button>
+              </div>
+              <div class="donor-tag-hint" id="donor-hint"></div>
+            </div>
+          </div>
+
+          <div class="field">
+            <label class="field-label">Delivery Date <span class="req">*</span></label>
+            <input type="date" class="field-input" id="delivery-date" tabindex="2">
+          </div>
+
+          <div class="field" id="weight-field-row">
+            <label class="field-label">Total Weight (kg) <span class="req">*</span></label>
+            <div class="weight-wrap">
+              <input type="number" class="weight-input" id="delivery-weight" tabindex="3" placeholder="0.0" min="0" step="0.1" oninput="updateWeight()">
+              <span class="weight-unit">KG</span>
+            </div>
+            <div id="weight-error" class="field-error" style="display:none;">Please enter the weight</div>
+          </div>
+
+          <div class="field">
+            <label class="field-label">Reference <span style="font-weight:400;text-transform:none;letter-spacing:0;">(optional)</span></label>
+            <input type="text" class="field-input" id="delivery-ref" tabindex="5" placeholder="e.g. TT-2026-0312">
+          </div>
+
+          <div class="field">
+            <label class="field-label">Delivery ID</label>
+            <div class="delivery-id-badge" style="padding:8px 12px;">
+              <div class="did-val" id="delivery-id-display" style="font-size:0.88rem;">–</div>
+              <div style="margin-left:auto;font-size:0.68rem;color:var(--muted);">Auto-generated</div>
+            </div>
+          </div>
+
+        </div>
+        <div style="margin-top:14px;">
+          <div class="field">
+            <label class="field-label">Notes</label>
+            <textarea class="field-input" id="delivery-notes" tabindex="6" placeholder="Any additional notes…" style="min-height:56px;"></textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="save-footer">
+      <div class="sf-info">Step 1 of 2 — <strong>Delivery Details</strong></div>
+      <div class="sf-btns">
+        <button class="btn btn-outline" onclick="goHome()">Cancel</button>
+        <button class="btn btn-green" onclick="goToStep2()">Next: Log Items →</button>
+      </div>
+    </div>
+
+  </div><!-- end step-1-content -->
+
+  <!-- ── STEP 2: Item Quantities ── -->
+  <div id="step-2-content" style="display:none;">
+
+    <div class="items-intro">
+      <span class="items-intro-icon">📋</span>
+      <div class="items-intro-text">
+        Enter the <strong>quantity received</strong> for each item category. Leave blank if none received.
+        Quantities match the Pick Plan format — units are individual items (tins, packets, bottles etc.) unless noted.
+      </div>
+    </div>
+
+    <div class="running-total" id="running-total">
+      <div>
+        <div class="rt-label">Items entered</div>
+        <div class="rt-val" id="rt-count">0</div>
+        <div class="rt-sub">categories with quantity</div>
+      </div>
+      <div class="rt-items-tally" id="rt-section-tally"></div>
+      <div>
+        <div class="rt-label">Total units</div>
+        <div class="rt-val" id="rt-total">0</div>
+        <div class="rt-sub">across all categories</div>
+      </div>
+    </div>
+
+    <div id="items-sections"></div>
+
+    <div class="save-footer">
+      <div class="sf-info">Step 2 of 2 — <strong>Item Quantities</strong> · <span id="sf-items-summary">0 categories entered</span></div>
+      <div class="sf-btns">
+        <button class="btn btn-outline" onclick="backToStep1()">← Back</button>
+        <button class="btn btn-green btn-pill" id="btn-save-delivery" onclick="saveDeliveryDirect()">Save Delivery</button>
+      </div>
+    </div>
+
+  </div><!-- end step-2-content -->
+
+  
+
+</div><!-- end screen-form -->
+
+
+<!-- ══════════════════════════════════════
+     SCREEN 3: RESTOCK
+     Items returned by service users → back into stock
+══════════════════════════════════════ -->
+<!-- Restock uses screen-form (delivery form) with source pre-set to RESTOCK -->
+
+<!-- ══════════════════════════════════════
+     SCREEN 4: STOCK TAKE
+     Physical count reconciled against stored values
+══════════════════════════════════════ -->
+<div class="screen" id="screen-stocktake">
+
+  <div class="form-header">
+    <div>
+      <h2>Stock Take</h2>
+      <p>Enter the physical count for each item — updates Current Physical Stock in Sheet 4</p>
+    </div>
+    <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+      <span id="st-last-refresh" style="font-family:'DM Mono',monospace;font-size:0.6rem;color:var(--nav-dim);">Not yet loaded</span>
+      <button class="btn btn-ghost" id="btn-refresh-stock" onclick="refreshStock()">↻ Refresh Stock</button>
+    </div>
+  </div>
+
+  <div class="steps-bar" style="margin-bottom:16px;">
+    <div class="step-item active" style="cursor:default;">
+      <div class="step-num" style="background:var(--sage);color:#fff;">📋</div>
+      <div class="step-text">
+        <div class="step-label" style="color:var(--sage-dk);">Enter physical counts</div>
+        <div class="step-sub">Current stock (from Sheet 4) shown in grey — your count in the box</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="running-total" id="rt-stocktake">
+    <div>
+      <div class="rt-label">Items counted</div>
+      <div class="rt-val" id="rt-st-count">0</div>
+      <div class="rt-sub">categories</div>
+    </div>
+    <div class="rt-items-tally" id="rt-st-tally"></div>
+    <div>
+      <div class="rt-label">Total units counted</div>
+      <div class="rt-val" id="rt-st-total">0</div>
+      <div class="rt-sub">across all categories</div>
+    </div>
+  </div>
+
+  <div style="display:flex;align-items:center;padding:6px 16px 4px;font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);background:var(--raised);border:1px solid var(--line);border-radius:6px 6px 0 0;margin-bottom:0;">
+    <span style="width:60px;flex-shrink:0;margin-right:12px;">Count</span>
+    <span style="flex:1;">Item</span>
+    <span style="min-width:52px;text-align:right;margin-right:4px;">In Stock</span>
+    <span style="min-width:52px;text-align:right;">+/−</span>
+  </div>
+  <div id="stocktake-sections"></div>
+
+  <div class="save-footer">
+    <div class="sf-info"><span id="stocktake-summary">0 categories counted</span></div>
+    <div class="sf-btns">
+      <button class="btn btn-outline" onclick="goHome()">Cancel</button>
+      <button class="btn btn-green" id="btn-save-stocktake" onclick="saveStocktake()">Save Stock Take</button>
+    </div>
+  </div>
+
+</div><!-- end screen-stocktake -->
+
+</div><!-- end page-wrap -->
+
+
+
+<!-- Login Modal -->
+<div class="modal-overlay" id="login-modal" style="z-index:600;">
+  <div class="modal" style="max-width:400px;text-align:center;padding:32px 32px 28px;">
+
+    <!-- Logo -->
+    <div style="margin-bottom:20px;">
+      <img src="https://olivebranchaid.org/wp-content/uploads/2023/08/logo3.svg"
+           alt="Olive Branch Aid"
+           style="height:52px;width:auto;display:block;margin:0 auto;">
+    </div>
+
+    <!-- App identity -->
+    <div style="margin-bottom:24px;padding-bottom:20px;border-bottom:1px solid var(--line,#E2E4DA);">
+      <div style="font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:3px;text-transform:uppercase;color:var(--muted,#6B7060);margin-bottom:6px;">Volunteer Tool</div>
+      <div style="font-family:'Alegreya Sans',sans-serif;font-weight:900;font-size:1.4rem;color:var(--ink,#1E2118);letter-spacing:0.3px;">Stock Control</div>
+      <div style="font-size:0.8rem;color:var(--muted,#6B7060);margin-top:6px;line-height:1.5;">Use this tool to log incoming deliveries, record stock takes, and manage expected donations. All entries sync directly to the OBA spreadsheet.</div>
+    </div>
+
+    <!-- Google Sign-In -->
+    <div id="login-google-section">
+      <p style="font-size:0.78rem;color:var(--body,#3A3D31);margin-bottom:14px;font-weight:500;">
+        Sign in with your Olive Branch Aid Google account to continue.
+      </p>
+      <button id="google-signin-btn" onclick="signInWithGoogle()"
+        style="display:flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:11px 20px;border-radius:50px;border:1.5px solid var(--line-mid);background:var(--surface);color:var(--ink);font-family:inherit;font-size:0.88rem;font-weight:500;cursor:pointer;margin-bottom:12px;transition:box-shadow 0.15s;">
+        <svg width="18" height="18" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg">
+          <path d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.874 2.684-6.615z" fill="#4285F4"/>
+          <path d="M9 18c2.43 0 4.467-.806 5.956-2.184l-2.908-2.258c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332C2.438 15.983 5.482 18 9 18z" fill="#34A853"/>
+          <path d="M3.964 10.707c-.18-.54-.282-1.117-.282-1.707s.102-1.167.282-1.707V4.961H.957C.347 6.175 0 7.55 0 9s.348 2.825.957 4.039l3.007-2.332z" fill="#FBBC05"/>
+          <path d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0 5.482 0 2.438 2.017.957 4.961L3.964 7.293C4.672 5.166 6.656 3.58 9 3.58z" fill="#EA4335"/>
+        </svg>
+        Sign in with Google
+      </button>
+      <p style="font-size:0.72rem;color:var(--muted,#6B7060);line-height:1.5;">
+        Your name will be recorded against every delivery and stock count you log.
+      </p>
+    </div>
+
+    <!-- Fallback: name-only -->
+    <div id="login-fallback-section" style="display:none;text-align:left;">
+      <p style="font-size:0.78rem;color:var(--gold,#C07800);margin-bottom:14px;padding:10px 12px;background:rgba(192,120,0,0.08);border-radius:6px;line-height:1.5;">
+        ⚠ Google Sheets sync is not configured.<br>
+        Enter your name below to continue in offline mode — data will not sync to the spreadsheet.
+      </p>
+      <div class="field" style="margin-bottom:16px;">
+        <label class="field-label">Your name <span style="color:var(--red,#B03030);">*</span></label>
+        <input type="text" class="field-input" id="login-name"
+          placeholder="e.g. Sarah, Mohammed…"
+          onkeydown="if(event.key==='Enter'){event.preventDefault();submitFallbackLogin();}">
+        <div id="login-error" class="field-error" style="display:none;">Please enter your name to continue</div>
+      </div>
+      <div style="display:flex;justify-content:flex-end;">
+        <button class="btn btn-green" onclick="submitFallbackLogin()">Continue →</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+
+<!-- Sheet Mismatch Modal -->
+<div class="modal-overlay" id="mismatch-modal" style="z-index:550;">
+  <div class="modal" style="max-width:520px;">
+    <h3 id="mm-title">Sheet Structure Mismatch</h3>
+    <p id="mm-desc" style="margin-bottom:12px;"></p>
+    <div id="mm-detail" style="background:var(--raised);border:1px solid var(--line);border-radius:6px;padding:12px 16px;margin-bottom:18px;font-family:'DM Mono',monospace;font-size:0.75rem;color:var(--body);max-height:220px;overflow-y:auto;line-height:1.8;"></div>
+    <p style="font-size:0.78rem;color:var(--muted);margin-bottom:18px;" id="mm-question"></p>
+    <div class="modal-btns">
+      <button class="btn btn-outline" id="mm-cancel" onclick="closeMismatchModal()">Cancel — do not save</button>
+      <button class="btn btn-green" id="mm-confirm">Proceed anyway</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal-overlay" id="modal">
+  <div class="modal">
+    <h3 id="modal-title"></h3>
+    <p  id="modal-body"></p>
+    <div class="modal-btns">
+      <button class="btn btn-outline" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-green"   id="modal-ok">Confirm</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+
+<div class="toast" id="toast"></div>
+
+<!-- Expected Delivery Modal -->
+<div class="modal-overlay" id="expected-modal">
+  <div class="modal" style="max-width:520px;">
+    <h3>📅 Expected Delivery</h3>
+    <p style="margin-bottom:16px;">Log a delivery that is on its way — you can complete the full details when it arrives.</p>
+    <div class="field" style="margin-bottom:12px;">
+      <label class="field-label">Source <span class="req">*</span></label>
+      <select class="field-input" id="exp-source">
+        <option value="">— Select source —</option>
+      </select>
+      <div id="exp-source-error" class="field-error" style="display:none;">Please select a source</div>
+    </div>
+    <div class="field" style="margin-bottom:12px;">
+      <label class="field-label">Donor / Organisation</label>
+      <select class="field-input" id="exp-donor">
+        <option value="">— Select donor (optional) —</option>
+      </select>
+    </div>
+    <div class="field" style="margin-bottom:12px;">
+      <label class="field-label">Expected Date <span class="req">*</span></label>
+      <input type="date" class="field-input" id="exp-date">
+      <div id="exp-date-error" class="field-error" style="display:none;">Please select an expected date</div>
+    </div>
+    <div class="field" style="margin-bottom:20px;">
+      <label class="field-label">Notes</label>
+      <textarea class="field-input" id="exp-notes" placeholder="Any notes about this expected delivery…" style="min-height:56px;"></textarea>
+    </div>
+    <div class="modal-btns">
+      <button class="btn btn-outline" onclick="closeExpectedModal()">Cancel</button>
+      <button class="btn btn-green" onclick="saveExpectedDelivery()">📅 Save Expected Delivery</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     GOOGLE SHEETS SETUP — read before going live
+     ═══════════════════════════════════════════════════════════
+  1. In SHEET_ID put your spreadsheet ID (from the URL)
+  2. In CLIENT_ID put your OAuth2 client ID from Google Cloud Console
+     (APIs & Services → Credentials → OAuth 2.0 Client IDs)
+     Authorised JS origins must include the URL this page is served from.
+  3. API_KEY is only needed if you want public read access.
+     For writing, OAuth2 (CLIENT_ID) is what actually authenticates.
+  4. The app writes to the following tabs in your spreadsheet:
+       "5. Delivery Log"    — one row per item per delivery (matches sheet structure)
+       "Restock Log"        — one row per item restocked (new tab, created on first save)
+       "Stock Take Log"     — one row per item counted (new tab, created on first save)
+  5. The GIS library below handles the OAuth2 token flow silently
+     (no popup if the user is already signed in to Google).
+═══════════════════════════════════════════════════════════ -->
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+<script>
+// ═══════════════════════════════════════════════════════════
+// CONFIGURATION
+// ═══════════════════════════════════════════════════════════
+const SHEET_ID       = "129xUmLALy4Pk_vnKSSrUl5dfT88nKjTMUnsFJ4VwZxk";   // ← bretsteiner Hosted Sheet
+const API_KEY        = "AIzaSyDcSfGmEJBdl5AHuVfHokLk7MIzJD2DTvE";    // ← BretSteiner API Key
+const CLIENT_ID      = "592083298024-82q4vcie6rualiooaiqgn43rvmb3jvhr.apps.googleusercontent.com"; 
+const SCOPES    = "https://www.googleapis.com/auth/spreadsheets https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email";
+const LOG_TAB      = "5. Delivery Log";    // Matches spreadsheet tab name
+const LEDGER_TAB   = "4. Stock Ledger";    // Live stock levels — col D = Current Physical Stock
+const REF_TAB      = "10. Reference Data"; // Dropdown lists (sources, donors)
+const ITEMS_TAB = "4. Stock Ledger";   // Master item catalogue — codes, names, sections, colours
+
+const LS_KEY = "oba_delivery_log_v1";
+
+// ═══════════════════════════════════════════════════════════════
+// ITEM CATALOGUE — loaded dynamically from Tab 4 Stock Ledger
+// No hardcoded item names, sections, or colours anywhere.
+// Tab 4 layout: A=Name, B=Code, C=SectionColour, D=Section, E=Min
+// ═══════════════════════════════════════════════════════════════
+let ITEM_SECTIONS = [];    // [{name, color, items:[itemName,...]}] — built by loader
+let ITEM_CODE_MAP = {};    // {itemName: code}   e.g. {"Sugar": "BRK-002"}
+let ITEM_SECTION_MAP = {}; // {itemName: sectionName}
+
+// ── BUG 1 FIX: fetchSheet was called but never defined ──────────────────────
+// Reads all values from a named sheet tab using the API_KEY (no auth needed for reads).
+// Returns a 2D array of row values (strings). Skips empty rows.
+async function fetchSheet(tabName, range) {
+  const rangeParam = range ? `${tabName}!${range}` : tabName;
+  const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${encodeURIComponent(rangeParam)}?key=${API_KEY}`;
+  const r = await fetch(url);
+  if (!r.ok) {
+    // If API key read fails, try with OAuth token (for private sheets)
+    try {
+      const token = await getOAuthToken();
+      const r2 = await fetch(url.replace(`?key=${API_KEY}`, ''), {
+        headers: { Authorization: 'Bearer ' + token }
+      });
+      if (!r2.ok) { const e = await r2.json(); throw new Error(e.error?.message || 'fetchSheet failed'); }
+      return (await r2.json()).values || [];
+    } catch(e2) { throw new Error('fetchSheet(' + tabName + '): ' + e2.message); }
+  }
+  return (await r.json()).values || [];
+}
+
+async function loadItemCatalogueFromSheet() {
+  // Reads Tab 4 Stock Ledger:
+  // - Section header rows: col A = section name, col B = empty, col D = empty
+  // - Item rows:           col A = item name, col B = code, col C = colour hex, col D = section
+  // Tab 4 layout (v2): A=Name, B=Code, C=SectionColour, D=Section, E=Min, F=Physical
+  try {
+    const rows = await fetchSheet(ITEMS_TAB);
+    const sectionsMap = {}; const sectionOrder = [];
+    ITEM_CODE_MAP = {}; ITEM_SECTION_MAP = {};
+
+    rows.forEach(row => {
+      const name   = (row[0]||'').toString().trim();
+      const code   = (row[1]||'').toString().trim();
+      const colour = (row[2]||'').toString().trim();
+      const sec    = (row[3]||'').toString().trim();
+      if (!name || name.startsWith('ℹ️') || name.startsWith('📦') ||
+          name === 'Item Category' || name === '/') return;
+      if (code && sec) {
+        // Item row — sec is the section name from col D
+        if (!sectionsMap[sec]) {
+          sectionsMap[sec] = { name: sec, color: colour || '#4A7C59', items: [] };
+          sectionOrder.push(sec);
+        }
+        sectionsMap[sec].items.push(name);
+        ITEM_CODE_MAP[name] = code;
+        ITEM_SECTION_MAP[name] = sec;
+        // BUG 7 FIX: always update colour from item rows so we get the real hex,
+        // not just the first item's colour. All items in a section share the same
+        // colour in col C, so last-write is fine.
+        if (colour) sectionsMap[sec].color = colour;
+      }
+    });
+    ITEM_SECTIONS = sectionOrder
+      .filter(s => sectionsMap[s]?.items.length > 0)
+      .map(s => ({ name: sectionsMap[s].name, color: sectionsMap[s].color, items: sectionsMap[s].items }));
+    console.log(`Item catalogue: ${ITEM_SECTIONS.reduce((t,s)=>t+s.items.length,0)} items, ${ITEM_SECTIONS.length} sections`);
+    return ITEM_SECTIONS;
+  } catch(e) {
+    console.warn('loadItemCatalogueFromSheet failed:', e.message);
+    return [];
+  }
+}
+
+// ═══════════════════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════════════════
+let currentDelivery = {};
+let deliveryHistory = [];
+let selectedSource = null;
+const LS_DONORS = "oba_donors_v1";
+const LS_EXPECTED  = "oba_expected_v1";
+// Live stock cache — populated by fetchLiveStock()
+let liveStock = {};       // { itemName: currentQty }
+let liveStockLoaded = false;
+let currentUser = "";         // set on login
+let currentUserEmail = "";    // Google email
+let refData = null;           // { sources: [], donors: [] } loaded from sheet
+const STOCKTAKE_TAB     = "11. Stock Take Log";
+const STOCKTAKE_HEADERS = ["Stock Take ID","Row","Date & Time","User","Item Category","Section","Quantity","Item Code"];
+
+const EXP_TAB       = "6. Expected Deliveries"; // Separate tab for expected deliveries
+
+let pendingExpId = null; // set when receiving an expected delivery
+let expectedDeliveries = [];
+
+// ═══════════════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════════════
+window.addEventListener("load", () => {
+  setHeaderDate();
+  loadItemCatalogueFromSheet()
+    .then(() => { buildItemsGrid(); buildExpItemsGrid(null); })
+    .catch(e => { console.warn("Catalogue load failed:", e); buildItemsGrid(); });
+  generateDeliveryId();
+  checkSheetConfig();
+  // Populate dropdowns immediately from fallback data — no auth needed
+  populateAllSourceSelects();
+  populateDonorSelect();
+  showLoginModal(); // prompt for Google sign-in
+});
+
+function afterLogin() {
+  loadHistory();
+  // Dropdowns populated immediately from fallback data
+  populateAllSourceSelects();
+  populateDonorSelect();
+  // Then fetch live ref data from sheet — repopulates dropdowns when ready
+  fetchRefData().catch(e => console.warn("fetchRefData:", e.message));
+  // Expected deliveries are loaded on demand when user opens the Expected screen
+}
+
+
+// ─── Google Sign-In (single OAuth2 flow) ─────────────────
+// Uses google.accounts.oauth2 for BOTH identity and Sheets access.
+// One consent popup grants everything — the access token is stored
+// immediately, so fetchRefData works right after login without a
+// second prompt.
+
+function showLoginModal() {
+  const modal = document.getElementById("login-modal");
+  modal.classList.add("show");
+  if (CLIENT_ID === "YOUR_CLIENT_ID") {
+    // No client ID configured — show name-only fallback
+    document.getElementById("login-google-section").style.display = "none";
+    document.getElementById("login-fallback-section").style.display = "block";
+  }
+  // Google section is shown by default in HTML
+}
+
+function signInWithGoogle() {
+  if (!window.google?.accounts?.oauth2) {
+    // GIS not yet loaded — retry
+    setTimeout(signInWithGoogle, 300);
+    return;
+  }
+  const btn = document.getElementById("google-signin-btn");
+  if (btn) { btn.disabled = true; btn.textContent = "Signing in…"; }
+
+  const client = google.accounts.oauth2.initTokenClient({
+    client_id: CLIENT_ID,
+    scope: SCOPES,
+    callback: async (resp) => {
+      if (resp.error) {
+        if (btn) { btn.disabled = false; btn.textContent = "Sign in with Google"; }
+        showToast("Sign-in failed: " + resp.error, "error");
+        return;
+      }
+      // Store the access token immediately — used by all subsequent sheet calls
+      _oauthToken = {
+        token:  resp.access_token,
+        expiry: Date.now() + (resp.expires_in - 60) * 1000
+      };
+      // Fetch user's name from Google userinfo endpoint
+      try {
+        const ui = await fetch("https://www.googleapis.com/oauth2/v3/userinfo", {
+          headers: { Authorization: "Bearer " + resp.access_token }
+        });
+        const info = await ui.json();
+        currentUser      = info.name  || info.email || "Google User";
+        currentUserEmail = info.email || "";
+      } catch(e) {
+        currentUser = "Google User";
+        currentUserEmail = "";
+      }
+      completeLogin();
+    }
+  });
+  client.requestAccessToken({ prompt: "" });
+}
+
+function submitFallbackLogin() {
+  const name = document.getElementById("login-name").value.trim();
+  const err  = document.getElementById("login-error");
+  if (!name) {
+    err.style.display = "block";
+    document.getElementById("login-name").classList.add("error");
+    return;
+  }
+  err.style.display = "none";
+  currentUser = name;
+  currentUserEmail = "";
+  completeLogin();
+}
+
+function completeLogin() {
+  document.getElementById("login-modal").classList.remove("show");
+  const badge = document.getElementById("user-badge");
+  if (badge) badge.textContent = currentUser;
+  afterLogin();
+}
+
+function checkSheetConfig() {
+  const badge = document.getElementById("sheet-status");
+  if (!badge) return;
+  if (SHEET_ID === "YOUR_SHEET_ID" || CLIENT_ID === "YOUR_CLIENT_ID") {
+    badge.textContent = "⬤ Sheet not configured";
+    badge.style.background = "rgba(192,120,0,0.12)";
+    badge.style.color = "#C07800";
+    badge.title = "Set SHEET_ID and CLIENT_ID in the source to enable Google Sheets sync";
+  } else {
+    badge.textContent = "⬤ Sheet configured";
+    badge.style.background = "rgba(74,124,89,0.15)";
+    badge.style.color = "var(--sage)";
+    badge.title = "Deliveries will sync to Google Sheets on save";
+  }
+}
+
+function setHeaderDate() {
+  const now = new Date();
+  const o = {weekday:"short", day:"2-digit", month:"short", year:"numeric"};
+  document.getElementById("header-date").textContent = now.toLocaleDateString("en-GB", o);
+  // Auto-populate date field
+  const di = document.getElementById("delivery-date");
+  di.value = now.toISOString().slice(0,10);
+}
+
+// ═══════════════════════════════════════════════════════════
+// LOCAL STORAGE — HISTORY
+// ═══════════════════════════════════════════════════════════
+function getHistory() {
+  try { return JSON.parse(localStorage.getItem(LS_KEY) || "[]"); } catch(e) { return []; }
+}
+function saveHistory(arr) {
+  try { localStorage.setItem(LS_KEY, JSON.stringify(arr)); } catch(e) {}
+}
+
+function loadHistory() {
+  deliveryHistory = getHistory();
+  renderHistory();
+  renderStats();
+}
+
+function renderStats() {
+  const h = deliveryHistory;
+  const now = new Date();
+  const monthH = h.filter(d => {
+    const dd = new Date(d.date);
+    return dd.getFullYear()===now.getFullYear() && dd.getMonth()===now.getMonth();
+  });
+  const totalKg = h.reduce((s,d) => s + (parseFloat(d.weight)||0), 0);
+  const strip = document.getElementById("hero-stats");
+  if (!strip) return;
+  const pill = (label, val) =>
+    '<span style="font-family:DM Mono,monospace;font-size:0.62rem;letter-spacing:1px;color:rgba(212,217,200,0.65);">'
+    + '<span style="color:var(--nav-text);font-weight:700;font-size:0.82rem;margin-right:5px;">' + val + '</span>'
+    + label + '</span>';
+  const lastDelivery = h.length ? formatDateShort(h[h.length-1].date) : "none yet";
+  strip.innerHTML =
+    pill("deliveries total", h.length) +
+    '<span style="color:rgba(255,255,255,0.15);font-size:0.7rem;">|</span>' +
+    pill("this month", monthH.length) +
+    '<span style="color:rgba(255,255,255,0.15);font-size:0.7rem;">|</span>' +
+    pill("kg received", totalKg.toFixed(1)) +
+    '<span style="color:rgba(255,255,255,0.15);font-size:0.7rem;">|</span>' +
+    pill("last delivery", lastDelivery);
+  // Keep expected count updated
+  const expBadge = document.getElementById("stat-expected");
+  if (expBadge) expBadge.textContent = (getExpected()||[]).length; // null-safe
+}
+
+function renderHistory() {
+  const el = document.getElementById("history-body");
+  const h = [...deliveryHistory].reverse();
+  if (h.length === 0) {
+    el.innerHTML = `<div class="empty-history"><div class="emoji">📭</div><div>No deliveries logged yet.<br>Use <strong>+ Log New Delivery</strong> to get started.</div></div>`;
+    return;
+  }
+  let html = '<div style="overflow-x:auto;"><table class="history-tbl" style="min-width:700px;">'
+    + '<thead><tr>'
+    + '<th>Delivery ID</th>'
+    + '<th>Date</th>'
+    + '<th>Source</th>'
+    + '<th>Donor / Organisation</th>'
+    + '<th style="text-align:right;">Weight (kg)</th>'
+    + '<th style="text-align:right;">Item Categories</th>'
+    + '<th>Notes</th>'
+    + '<th></th>'
+    + '</tr></thead><tbody>';
+  h.forEach(d => {
+    const srcClass = sourceClass(d.source);
+    const itemCount = d.items ? Object.values(d.items).filter(v=>v>0).length : 0;
+    html += '<tr>'
+      + '<td class="tbl-code">' + esc(d.id||"") + '</td>'
+      + '<td>' + formatDateShort(d.date) + '</td>'
+      + '<td><span class="source-pill ' + srcClass + '">' + esc(d.source||"") + '</span></td>'
+      + '<td class="tbl-source">' + esc(d.donor||"—") + '</td>'
+      + '<td class="tbl-weight" style="text-align:right;">' + (d.weight ? parseFloat(d.weight).toFixed(1)+" kg" : "—") + '</td>'
+      + '<td style="text-align:right;">' + itemCount + '</td>'
+      + '<td style="font-size:0.76rem;color:var(--muted);max-width:200px;">' + esc(d.notes||"") + '</td>'
+      + '<td>'
+      + '<button class="btn btn-outline" style="font-size:0.62rem;padding:4px 9px;" onclick="viewDelivery(\x27' + esc(d.id||'') + '\x27)">View</button>'
+      + '<button class="btn btn-outline" style="font-size:0.62rem;padding:4px 9px;color:var(--red);border-color:rgba(176,48,48,0.2);" onclick="deleteDelivery(\x27' + esc(d.id||'') + '\x27)">Delete</button>'
+      + '</td>'
+      + '</tr>';
+  });
+  html += '</tbody></table></div>';
+  el.innerHTML = html;
+}
+
+function sourceClass(src) {
+  if (!src) return "other";
+  const s = src.toLowerCase();
+  if (s.includes("trussell")) return "trussell";
+  if (s.includes("public") || s.includes("donation")) return "donation";
+  if (s.includes("supermarket")) return "supermarket";
+  if (s.includes("community")) return "community";
+  if (s.includes("restock")) return "restock";
+  return "other";
+}
+
+function viewDelivery(id) {
+  const d = deliveryHistory.find(x => x.id === id);
+  if (!d) return;
+  // Populate form fields for read-only review
+  currentDelivery = JSON.parse(JSON.stringify(d));
+  selectedSource = d.source;
+  const srcSelV = document.getElementById("delivery-source-select");
+  if (srcSelV && d.source) srcSelV.value = d.source;
+  document.getElementById("delivery-date").value = d.date||"";
+  document.getElementById("delivery-weight").value = d.weight||"";
+  document.getElementById("delivery-ref").value = d.ref||"";
+  // Donor: ensure option exists then select it
+  if(d.donor) {
+    const sel = document.getElementById("delivery-donor");
+    if(![...sel.options].some(o=>o.value===d.donor)) {
+      const opt=document.createElement("option"); opt.value=d.donor; opt.textContent=d.donor; sel.appendChild(opt);
+    }
+    sel.value = d.donor;
+  }
+  document.getElementById("delivery-notes").value = d.notes||"";
+  document.getElementById("delivery-id-display").textContent = d.id||"—";
+  // Restore quantities
+  restoreQuantities(d.items||{});
+  // Go to review
+  goToStep3Preview();
+}
+
+function deleteDelivery(id) {
+  showModal("Delete Delivery", `Are you sure you want to permanently delete delivery ${id}? This cannot be undone.`, "Delete", () => {
+    deliveryHistory = deliveryHistory.filter(x => x.id !== id);
+    saveHistory(deliveryHistory);
+    closeModal();
+    loadHistory();
+    showToast("Delivery deleted.", "warn");
+  });
+}
+// ─── Donor picklist ─────────────────────────────────────
+function getDonors() {
+  // Prefer donors fetched from the Reference Data sheet
+  if (refData && refData.donors && refData.donors.length) {
+    return [...refData.donors].sort((a,b) => a.localeCompare(b));
+  }
+  // Fallback: localStorage + hardcoded defaults
+  const defaults = ["Trussell Trust Allocation","Tesco","Sainsbury\u2019s","Waitrose","Morrisons","Asda","Lidl","Aldi","St Giles Church","Local Community Drive","Anonymous Donation"];
+  try {
+    const saved = JSON.parse(localStorage.getItem(LS_DONORS) || "[]");
+    const all = [...new Set([...defaults, ...saved])];
+    return all.sort((a,b) => a.localeCompare(b));
+  } catch(e) { return defaults; }
+}
+function saveDonors(arr) {
+  const defaults = ["Trussell Trust Allocation","Tesco","Sainsbury\u2019s","Waitrose","Morrisons","Asda","Lidl","Aldi","St Giles Church","Local Community Drive","Anonymous Donation"];
+  const custom = arr.filter(d => !defaults.includes(d));
+  try { localStorage.setItem(LS_DONORS, JSON.stringify(custom)); } catch(e) {}
+}
+function populateDonorSelect() {
+  const donors = getDonors();
+  // Populate every donor select in the app
+  [
+    { id: "delivery-donor", placeholder: "— Select donor / organisation —" },
+    { id: "exp-donor",      placeholder: "— Select donor (optional) —" }
+  ].forEach(({ id, placeholder }) => {
+    const sel = document.getElementById(id);
+    if (!sel) return;
+    const current = sel.value;
+    sel.innerHTML = `<option value="">${placeholder}</option>`;
+    donors.forEach(d => {
+      const opt = document.createElement("option");
+      opt.value = d; opt.textContent = d;
+      sel.appendChild(opt);
+    });
+    if (current) sel.value = current;
+  });
+}
+function handleDonorChange(sel) {
+  document.getElementById("donor-hint").textContent = sel.value ? "✓ " + sel.value : "";
+}
+function showAddDonor() {
+  document.getElementById("donor-add-row").classList.add("visible");
+  document.getElementById("donor-new-input").focus();
+}
+function cancelAddDonor() {
+  document.getElementById("donor-add-row").classList.remove("visible");
+  document.getElementById("donor-new-input").value = "";
+}
+function saveNewDonor() {
+  const val = document.getElementById("donor-new-input").value.trim();
+  if (!val) { showToast("Please enter a donor name.", "error"); return; }
+  const donors = getDonors();
+  if (donors.find(d => d.toLowerCase() === val.toLowerCase())) {
+    showToast("Donor already in list.", "warn");
+    document.getElementById("delivery-donor").value =
+      donors.find(d => d.toLowerCase() === val.toLowerCase());
+    cancelAddDonor();
+    return;
+  }
+  // Update in-memory refData immediately so dropdown reflects it now
+  if (!refData) refData = { sources: [...REF_SOURCES], donors: [] };
+  if (!refData.donors) refData.donors = [];
+  refData.donors.push(val);
+  refData.donors.sort((a, b) => a.localeCompare(b));
+  // Also save to localStorage as fallback
+  saveDonors(getDonors());
+  // Repopulate all donor selects
+  populateDonorSelect();
+  document.getElementById("delivery-donor").value = val;
+  document.getElementById("donor-hint").textContent = "✓ " + val;
+  cancelAddDonor();
+  showToast("Donor added: " + val, "success");
+  // Sync to sheet in background
+  syncDonorToRefTab(val);
+}
+function getDonorValue() {
+  return document.getElementById("delivery-donor")?.value || "";
+}
+
+
+// ═══════════════════════════════════════════════════════════
+// NAVIGATION
+// ═══════════════════════════════════════════════════════════
+function showScreen(id) {
+  document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+  window.scrollTo(0,0);
+}
+
+function goHome() {
+  // Restore any restock-mode overrides
+  const srcSel = document.getElementById("delivery-source-select");
+  if (srcSel) srcSel.disabled = false;
+  const donorRow = document.getElementById("donor-field-row");
+  if (donorRow) donorRow.style.display = "";
+  const weightRow = document.getElementById("weight-field-row");
+  if (weightRow) weightRow.style.display = "";
+  const fh = document.querySelector("#screen-form .form-header h2");
+  if (fh) fh.textContent = "Log New Delivery";
+  const sf = document.getElementById("screen-form");
+  if (sf) delete sf.dataset.mode;
+  pendingExpId = null;
+  // Reset form header
+  const fh2 = document.querySelector("#screen-form .form-header h2");
+  if (fh2) fh2.textContent = "Log New Delivery";
+  const fp2 = document.querySelector("#screen-form .form-header p");
+  if (fp2) fp2.textContent = "";
+  showScreen("screen-home");
+  document.getElementById("btn-new-delivery").style.display = "none";
+  document.getElementById("btn-back-home").style.display = "none";
+  currentDelivery = {};
+  selectedSource = null;
+  resetForm();
+  loadHistory();
+}
+
+function startNewDelivery() {
+  resetForm();
+  generateDeliveryId();
+  showScreen("screen-form");
+  setStepActive(1);
+  document.getElementById("step-1-content").style.display = "block";
+  document.getElementById("step-2-content").style.display = "none";
+  document.getElementById("btn-back-home").style.display = "inline-flex";
+  document.getElementById("btn-new-delivery").style.display = "none";
+}
+
+function resetForm() {
+  selectedSource = null;
+  const ss = document.getElementById("delivery-source-select"); if (ss) ss.value = "";
+  ["delivery-source-select","delivery-weight"].forEach(id => { const e=document.getElementById(id); if(e) e.classList.remove("error"); });
+  ["source-error","weight-error"].forEach(id => { const e=document.getElementById(id); if(e) e.style.display="none"; });
+  document.getElementById("delivery-weight").value = "";
+  document.getElementById("delivery-ref").value = "";
+  document.getElementById("delivery-donor").value = "";
+  document.getElementById("donor-add-row").classList.remove("visible");
+  document.getElementById("donor-hint").textContent = "";
+  document.getElementById("delivery-notes").value = "";
+  // Reset all qty inputs
+  document.querySelectorAll(".item-qty").forEach(el => {
+    el.value = "";
+    el.classList.remove("filled");
+    el.closest(".item-cell")?.classList.remove("has-value");
+  });
+  updateRunningTotal();
+}
+
+function setStepActive(n) {
+  [1,2].forEach(i => {
+    const el = document.getElementById(`step-tab-${i}`);
+    if (!el) return;
+    el.classList.remove("active","done");
+    if (i < n) el.classList.add("done");
+    if (i === n) el.classList.add("active");
+  });
+}
+
+// ── STEP NAVIGATION ──────────────────────────────────────
+function selectSourceFromDropdown(val) { selectedSource = val || null; }
+function showFieldError(fid,eid){ const f=document.getElementById(fid),e=document.getElementById(eid); if(f)f.classList.add("error"); if(e)e.style.display="block"; }
+function clearFieldError(fid,eid){ const f=document.getElementById(fid),e=document.getElementById(eid); if(f)f.classList.remove("error"); if(e)e.style.display="none"; }
+function showErrorModal(msg){ showModal("Missing information", msg, "OK", closeModal); }
+function validateStep1() {
+  let ok = true;
+  const isRestock = document.getElementById("screen-form")?.dataset.mode === "restock";
+  const src = document.getElementById("delivery-source-select").value;
+  if (!src) { showFieldError("delivery-source-select","source-error"); ok = false; }
+  else { clearFieldError("delivery-source-select","source-error"); selectedSource = src; }
+  // Weight is required for deliveries but not for restocks
+  if (!isRestock) {
+    const wt = document.getElementById("delivery-weight").value;
+    if (!wt || parseFloat(wt) <= 0) { showFieldError("delivery-weight","weight-error"); ok = false; }
+    else clearFieldError("delivery-weight","weight-error");
+  }
+  if (!ok) showErrorModal("Please fill in the highlighted fields before continuing.");
+  return ok;
+}
+function goToStep2() {
+  if (!validateStep1()) return;
+  setStepActive(2);
+  document.getElementById("step-1-content").style.display = "none";
+  document.getElementById("step-2-content").style.display = "block";
+  window.scrollTo(0,0);
+}
+
+function backToStep1() {
+  setStepActive(1);
+  document.getElementById("step-1-content").style.display = "block";
+  document.getElementById("step-2-content").style.display = "none";
+  window.scrollTo(0,0);
+}
+
+function goToStep3() {
+  setStepActive(3);
+  document.getElementById("step-2-content").style.display = "none";
+  buildReview();
+  window.scrollTo(0,0);
+}
+
+function backToStep2() {
+  setStepActive(2);
+  document.getElementById("step-2-content").style.display = "block";
+  window.scrollTo(0,0);
+}
+
+function goToStep3Preview() {
+  showScreen("screen-form");
+  setStepActive(3);
+  document.getElementById("step-1-content").style.display = "none";
+  document.getElementById("step-2-content").style.display = "none";
+  const bcs = document.getElementById("btn-confirm-save"); if (bcs) bcs.style.display = "none";
+  buildReview();
+  document.getElementById("btn-back-home").style.display = "inline-flex";
+}
+
+// ═══════════════════════════════════════════════════════════
+// SOURCE SELECTION
+// ═══════════════════════════════════════════════════════════
+function selectSource(el, value) {
+  document.querySelectorAll(".source-opt").forEach(o => o.classList.remove("selected"));
+  el.classList.add("selected");
+  selectedSource = value;
+  document.getElementById("source-error").style.display = "none";
+}
+
+// ═══════════════════════════════════════════════════════════
+// DELIVERY ID GENERATION
+// ═══════════════════════════════════════════════════════════
+function generateDeliveryId() {
+  const now = new Date();
+  const mo = now.toLocaleString("en-GB",{month:"short"}).toUpperCase();
+  const yr = now.getFullYear().toString().slice(2);
+  const existing = getHistory();
+  const seq = String(existing.length + 1).padStart(3, "0");
+  const id = `DEL-${mo}${yr}-${seq}`;
+  document.getElementById("delivery-id-display").textContent = id;
+  return id;
+}
+
+// ═══════════════════════════════════════════════════════════
+// ITEMS GRID BUILD
+// ═══════════════════════════════════════════════════════════
+function buildItemsGrid() {
+  const wrap = document.getElementById("items-sections");
+  let html = "";
+  ITEM_SECTIONS.forEach((sec, si) => {
+    html += `<div class="section-block" id="sec-block-${si}">
+      <div class="section-hdr" style="background:${sec.color};" onclick="toggleSection(${si})">
+        <div class="section-hdr-left">
+          <span class="section-hdr-name">${esc(sec.name)}</span>
+          <span class="section-hdr-count" id="sec-count-${si}">0/${sec.items.length}</span>
+        </div>
+        <span class="section-chevron">▼</span>
+      </div>
+      <div class="items-grid">`;
+    sec.items.forEach((item, ii) => {
+      const key = `${si}_${ii}`;
+      const tabIdx = 10 + si * 20 + ii; // section-ordered tabindex starting at 10
+      html += `<div class="item-cell" id="cell-${key}">
+        <input type="number" class="item-qty" id="qty-${key}"
+          min="0" max="9999" placeholder="–" tabindex="${tabIdx}"
+          oninput="updateItemQty(${si},${ii},this)"
+          onfocus="this.select()">
+        <span class="item-name" id="name-${key}">${esc(item)}</span>
+      </div>`;
+    });
+    html += `</div></div>`;
+  });
+  wrap.innerHTML = html;
+  buildSectionTally();
+}
+
+function toggleSection(si) {
+  const block = document.getElementById(`sec-block-${si}`);
+  block.classList.toggle("collapsed");
+}
+
+function updateItemQty(si, ii, input) {
+  const val = parseInt(input.value) || 0;
+  const key = `${si}_${ii}`;
+  const cell = document.getElementById(`cell-${key}`);
+  const nameEl = document.getElementById(`name-${key}`);
+  input.classList.toggle("filled", val > 0);
+  cell.classList.toggle("has-value", val > 0);
+  nameEl.classList.toggle("has-value", val > 0);
+  updateSectionCount(si);
+  updateRunningTotal();
+}
+
+function updateSectionCount(si) {
+  const sec = ITEM_SECTIONS[si];
+  let filled = 0;
+  sec.items.forEach((_, ii) => {
+    const v = parseInt(document.getElementById(`qty-${si}_${ii}`)?.value)||0;
+    if (v > 0) filled++;
+  });
+  document.getElementById(`sec-count-${si}`).textContent = `${filled}/${sec.items.length}`;
+}
+
+function updateRunningTotal() {
+  let totalItems = 0, totalUnits = 0;
+  ITEM_SECTIONS.forEach((sec,si) => {
+    sec.items.forEach((_, ii) => {
+      const v = parseInt(document.getElementById(`qty-${si}_${ii}`)?.value)||0;
+      if (v > 0) { totalItems++; totalUnits += v; }
+    });
+  });
+  document.getElementById("rt-count").textContent = totalItems;
+  document.getElementById("rt-total").textContent = totalUnits;
+  document.getElementById("sf-items-summary").textContent = `${totalItems} categories entered · ${totalUnits} total units`;
+  buildSectionTally();
+}
+
+function buildSectionTally() {
+  const wrap = document.getElementById("rt-section-tally");
+  if (!wrap) return;
+  let html = "";
+  ITEM_SECTIONS.forEach((sec,si) => {
+    let filled = 0;
+    sec.items.forEach((_, ii) => {
+      if ((parseInt(document.getElementById(`qty-${si}_${ii}`)?.value)||0)>0) filled++;
+    });
+    if (filled > 0) {
+      const short = sec.name.split(" ")[0];
+      html += `<div class="rt-item-count">
+        <span style="font-family:'DM Mono',monospace;font-weight:700;font-size:1rem;">${filled}</span>
+        <span style="font-size:0.55rem;opacity:0.7;letter-spacing:0.5px;">${short}</span>
+      </div>`;
+    }
+  });
+  wrap.innerHTML = html;
+}
+
+function collectItemQuantities() {
+  const items = {};
+  ITEM_SECTIONS.forEach((sec,si) => {
+    sec.items.forEach((name, ii) => {
+      const v = parseInt(document.getElementById(`qty-${si}_${ii}`)?.value)||0;
+      if (v > 0) items[name] = v;
+    });
+  });
+  return items;
+}
+
+function restoreQuantities(items) {
+  // Reset all first
+  document.querySelectorAll(".item-qty").forEach(el => {
+    el.value = ""; el.classList.remove("filled");
+    el.closest(".item-cell")?.classList.remove("has-value");
+  });
+  // Restore
+  ITEM_SECTIONS.forEach((sec,si) => {
+    sec.items.forEach((name, ii) => {
+      const v = items[name];
+      if (v > 0) {
+        const input = document.getElementById(`qty-${si}_${ii}`);
+        if (input) {
+          input.value = v;
+          input.classList.add("filled");
+          document.getElementById(`cell-${si}_${ii}`)?.classList.add("has-value");
+          document.getElementById(`name-${si}_${ii}`)?.classList.add("has-value");
+        }
+      }
+    });
+    updateSectionCount(si);
+  });
+  updateRunningTotal();
+}
+
+// ═══════════════════════════════════════════════════════════
+// REVIEW BUILD
+// ═══════════════════════════════════════════════════════════
+function buildReview() {
+  const src  = selectedSource || currentDelivery.source || "—";
+  const date = document.getElementById("delivery-date").value || currentDelivery.date || "—";
+  const wt   = document.getElementById("delivery-weight").value || currentDelivery.weight || "—";
+  const ref  = document.getElementById("delivery-ref").value || currentDelivery.ref || "—";
+  const donor= getDonorValue() || currentDelivery.donor || "—";
+  const notes= document.getElementById("delivery-notes").value || currentDelivery.notes || "—";
+  const id   = document.getElementById("delivery-id-display").textContent;
+  const items = collectItemQuantities();
+  const itemCount = Object.values(items).filter(v=>v>0).length;
+  const totalUnits = Object.values(items).reduce((s,v)=>s+v,0);
+
+  // Meta cards
+  const metaFields = [
+    {label:"Delivery ID",  val: id},
+    {label:"Date",         val: formatDateShort(date)},
+    {label:"Source",       val: src},
+    {label:"Donor / Org",  val: donor},
+    {label:"Total Weight", val: wt ? parseFloat(wt).toFixed(1)+" kg" : "—"},
+    {label:"Reference",    val: ref},
+    {label:"Categories",   val: itemCount+" with items"},
+    {label:"Total Units",  val: totalUnits},
+  ];
+  const reviewMeta = document.getElementById("review-meta");
+  if (!reviewMeta) return;
+  reviewMeta.innerHTML = metaFields.map(f =>
+    `<div class="review-meta-card"><div class="rmc-label">${esc(f.label)}</div><div class="rmc-val">${esc(String(f.val))}</div></div>`
+  ).join("");
+
+  // Items by section
+  let html = "";
+  ITEM_SECTIONS.forEach(sec => {
+    const secItems = sec.items.filter(name => (items[name]||0) > 0);
+    if (secItems.length === 0) return;
+    html += `<div class="review-items-section">
+      <div class="review-sec-hdr" style="background:${sec.color};">${esc(sec.name)}</div>`;
+    secItems.forEach(name => {
+      html += `<div class="review-item-row">
+        <span>${esc(name)}</span>
+        <span class="review-item-qty">${items[name]}</span>
+      </div>`;
+    });
+    html += `</div>`;
+  });
+  if (!html) html = `<div style="text-align:center;padding:32px;color:var(--muted);font-style:italic;">No item quantities entered — delivery will be logged with weight only.</div>`;
+
+  if (notes && notes !== "—") {
+    html += `<div class="review-items-section">
+      <div class="review-sec-hdr" style="background:var(--muted);">Notes</div>
+      <div class="review-item-row">${esc(notes)}</div>
+    </div>`;
+  }
+  const reviewWrap = document.getElementById("review-items-wrap");
+  if (reviewWrap) reviewWrap.innerHTML = html;
+}
+
+// ═══════════════════════════════════════════════════════════
+// SAVE
+// ═══════════════════════════════════════════════════════════
+function saveDeliveryDirect() {
+  const delivery = {
+    id:        document.getElementById("delivery-id-display").textContent,
+    date:      document.getElementById("delivery-date").value,
+    source:    selectedSource,
+    donor:     getDonorValue(),
+    weight:    document.getElementById("delivery-weight").value,
+    ref:       document.getElementById("delivery-ref").value,
+    notes:     document.getElementById("delivery-notes").value,
+    items:     collectItemQuantities(),
+    createdBy: currentUser || "unknown",
+    savedAt:   new Date().toISOString()
+  };
+  doSave(delivery);
+}
+function confirmSave() { saveDeliveryDirect(); }
+
+function doSave(delivery) {
+  const btn = document.getElementById("btn-save-delivery") || document.getElementById("btn-confirm-save");
+  if (btn) { btn.disabled = true; btn.textContent = "Saving…"; }
+
+  try {
+    const history = getHistory();
+    history.push(delivery);
+    saveHistory(history);
+    deliveryHistory = history;
+
+    if (SHEET_ID !== "YOUR_SHEET_ID" && CLIENT_ID !== "YOUR_CLIENT_ID") {
+      appendToSheet(delivery).catch(e => {
+        console.warn("Sheet sync failed:", e.message);
+        showToast("Saved locally. Sheet sync failed: " + e.message, "warn");
+      });
+      // If this delivery was received from an expected delivery, mark it received
+      if (pendingExpId) {
+        const expId = pendingExpId;
+        const receivedDate = delivery.date || new Date().toISOString().slice(0,10);
+        markExpectedReceived(expId, receivedDate).catch(e =>
+          console.warn("markExpectedReceived failed:", e.message)
+        );
+      }
+    }
+
+    showToast("✓ Delivery " + delivery.id + " saved!", "success");
+    // Reset pending expected ID and form header
+    pendingExpId = null;
+    const fh = document.querySelector("#screen-form .form-header h2");
+    if (fh) fh.textContent = "Log New Delivery";
+    const fp = document.querySelector("#screen-form .form-header p");
+    if (fp) fp.textContent = "";
+    setTimeout(() => {
+      goHome();
+      if (btn) { btn.disabled = false; btn.textContent = "Save Delivery"; btn.style.background = ""; }
+    }, 900);
+
+  } catch(e) {
+    showToast("Save failed: " + e.message, "error");
+    if (btn) { btn.disabled = false; btn.textContent = "Save Delivery"; }
+  }
+}
+
+// ─── Google Sheets sync (optional) ──────────────────────
+// ─── Sheet header columns (must match exactly what appendToSheet writes) ───────
+// ─── Sheet header columns (must match exactly what appendToSheet writes) ───────
+// BUG 4+5 FIX: Added Item Code (col M) and corrected all header names to match
+// the actual spreadsheet Tab 5 headers exactly (no spurious \n differences).
+// Tab 5 headers at row 5: Delivery Ref | Row | Source | Donor Name | Expected Date |
+//   Received Date | Confirmed?\n(auto) | Weight\n(kg) | Item Category | Section |
+//   Quantity | Notes | Item Code
+const SHEET_HEADERS = [
+  "Delivery Ref", "Row", "Source", "Donor Name", "Expected Date", "Received Date",
+  "Confirmed?\n(auto)", "Weight\n(kg)", "Item Category", "Section", "Quantity", "Notes", "Item Code"
+]// 13 columns — A=Delivery Ref, B=Row, C=Source, D=Donor Name, E=Expected Date,
+ // F=Received Date, G=Confirmed?(auto), H=Weight(kg), I=Item Category,
+ // J=Section, K=Quantity, L=Notes, M=Item Code
+
+// ─── OAuth2 token holder ──────────────────────────────────
+let _oauthToken = null;
+async function getOAuthToken() {
+  if (_oauthToken && _oauthToken.expiry > Date.now()) return _oauthToken.token;
+  return new Promise((resolve, reject) => {
+    if (!window.google?.accounts?.oauth2) {
+      reject(new Error("Google Identity Services not loaded. Add the GIS script tag — see setup instructions in the source."));
+      return;
+    }
+    const client = google.accounts.oauth2.initTokenClient({
+      client_id: CLIENT_ID,
+      scope: SCOPES,
+      callback: (resp) => {
+        if (resp.error) { reject(new Error(resp.error)); return; }
+        _oauthToken = { token: resp.access_token, expiry: Date.now() + (resp.expires_in - 60) * 1000 };
+        resolve(resp.access_token);
+      }
+    });
+    client.requestAccessToken({ prompt: "" });
+  });
+}
+
+// ─── Ensure header row exists on first use ────────────────
+// ─── Shared helper: get all existing tab titles ─────────────
+// ─── Build detail lines for the mismatch modal ──────────────
+function buildMismatchLines(missing, extra) {
+  const lines = [];
+  if (missing.length) {
+    lines.push('<strong style="color:var(--red);">Missing from spreadsheet (' + missing.length + '):</strong>');
+    missing.forEach(h => lines.push('&nbsp;&nbsp;<span class="mm-missing">&#x2717; ' + h + '</span>'));
+  }
+  if (extra.length) {
+    lines.push('<strong style="color:var(--gold);">Extra columns in spreadsheet (' + extra.length + '):</strong>');
+    extra.forEach(h => lines.push('&nbsp;&nbsp;<span class="mm-extra">&#x26A0; ' + h + '</span>'));
+  }
+  return lines;
+}
+
+// ─── Mismatch modal ───────────────────────────────────────────
+function closeMismatchModal() {
+  document.getElementById("mismatch-modal").classList.remove("show");
+}
+function showMismatchModal(title, description, detailLines, question) {
+  return new Promise(resolve => {
+    document.getElementById("mm-title").textContent    = title;
+    document.getElementById("mm-desc").textContent     = description;
+    document.getElementById("mm-question").textContent = question;
+    document.getElementById("mm-detail").innerHTML     = detailLines.join("<br>");
+    const old = document.getElementById("mm-confirm");
+    const btn = old.cloneNode(true);
+    old.parentNode.replaceChild(btn, old);
+    btn.onclick    = () => { closeMismatchModal(); resolve(true); };
+    document.getElementById("mm-cancel").onclick = () => { closeMismatchModal(); resolve(false); };
+    document.getElementById("mismatch-modal").classList.add("show");
+  });
+}
+
+async function getSheetTitles(token) {
+  const r = await fetch(
+    `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}?fields=sheets.properties.title`,
+    { headers: { Authorization: "Bearer " + token } }
+  );
+  if (!r.ok) { const e = await r.json(); throw new Error(e.error?.message || "Could not read spreadsheet"); }
+  const d = await r.json();
+  return (d.sheets || []).map(s => s.properties.title);
+}
+
+// ─── Shared helper: create a tab if it does not exist ────────
+// Returns true if the tab was newly created, false if it already existed.
+async function ensureTabExists(token, tabTitle) {
+  const titles = await getSheetTitles(token);
+  if (titles.includes(tabTitle)) return false;
+
+  // Tab is missing — ask before creating
+  const lines = [
+    '<span class="mm-missing">&#x2717; Missing tab: ' + tabTitle + '</span>',
+    '<span class="mm-ok">Existing tabs: ' + (titles.length ? titles.join(", ") : "(none)") + '</span>'
+  ];
+  const proceed = await showMismatchModal(
+    "Sheet tab not found",
+    "The tab \u201c" + tabTitle + "\u201d does not exist in this spreadsheet.",
+    lines,
+    "Do you want to create this tab now and continue saving? If this is the wrong spreadsheet, click Cancel."
+  );
+  if (!proceed) throw new Error("Cancelled \u2014 tab '" + tabTitle + "' not found.");
+
+  const r = await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}:batchUpdate`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json", Authorization: "Bearer " + token },
+    body: JSON.stringify({ requests: [{ addSheet: { properties: { title: tabTitle } } }] })
+  });
+  if (!r.ok) { const e = await r.json(); throw new Error("Could not create tab '" + tabTitle + "': " + (e.error?.message||"unknown")); }
+  return true;
+}
+
+// ─── Delivery log: ensure tab + header row ───────────────────
+async function ensureSheetHeaders(token) {
+  const created = await ensureTabExists(token, LOG_TAB);
+  if (created) {
+    const wr = await fetch(
+      `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${encodeURIComponent(LOG_TAB + "!A5")}?valueInputOption=RAW`,
+      { method:"PUT", headers:{"Content-Type":"application/json",Authorization:"Bearer "+token},
+        body: JSON.stringify({ values:[SHEET_HEADERS] }) }
+    );
+    if (!wr.ok) { const e = await wr.json(); throw new Error("Could not write headers: " + (e.error?.message||"unknown")); }
+    showToast("Header row written to \u201c" + LOG_TAB + "\u201d", "success");
+    return;
+  }
+  // Tab existed — read row 5 and check for mismatches
+  // BUG 4+5 FIX: normalise whitespace/newlines on both sides so \n variants
+  // in the spreadsheet don't trigger a false mismatch warning every time.
+  const rr = await fetch(
+    `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${encodeURIComponent(LOG_TAB + "!5:5")}`,
+    { headers: { Authorization: "Bearer " + token } }
+  );
+  if (!rr.ok) return;
+  const rd = await rr.json();
+  const rawExisting = (rd.values || [[]])[0] || [];
+  if (!rawExisting.length) return;
+  // Normalise: collapse all whitespace/newlines to single space for comparison
+  const norm = h => h.replace(/\s+/g, " ").trim();
+  const existing   = rawExisting.map(norm);
+  const expected   = SHEET_HEADERS.map(norm);
+  const missing = expected.filter(h => !existing.includes(h));
+  const extra   = existing.filter(h => !expected.includes(h));
+  if (!missing.length && !extra.length) return;
+  const lines = buildMismatchLines(missing, extra);
+  const ok = await showMismatchModal(
+    "Column mismatch on \u201c" + LOG_TAB + "\u201d",
+    "The spreadsheet columns do not match what this app expects. Data may land in the wrong columns.",
+    lines,
+    "Save anyway? Data will be written in the app\u2019s column order and may not align with the existing sheet."
+  );
+  if (!ok) throw new Error("Cancelled \u2014 column mismatch on '" + LOG_TAB + "'.");
+}
+
+// ─── Append a completed delivery to the sheet ────────────
+async function appendToSheet(delivery) {
+  const token = await getOAuthToken();
+  await ensureSheetHeaders(token);
+  await ensureRefDataTab(token).catch(e => console.warn("RefData tab:", e.message));
+
+  // Sheet 5 "Delivery Log" — LONG FORMAT (one row per item):
+  // A=Delivery Ref (with row total suffix) | B=Row number | C=Source |
+  // D=Donor Name | E=Expected Date | F=Received Date | G=Confirmed?(formula) |
+  // H=Total Weight(kg, row 1 only) | I=Item Category | J=Section |
+  // K=Quantity | L=Notes (row 1 only)
+
+  const deliveredItems = ITEM_SECTIONS.flatMap(s =>
+    s.items
+      .filter(name => (delivery.items || {})[name] > 0)
+      .map(name => ({ name, section: s.name, qty: Number((delivery.items || {})[name]) }))
+  );
+
+  if (deliveredItems.length === 0) return; // nothing to write
+
+  const deliveryRef  = delivery.id     || "";
+  const donorName    = delivery.donor  || "";
+  // Col E = Expected Date, Col F = Received Date (both = delivery.date for confirmed deliveries)
+  const receivedDate = delivery.date   || "";
+  const expectedDate = delivery.date   || "";
+  const weightKg     = delivery.weight ? parseFloat(delivery.weight) : "";
+  const notes        = delivery.notes  || "";
+
+  const sourceVal  = delivery.source || "";
+  const totalRows  = deliveredItems.length;
+  // Delivery Ref gets a total-row suffix so you can see how many lines each delivery has
+  // e.g. DEL-MAR26-001 (3 rows) → "DEL-MAR26-001 (3)"
+  const refWithTotal = deliveryRef + " (" + totalRows + ")";
+
+  const rows = deliveredItems.map((item, i) => [
+    refWithTotal,              // A: Delivery Ref (includes total row count)
+    i + 1,                     // B: Row (1-based row number within this delivery)
+    sourceVal,                 // C: Source
+    donorName,                 // D: Donor Name
+    expectedDate,              // E: Expected Date
+    receivedDate,              // F: Received Date
+    "",                        // G: Confirmed? — sheet formula auto-populates
+    i === 0 ? weightKg : "",   // H: Total Weight (kg) — first row only
+    item.name,                         // I: Item Category
+    item.section,                      // J: Section
+    item.qty,                          // K: Quantity
+    i === 0 ? notes : "",              // L: Notes (first row only)
+    ITEM_CODE_MAP[item.name] || ""     // M: Item Code — join key for Stock Ledger
+  ]);
+
+  const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${encodeURIComponent(LOG_TAB)}:append?valueInputOption=USER_ENTERED&insertDataOption=INSERT_ROWS`;
+  const r = await fetch(url, {
+    method: "POST",
+    headers: { "Content-Type": "application/json", Authorization: "Bearer " + token },
+    body: JSON.stringify({ values: rows })
+  });
+  if (!r.ok) {
+    const e = await r.json();
+    throw new Error(e.error?.message || "Sheet append failed (HTTP " + r.status + ")");
+  }
+}
+
+// ─── Append an expected delivery to a separate sheet tab ─
+// ─── Expected Deliveries tab ───────────────────────────────
+// Writes to EXP_TAB ("6. Expected Deliveries") — separate from Delivery Log.
+// Columns: A=EXP Ref | B=Source | C=Donor Name | D=Expected Date |
+//          E=Status | F=Received Date | G=Notes | H=Logged By | I=Created At
+const EXP_TAB_HEADERS = [
+  "EXP Ref", "Source", "Donor Name", "Expected Date",
+  "Status", "Received Date", "Notes", "Logged By", "Created At"
+];
+
+async function ensureExpTab(token) {
+  const created = await ensureTabExists(token, EXP_TAB);
+  if (created) {
+    // New tab — write header row
+    const wr = await fetch(
+      `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${encodeURIComponent(EXP_TAB + "!A1")}?valueInputOption=RAW`,
+      { method: "PUT", headers: { "Content-Type": "application/json", Authorization: "Bearer " + token },
+        body: JSON.stringify({ values: [EXP_TAB_HEADERS] }) }
+    );
+    if (!wr.ok) { const e = await wr.json(); throw new Error("Could not write EXP tab headers: " + (e.error?.message||"unknown")); }
+  }
+  // Tab exists (existing or just created) — no mismatch check needed for EXP_TAB
+  // since we own its structure entirely
+}
+
+async function writeExpectedToTab(exp) {
+  if (SHEET_ID === "YOUR_SHEET_ID" || CLIENT_ID === "YOUR_CLIENT_ID") return;
+  const token = await getOAuthToken();
+  await ensureExpTab(token);
+  const row = [
+    exp.id        || "",   // A: EXP Ref
+    exp.source    || "",   // B: Source
+    exp.donor     || "",   // C: Donor Name
+    exp.date      || "",   // D: Expected Date
+    "⏳ Expected",          // E: Status
+    "",                    // F: Received Date — blank until received
+    exp.notes     || "",   // G: Notes
+    exp.createdBy || currentUser || "unknown",  // H: Logged By
+    exp.createdAt || new Date().toISOString()   // I: Created At
+  ];
+  // Also write item-level rows to Delivery Log if quantities were entered
+  const expItemsWithQty = Object.entries(exp.items||{})
+    .filter(([n,q])=>q>0)
+    .map(([n,q])=>({name:n, section:ITEM_SECTION_MAP[n]||"", qty:q}));
+  const r = await fetch(
+    `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${encodeURIComponent(EXP_TAB)}:append?valueInputOption=USER_ENTERED&insertDataOption=INSERT_ROWS`,
+    { method: "POST", headers: { "Content-Type": "application/json", Authorization: "Bearer " + token },
+      body: JSON.stringify({ values: [row] }) }
+  );
+  if (!r.ok) { const e = await r.json(); throw new Error(e.error?.message || "Failed to write expected delivery header"); }
+
+  // Write item rows to Delivery Log (Tab 5) if any quantities were entered
+  // Col F (Received Date) is blank = unconfirmed. Stock Ledger Forecast picks these up.
+  if (expItemsWithQty.length > 0) {
+    await ensureSheetHeaders(token);
+    const expRef = (exp.id||"") + " (" + expItemsWithQty.length + ")";
+    const expLogRows = expItemsWithQty.map((item,i) => [
+      expRef,                              // A: Ref
+      i+1,                                 // B: Row
+      exp.source||"",                      // C: Source
+      exp.donor||"",                       // D: Donor
+      exp.date||"",                        // E: Expected Date
+      "",                                  // F: Received Date — BLANK
+      "",                                  // G: Confirmed? — formula shows ⏳
+      i===0?(exp.weight||""):"",           // H: Weight
+      item.name,                           // I: Item Category
+      item.section,                        // J: Section
+      item.qty,                            // K: Quantity
+      i===0?(exp.notes||""):"",            // L: Notes
+      ITEM_CODE_MAP[item.name]||""         // M: Item Code
+    ]);
+    const r2 = await fetch(
+      `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${encodeURIComponent(LOG_TAB)}:append?valueInputOption=USER_ENTERED&insertDataOption=INSERT_ROWS`,
+      {method:"POST",headers:{"Content-Type":"application/json","Authorization":"Bearer "+token},
+       body:JSON.stringify({values:expLogRows})});
+    if (!r2.ok) console.warn("writeExpectedToTab: Delivery Log write failed");
+  }
+}
+
+async function markExpectedReceived(expId, receivedDate) {
+  // Find the row in EXP_TAB where col A = expId, then update cols E and F
+  if (SHEET_ID === "YOUR_SHEET_ID" || CLIENT_ID === "YOUR_CLIENT_ID") return;
+  try {
+    const token = await getOAuthToken();
+    // Read col A to find the row
+    const r = await fetch(
+      `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${encodeURIComponent(EXP_TAB + "!A:A")}`,
+      { headers: { Authorization: "Bearer " + token } }
+    );
+    if (!r.ok) return;
+    const rows = (await r.json()).values || [];
+    const rowIdx = rows.findIndex(row => (row[0] || "").trim() === expId);
+    if (rowIdx === -1) { console.warn("markExpectedReceived: row not found for", expId); return; }
+    const sheetRow = rowIdx + 1; // 1-based
+    // Update col E (Status) and col F (Received Date)
+    const batchUrl = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values:batchUpdate`;
+    await fetch(batchUrl, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Authorization: "Bearer " + token },
+      body: JSON.stringify({
+        valueInputOption: "USER_ENTERED",
+        data: [
+          { range: `${EXP_TAB}!E${sheetRow}`, values: [["✅ Received"]] },
+          { range: `${EXP_TAB}!F${sheetRow}`, values: [[receivedDate]] }
+        ]
+      })
+    });
+  } catch(e) {
+    console.warn("markExpectedReceived failed:", e.message);
+  }
+}
+
+
+// ─── Expected Deliveries ────────────────────────────────
+// Expected deliveries are sourced entirely from Tab 6 of the Google Sheet.
+// Nothing is stored in localStorage.
+// fetchExpectedFromSheet() reads the sheet and returns the array.
+async function fetchExpectedFromSheet() {
+  // Reads Tab 6 "6. Expected Deliveries" and returns rows with Status != "✅ Received"
+  // Tab 6 structure: row1=title, row2=app note, row3+=data rows
+  // Columns: A=EXP Ref | B=Source | C=Donor | D=Expected Date | E=Status | F=Received Date | G=Notes | H=Logged By | I=Created At
+  // BUG 6 FIX: was reading from A2 which picked up the note text in row2 as a fake entry.
+  // Now reads from A3 to skip title (row1) and note (row2).
+  if (SHEET_ID === "YOUR_SHEET_ID" || CLIENT_ID === "YOUR_CLIENT_ID") return [];
+  try {
+    const token = await getOAuthToken();
+    const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${encodeURIComponent(EXP_TAB + "!A3:I1000")}`;
+    const r = await fetch(url, { headers: { Authorization: "Bearer " + token } });
+    if (!r.ok) { console.warn("fetchExpectedFromSheet: could not read", EXP_TAB); return []; }
+    const rows = (await r.json()).values || [];
+    return rows
+      .filter(row => (row[4] || "").trim() !== "✅ Received") // exclude received
+      .map(row => ({
+        id:        (row[0] || "").trim(),
+        source:    (row[1] || "").trim(),
+        donor:     (row[2] || "").trim(),
+        date:      (row[3] || "").trim(),
+        status:    (row[4] || "").trim(),
+        notes:     (row[6] || "").trim(),
+        loggedBy:  (row[7] || "").trim(),
+        createdAt: (row[8] || "").trim()
+      }))
+      .filter(e => e.id.startsWith("EXP-")); // safety: only real EXP rows
+  } catch(e) {
+    console.warn("fetchExpectedFromSheet failed:", e.message);
+    return [];
+  }
+}
+
+function loadExpected() {
+  // Sheet-first: fetch from Tab 6, render results
+  const expBody = document.getElementById("expected-body");
+  if (expBody) expBody.innerHTML = `<div style="padding:24px;text-align:center;color:var(--muted);font-size:0.82rem;">Loading…</div>`;
+  fetchExpectedFromSheet().then(data => {
+    expectedDeliveries = data;
+    renderExpected();
+  }).catch(e => {
+    if (expBody) expBody.innerHTML = `<div style="padding:24px;color:var(--red);font-size:0.82rem;">Could not load expected deliveries: ${esc(e.message)}</div>`;
+  });
+}
+
+function setExpectedCount(n) {
+  const el = document.getElementById("stat-expected");
+  if (el) el.textContent = n;
+}
+
+function renderExpected() {
+  const el = document.getElementById("expected-body");
+  if (!el) return;
+  if (!expectedDeliveries.length) {
+    el.innerHTML = `<div class="empty-history" style="padding:32px 20px;"><div class="emoji" style="font-size:2rem;">📭</div><div>No expected deliveries found in the sheet.<br>Use <strong>+ Add Expected</strong> to log one.</div></div>`;
+    return;
+  }
+  const today = new Date().toISOString().slice(0,10);
+  const sorted = [...expectedDeliveries].sort((a,b) => a.date < b.date ? -1 : 1);
+  let html = "";
+  sorted.forEach(exp => {
+    const isOverdue = exp.date < today;
+    const isToday   = exp.date === today;
+    const badgeCls  = isOverdue ? "exp-overdue" : isToday ? "exp-today" : "";
+    const badge     = isOverdue
+      ? '<span class="exp-badge exp-badge-overdue">OVERDUE</span>'
+      : isToday ? '<span class="exp-badge exp-badge-today">TODAY</span>' : "";
+    const dt  = new Date(exp.date + "T12:00:00");
+    const day = dt.toLocaleDateString("en-GB", { day: "2-digit" });
+    const mon = dt.toLocaleDateString("en-GB", { month: "short", year: "numeric" });
+    const safeId = esc(exp.id || "");
+    html += `<div class="expected-item ${badgeCls}" role="button" tabindex="0"
+        style="cursor:pointer;"
+        onclick="receiveExpected('${safeId}')"
+        onkeydown="if(event.key==='Enter'||event.key===' ')receiveExpected('${safeId}')">
+      <div class="exp-date-badge">
+        <div class="exp-date-day">${day}</div>
+        <div class="exp-date-mon">${mon}</div>
+      </div>
+      <div class="exp-details" style="flex:1;">
+        <div class="exp-source">${esc(exp.source || "Unknown source")} ${badge}</div>
+        ${exp.donor ? `<div class="exp-donor">${esc(exp.donor)}</div>` : ""}
+        ${exp.notes ? `<div class="exp-notes">${esc(exp.notes)}</div>` : ""}
+        <div style="font-size:0.65rem;color:var(--faint);margin-top:2px;">Ref: ${esc(exp.id)}</div>
+      </div>
+      <div style="color:var(--muted);font-size:0.7rem;align-self:center;">→</div>
+    </div>`;
+  });
+  el.innerHTML = html;
+}
+function scrollToExpected() {
+  document.getElementById("expected-section").scrollIntoView({behavior:"smooth"});
+}
+function showExpectedScreen() {
+  showScreen("screen-expected");
+  document.getElementById("btn-back-home").style.display = "none";
+  loadExpected(); // fetch live from sheet every time screen opens
+}
+
+function startExpectedDelivery() {
+  // Repopulate dropdowns fresh every time the modal opens
+  populateAllSourceSelects();
+  populateDonorSelect();
+  // Reset fields
+  const tomorrow = new Date(Date.now()+86400000).toISOString().slice(0,10);
+  document.getElementById("exp-date").value = tomorrow;
+  document.getElementById("exp-source").value = "";
+  if (document.getElementById("exp-donor")) document.getElementById("exp-donor").value = "";
+  document.getElementById("exp-notes").value = "";
+  // Clear any previous errors
+  ["exp-source","exp-date"].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.classList.remove("error");
+  });
+  ["exp-source-error","exp-date-error"].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.style.display = "none";
+  });
+  document.getElementById("expected-modal").classList.add("show");
+}
+function closeExpectedModal() {
+  document.getElementById("expected-modal").classList.remove("show");
+}
+function saveExpectedDelivery() {
+  console.log("[EXP] saveExpectedDelivery called");
+  // Validate
+  const source = document.getElementById("exp-source").value;
+  const date   = document.getElementById("exp-date").value;
+  console.log("[EXP] source=", JSON.stringify(source), "date=", JSON.stringify(date));
+  let expOk = true;
+  if (!source) {
+    document.getElementById("exp-source").classList.add("error");
+    const serr = document.getElementById("exp-source-error");
+    if (serr) serr.style.display = "block";
+    expOk = false;
+  } else {
+    document.getElementById("exp-source").classList.remove("error");
+    const serr = document.getElementById("exp-source-error");
+    if (serr) serr.style.display = "none";
+  }
+  if (!date) {
+    document.getElementById("exp-date").classList.add("error");
+    const derr = document.getElementById("exp-date-error");
+    if (derr) derr.style.display = "block";
+    expOk = false;
+  } else {
+    document.getElementById("exp-date").classList.remove("error");
+    const derr = document.getElementById("exp-date-error");
+    if (derr) derr.style.display = "none";
+  }
+  if (!expOk) {
+    console.log("[EXP] VALIDATION FAILED - source:", source, "date:", date);
+    showToast("Please select a source and date before saving.", "error");
+    return;
+  }
+  console.log("[EXP] Validation passed");
+
+  const exp = {
+    id:        "EXP-" + Date.now(),
+    source:    source,
+    donor:     document.getElementById("exp-donor").value,
+    date:      date,
+    notes:     document.getElementById("exp-notes").value,
+    createdBy: currentUser || "unknown",
+    createdAt: new Date().toISOString()
+  };
+
+  // Write to sheet only — no localStorage
+  closeExpectedModal();
+  showToast("Saving…", "success");
+  setTimeout(() => {
+    writeExpectedToTab(exp).then(() => {
+      showToast("✓ Expected delivery saved to sheet.", "success");
+      loadExpected(); // refresh list from sheet
+    }).catch(e => {
+      showToast("Save failed: " + e.message, "error");
+    });
+  }, 50);
+}
+// deleteExpected removed — expected deliveries are managed in the sheet directly
+function receiveExpected(id) {
+  // Find from in-memory array (already fetched from sheet)
+  const exp = expectedDeliveries.find(e => e.id === id);
+  if (!exp) { showToast("Could not find that expected delivery.", "error"); return; }
+  // Store the expected ID so doSave can mark it received on the sheet
+  pendingExpId = id;
+  // Pre-fill the delivery form
+  resetForm();
+  generateDeliveryId();
+  selectedSource = exp.source;
+  const srcSel = document.getElementById("delivery-source-select");
+  if (srcSel && exp.source) srcSel.value = exp.source;
+  document.getElementById("delivery-date").value = new Date().toISOString().slice(0,10);
+  if (exp.notes) document.getElementById("delivery-notes").value = exp.notes;
+  if (exp.donor) {
+    const sel = document.getElementById("delivery-donor");
+    if (![...sel.options].some(o => o.value === exp.donor)) {
+      const opt = document.createElement("option");
+      opt.value = exp.donor; opt.textContent = exp.donor;
+      sel.appendChild(opt);
+    }
+    sel.value = exp.donor;
+    document.getElementById("donor-hint").textContent = "✓ " + exp.donor;
+  }
+  // Update form header
+  const fh = document.querySelector("#screen-form .form-header h2");
+  if (fh) fh.textContent = "Receive Delivery";
+  const fp = document.querySelector("#screen-form .form-header p");
+  if (fp) fp.textContent = exp.id + " · " + (exp.source || "") + (exp.donor ? " · " + exp.donor : "");
+  // Go straight to delivery form step 1
+  showScreen("screen-form");
+  setStepActive(1);
+  document.getElementById("step-1-content").style.display = "block";
+  document.getElementById("step-2-content").style.display = "none";
+  document.getElementById("btn-back-home").style.display = "inline-flex";
+  document.getElementById("btn-new-delivery").style.display = "none";
+  showToast("Pre-filled — add weight and items, then save.", "success");
+}
+
+
+// ═══════════════════════════════════════════════════════════
+// SHARED ITEM GRID BUILDER
+// Builds the same grid as delivery Log Items screen.
+// mode: "delivery" | "restock" | "stocktake"
+// ═══════════════════════════════════════════════════════════
+function buildGrid(containerId, mode) {
+  const wrap = document.getElementById(containerId);
+  if (!wrap) return;
+  const prefix = mode; // "restock" or "stocktake"
+  let html = "";
+  ITEM_SECTIONS.forEach((sec, si) => {
+    html += `<div class="section-block" id="${prefix}-sec-block-${si}">
+      <div class="section-hdr" style="background:${sec.color};" onclick="toggleSectionMode('${prefix}',${si})">
+        <div class="section-hdr-left">
+          <span class="section-hdr-name">${esc(sec.name)}</span>
+          <span class="section-hdr-count" id="${prefix}-sec-count-${si}">0/${sec.items.length}</span>
+        </div>
+        <span class="section-chevron">▼</span>
+      </div>
+      <div class="items-grid">`;
+    sec.items.forEach((item, ii) => {
+      const key = `${si}_${ii}`;
+      if (mode === "stocktake") {
+        const stored = getStoredQty(item);
+        html += `<div class="item-cell" id="${prefix}-cell-${key}">
+          <input type="number" class="item-qty" id="${prefix}-qty-${key}"
+            min="0" max="9999" placeholder="–"
+            oninput="updateGridQty('${prefix}',${si},${ii},this)"
+            onfocus="this.select()">
+          <span class="item-name" id="${prefix}-name-${key}">${esc(item)}</span>
+          <span class="st-stored" title="Last logged quantity">${stored > 0 ? stored : "–"}</span>
+          <span class="st-diff" id="${prefix}-diff-${key}"></span>
+        </div>`;
+      } else {
+        html += `<div class="item-cell" id="${prefix}-cell-${key}">
+          <input type="number" class="item-qty" id="${prefix}-qty-${key}"
+            min="0" max="9999" placeholder="–"
+            oninput="updateGridQty('${prefix}',${si},${ii},this)"
+            onfocus="this.select()">
+          <span class="item-name" id="${prefix}-name-${key}">${esc(item)}</span>
+        </div>`;
+      }
+    });
+    html += `</div></div>`;
+  });
+  wrap.innerHTML = html;
+}
+
+function toggleSectionMode(prefix, si) {
+  const block = document.getElementById(`${prefix}-sec-block-${si}`);
+  if (block) block.classList.toggle("collapsed");
+}
+
+
+
+function saveNewSource() {
+  const inp = document.getElementById("source-new-input");
+  if (!inp) return;
+  const val = inp.value.trim();
+  if (!val) { showToast("Please enter a source name.", "error"); return; }
+  const sources = (refData && refData.sources.length) ? refData.sources : [...REF_SOURCES];
+  if (sources.find(s => s.toLowerCase() === val.toLowerCase())) {
+    showToast("Source already in list.", "warn");
+    return;
+  }
+  // Update in-memory refData immediately
+  if (!refData) refData = { sources: [...REF_SOURCES], donors: [] };
+  refData.sources.push(val);
+  refData.sources.sort((a, b) => a.localeCompare(b));
+  // Repopulate all source selects
+  populateAllSourceSelects();
+  // Close the add-source row
+  const addRow = document.getElementById("source-add-row");
+  if (addRow) addRow.classList.remove("visible");
+  inp.value = "";
+  showToast("Source added: " + val, "success");
+  // Sync to sheet in background
+  syncSourceToRefTab(val);
+}
+
+function showAddSource() {
+  const row = document.getElementById("source-add-row");
+  if (row) { row.classList.add("visible"); document.getElementById("source-new-input").focus(); }
+}
+
+function cancelAddSource() {
+  const row = document.getElementById("source-add-row");
+  if (row) row.classList.remove("visible");
+  const inp = document.getElementById("source-new-input");
+  if (inp) inp.value = "";
+}
+
+async function syncSourceToRefTab(sourceName) {
+  if (SHEET_ID === "YOUR_SHEET_ID" || CLIENT_ID === "YOUR_CLIENT_ID") return;
+  try {
+    const token = await getOAuthToken();
+    // Append to col A of Reference Data tab
+    await fetch(
+      `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${encodeURIComponent(REF_TAB + "!A:A")}:append?valueInputOption=RAW&insertDataOption=INSERT_ROWS`,
+      { method: "POST", headers: { "Content-Type": "application/json", Authorization: "Bearer " + token },
+        body: JSON.stringify({ values: [[sourceName]] }) }
+    );
+  } catch(e) { console.warn("syncSourceToRefTab failed:", e.message); }
+}
+
+// ─── Reference data from sheet ──────────────────────────
+async function fetchRefData() {
+  if (SHEET_ID === "YOUR_SHEET_ID" || CLIENT_ID === "YOUR_CLIENT_ID") return;
+  try {
+    const token = await getOAuthToken();
+    // Sheet 10 "Reference Data" layout:
+    //   Col A: Sources   (A1 = "Sources" header, A2+ = values)
+    //   Col C: Donors    (C1 = "Donors"  header, C2+ = values)
+    const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${encodeURIComponent(REF_TAB + "!A4:C200")}`;  // start row 4: skip title, note, header
+    const r = await fetch(url, { headers: { Authorization: "Bearer " + token } });
+    if (!r.ok) { console.warn("fetchRefData: could not read", REF_TAB); return; }
+    const rows = (await r.json()).values || [];
+    const sources = [], donors = [];
+    rows.forEach((row, i) => {
+      // All rows are data (title/note/header skipped by reading from A4)
+      const a = (row[0] || "").trim();
+      const c = (row[2] || "").trim();
+      if (a) sources.push(a);
+      if (c) donors.push(c);
+    });
+    refData = {
+      sources: sources.length ? sources : REF_SOURCES,
+      donors:  donors.length  ? donors  : null
+    };
+    // Immediately repopulate all dropdowns with live data
+    populateAllSourceSelects();
+    populateDonorSelect();
+    console.log("RefData loaded — sources:", refData.sources.length, "donors:", (refData.donors||[]).length);
+  } catch(e) {
+    console.warn("fetchRefData failed:", e.message);
+  }
+}
+
+function populateAllSourceSelects() {
+  const sources = (refData && refData.sources.length) ? refData.sources : REF_SOURCES;
+  // Populate delivery source select
+  const delivSrc = document.getElementById("delivery-source-select");
+  if (delivSrc) {
+    const cur = delivSrc.value;
+    delivSrc.innerHTML = '<option value="">— Select source —</option>';
+    sources.forEach(s => {
+      const opt = document.createElement("option");
+      opt.value = s; opt.textContent = s;
+      delivSrc.appendChild(opt);
+    });
+    // Always keep RESTOCK as an option (added dynamically for restock mode)
+    if (cur) delivSrc.value = cur;
+  }
+  // Populate expected delivery source select
+  const expSrc = document.getElementById("exp-source");
+  if (expSrc) {
+    const cur2 = expSrc.value;
+    expSrc.innerHTML = '<option value="">— Select source —</option>';
+    sources.forEach(s => {
+      const opt = document.createElement("option");
+      opt.value = s; opt.textContent = s;
+      expSrc.appendChild(opt);
+    });
+    if (cur2) expSrc.value = cur2;
+  }
+}
+
+// ─── Live stock from Sheet 4 col D ─────────────────────────
+function getStoredQty(itemName) {
+  // Returns from in-memory cache populated by fetchLiveStock()
+  return liveStock[itemName] || 0;
+}
+
+async function fetchLiveStock(force) {
+  if (liveStockLoaded && !force) return liveStock;
+  if (SHEET_ID === "YOUR_SHEET_ID" || CLIENT_ID === "YOUR_CLIENT_ID") return liveStock;
+  try {
+    const token = await getOAuthToken();
+    // Read cols A and D from Sheet 4 (item names and current physical stock)
+    // Data starts row 6 (rows 1-4 = title/headers/note, row 5 = section header)
+    const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${encodeURIComponent(LEDGER_TAB + "!A1:D200")}`;
+    const r = await fetch(url, { headers: { Authorization: "Bearer " + token } });
+    if (!r.ok) { console.warn("Could not read stock ledger"); return liveStock; }
+    const data = await r.json();
+    const rows = data.values || [];
+    const SECTION_NAMES = new Set(["BREAKFAST & DRINKS","TINNED GOODS","STORE CUPBOARD",
+      "FREE FROM / VEGAN / VEGETARIAN","TOILETRIES","BABY PRODUCTS","CLEANING PRODUCTS"]);
+    liveStock = {};
+    rows.forEach(row => {
+      const name = (row[0] || "").trim();
+      // BUG 2 FIX: v2 layout is A=Name, B=Code, C=Colour, D=Section, E=Min, F=Physical
+      // col D (row[3]) = Section name — was wrong. Physical Stock is col F = row[5].
+      const qty  = row[5];  // col F = Current Physical Stock (v2 layout)
+      if (name && !SECTION_NAMES.has(name) && !name.startsWith("ℹ️") && !name.startsWith("📦")) {
+        liveStock[name] = (qty !== undefined && qty !== "") ? Number(qty) : 0;
+      }
+    });
+    liveStockLoaded = true;
+    return liveStock;
+  } catch(e) {
+    console.warn("fetchLiveStock failed:", e.message);
+    return liveStock;
+  }
+}
+
+function updateGridQty(prefix, si, ii, input) {
+  const val = parseInt(input.value) || 0;
+  const key = `${si}_${ii}`;
+  const cell  = document.getElementById(`${prefix}-cell-${key}`);
+  const nameEl= document.getElementById(`${prefix}-name-${key}`);
+  input.classList.toggle("filled", val > 0);
+  if (cell)   cell.classList.toggle("has-value", val > 0);
+  if (nameEl) nameEl.classList.toggle("has-value", val > 0);
+  // Stock take: show diff vs stored
+  if (prefix === "stocktake") {
+    const itemName = ITEM_SECTIONS[si]?.items[ii];
+    const stored   = itemName ? getStoredQty(itemName) : 0;
+    const diffEl   = document.getElementById(`${prefix}-diff-${key}`);
+    if (diffEl && val > 0) {
+      const diff = val - stored;
+      if (diff > 0)      { diffEl.textContent = "+" + diff; diffEl.className = "st-diff over"; cell.classList.add("st-over"); cell.classList.remove("st-under","st-match"); }
+      else if (diff < 0) { diffEl.textContent = diff; diffEl.className = "st-diff under"; cell.classList.add("st-under"); cell.classList.remove("st-over","st-match"); }
+      else               { diffEl.textContent = "✓"; diffEl.className = "st-diff match"; cell.classList.add("st-match"); cell.classList.remove("st-over","st-under"); }
+    } else if (diffEl) { diffEl.textContent = ""; diffEl.className = "st-diff"; cell.classList.remove("st-over","st-under","st-match"); }
+  }
+  updateGridSectionCount(prefix, si);
+  updateGridRunningTotal(prefix);
+}
+
+function updateGridSectionCount(prefix, si) {
+  const sec = ITEM_SECTIONS[si];
+  let filled = 0;
+  sec.items.forEach((_, ii) => {
+    const v = parseInt(document.getElementById(`${prefix}-qty-${si}_${ii}`)?.value) || 0;
+    if (v > 0) filled++;
+  });
+  const el = document.getElementById(`${prefix}-sec-count-${si}`);
+  if (el) el.textContent = `${filled}/${sec.items.length}`;
+}
+
+function updateGridRunningTotal(prefix) {
+  let totalItems = 0, totalUnits = 0;
+  ITEM_SECTIONS.forEach((sec, si) => {
+    sec.items.forEach((_, ii) => {
+      const v = parseInt(document.getElementById(`${prefix}-qty-${si}_${ii}`)?.value) || 0;
+      if (v > 0) { totalItems++; totalUnits += v; }
+    });
+  });
+  const ids = prefix === "restock"
+    ? { count:"rt-restock-count", total:"rt-restock-total", summary:"restock-summary", tally:"rt-restock-tally" }
+    : { count:"rt-st-count",      total:"rt-st-total",      summary:"stocktake-summary", tally:"rt-st-tally"    };
+  const setEl = (id, val) => { const e = document.getElementById(id); if (e) e.textContent = val; };
+  setEl(ids.count, totalItems);
+  setEl(ids.total, totalUnits);
+  setEl(ids.summary, `${totalItems} categories · ${totalUnits} total units`);
+  // Section tally
+  const tally = document.getElementById(ids.tally);
+  if (tally) {
+    let html = "";
+    ITEM_SECTIONS.forEach((sec, si) => {
+      let filled = 0;
+      sec.items.forEach((_, ii) => { if ((parseInt(document.getElementById(`${prefix}-qty-${si}_${ii}`)?.value)||0)>0) filled++; });
+      if (filled > 0) {
+        const short = sec.name.split(" ")[0];
+        html += `<div class="rt-item-count">
+          <span style="font-family:'DM Mono',monospace;font-weight:700;font-size:1rem;">${filled}</span>
+          <span style="font-size:0.55rem;opacity:0.7;letter-spacing:0.5px;">${short}</span>
+        </div>`;
+      }
+    });
+    tally.innerHTML = html;
+  }
+}
+
+function collectGridQuantities(prefix) {
+  const items = {};
+  ITEM_SECTIONS.forEach((sec, si) => {
+    sec.items.forEach((name, ii) => {
+      const v = parseInt(document.getElementById(`${prefix}-qty-${si}_${ii}`)?.value) || 0;
+      if (v > 0) items[name] = v;
+    });
+  });
+  return items;
+}
+
+function resetGrid(prefix) {
+  ITEM_SECTIONS.forEach((sec, si) => {
+    sec.items.forEach((_, ii) => {
+      const input = document.getElementById(`${prefix}-qty-${si}_${ii}`);
+      if (!input) return;
+      input.value = "";
+      input.classList.remove("filled");
+      const cell = document.getElementById(`${prefix}-cell-${si}_${ii}`);
+      if (cell) cell.classList.remove("has-value","st-over","st-under","st-match");
+      const nameEl = document.getElementById(`${prefix}-name-${si}_${ii}`);
+      if (nameEl) nameEl.classList.remove("has-value");
+      if (prefix === "stocktake") {
+        const diff = document.getElementById(`${prefix}-diff-${si}_${ii}`);
+        if (diff) { diff.textContent = ""; diff.className = "st-diff"; }
+      }
+    });
+  });
+  updateGridRunningTotal(prefix);
+}
+
+// ─── RESTOCK ────────────────────────────────────────────────
+
+
+
+
+
+function startRestock() {
+  // Restock uses the same delivery form — pre-set Source to RESTOCK, hide donor
+  resetForm();
+  generateDeliveryId();
+  const di = document.getElementById("delivery-date");
+  if (di) di.value = new Date().toISOString().slice(0,10);
+  // Pre-select source as RESTOCK
+  selectedSource = "RESTOCK";
+  const srcSel = document.getElementById("delivery-source-select");
+  if (srcSel) {
+    // Add RESTOCK option if not present
+    if (![...srcSel.options].some(o => o.value === "RESTOCK")) {
+      const opt = document.createElement("option");
+      opt.value = "RESTOCK"; opt.textContent = "Restock (returned items)";
+      srcSel.appendChild(opt);
+    }
+    srcSel.value = "RESTOCK";
+    srcSel.disabled = true;
+  }
+  // Hide donor and weight rows — not needed for restock
+  const donorRow = document.getElementById("donor-field-row");
+  if (donorRow) donorRow.style.display = "none";
+  const weightRow = document.getElementById("weight-field-row");
+  if (weightRow) weightRow.style.display = "none";
+  // Store restock mode so saveDeliveryDirect knows
+  document.getElementById("screen-form").dataset.mode = "restock";
+  showScreen("screen-form");
+  setStepActive(1);
+  document.getElementById("step-1-content").style.display = "block";
+  document.getElementById("step-2-content").style.display = "none";
+  document.getElementById("btn-back-home").style.display = "inline-flex";
+  document.getElementById("btn-new-delivery").style.display = "none";
+  // Update form header label
+  const fh = document.querySelector("#screen-form .form-header h2");
+  if (fh) fh.textContent = "Log Restock";
+}
+
+function saveRestock() {
+  // Delegates to the normal delivery save — source is pre-set to RESTOCK
+  saveDeliveryDirect();
+}
+
+
+
+
+
+// ─── STOCK TAKE ─────────────────────────────────────────────
+
+
+
+
+
+function startStocktake() {
+  resetGrid("stocktake");
+  showScreen("screen-stocktake");
+  document.getElementById("btn-back-home").style.display = "inline-flex";
+  document.getElementById("btn-new-delivery").style.display = "none";
+  // Fetch live stock first, then build grid so stored values show correctly
+  const btn = document.getElementById("btn-refresh-stock");
+  if (btn) btn.textContent = "Loading…";
+  fetchLiveStock(true).then(() => {
+    buildGrid("stocktake-sections", "stocktake");
+    if (btn) btn.textContent = "↻ Refresh Stock";
+    const ts = document.getElementById("st-last-refresh");
+    if (ts) ts.textContent = "Last refreshed: " + new Date().toLocaleTimeString("en-GB");
+  });
+}
+
+function refreshStock() {
+  const btn = document.getElementById("btn-refresh-stock");
+  if (btn) btn.disabled = true;
+  liveStockLoaded = false;
+  fetchLiveStock(true).then(() => {
+    buildGrid("stocktake-sections", "stocktake");
+    if (btn) { btn.disabled = false; btn.textContent = "↻ Refresh Stock"; }
+    const ts = document.getElementById("st-last-refresh");
+    if (ts) ts.textContent = "Last refreshed: " + new Date().toLocaleTimeString("en-GB");
+    showToast("Stock levels refreshed from Sheet 4", "success");
+  }).catch(e => {
+    if (btn) { btn.disabled = false; btn.textContent = "↻ Refresh Stock"; }
+    showToast("Refresh failed: " + e.message, "error");
+  });
+}
+
+function saveStocktake() {
+  const items = collectGridQuantities("stocktake");
+  if (Object.keys(items).length === 0) {
+    showErrorModal("Please enter at least one item count before updating.");
+    return;
+  }
+  if (SHEET_ID === "YOUR_SHEET_ID" || CLIENT_ID === "YOUR_CLIENT_ID") {
+    showErrorModal("Google Sheets is not configured. Set SHEET_ID and CLIENT_ID to save the stock take log.");
+    return;
+  }
+  // Confirmation modal before overwriting
+  const count = Object.keys(items).length;
+  showModal(
+    "Save stock take?",
+    "This will log " + count + " item count" + (count===1?"":"s") + " to the Stock Take Log (tab 11). The Stock Ledger will recalculate automatically from your Google Sheet formulas.",
+    "Yes, save stock take",
+    () => { closeModal(); doWriteStocktake(items); }
+  );
+}
+
+function doWriteStocktake(items) {
+  const btn = document.getElementById("btn-save-stocktake");
+  if (btn) { btn.disabled = true; btn.textContent = "Saving…"; }
+
+  const stRecord = {
+    id:       "ST-" + new Date().toISOString().slice(0,10) + "-" + Date.now().toString().slice(-6),
+    // Write plain YYYY-MM-DD so Google Sheets parses it as a real DATE value.
+    // The full ISO string "2026-03-19T13:51:09Z" is not recognised by Sheets as a
+    // date — it stays as text, which breaks the >= comparisons in the Stock Ledger
+    // formulas (Tab 4 col F) that compare Tab11 col C against Tab5 col F and Tab2
+    // col M (both proper date values). Plain YYYY-MM-DD is always parsed as a date.
+    datetime: new Date().toISOString().slice(0, 10), // "YYYY-MM-DD" — Sheets date value
+    user:     currentUser || "unknown",
+    items:    items,
+    savedAt:  new Date().toISOString()
+  };
+
+  // Option A: write item-level rows to tab 11 only.
+  // Col D of the Stock Ledger is formula-driven — the HTML never writes there.
+  appendStocktakeLog(stRecord)
+    .then(() => {
+      // Update local live stock cache so the stocktake screen shows correct values
+      Object.entries(items).forEach(([name, qty]) => { liveStock[name] = qty; });
+      const count = Object.keys(items).length;
+      showToast("✓ Stock take saved — " + count + " item" + (count===1?"":"s") + " logged by " + stRecord.user, "success");
+      setTimeout(() => {
+        goHome();
+        if (btn) { btn.disabled = false; btn.textContent = "Save Stock Take"; }
+      }, 900);
+    })
+    .catch(e => {
+      showToast("Save failed: " + e.message, "error");
+      if (btn) { btn.disabled = false; btn.textContent = "Save Stock Take"; }
+    });
+}
+
+async function appendStocktakeLog(record) {
+  // Writes one row per item to "11. Stock Take Log" — Option A item-level format.
+  // Columns: A=Stock Take ID (with total suffix) | B=Row | C=Date & Time (ISO datetime) | D=User | E=Item Category | F=Section | G=Quantity
+  //
+  // Always validates + rewrites row 1 headers — handles the case where the tab
+  // exists with the old 5-column summary format.
+  const token   = await getOAuthToken();
+  const tabName = STOCKTAKE_TAB;
+
+  // Step 1: ensure tab exists (creates it if missing, no-op if present)
+  const titles = await getSheetTitles(token);
+  if (!titles.includes(tabName)) {
+    const cr = await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}:batchUpdate`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Authorization: "Bearer " + token },
+      body: JSON.stringify({ requests: [{ addSheet: { properties: { title: tabName } } }] })
+    });
+    if (!cr.ok) { const e = await cr.json(); throw new Error("Could not create tab: " + (e.error?.message||"unknown")); }
+  }
+
+  // Step 2: write the correct headers to row 3 (Tab 11 structure: row1=title, row2=note, row3=headers, row4+=data)
+  // BUG 3 FIX: was writing to A1 (the title row). Now writes to A3 to match the spreadsheet structure.
+  await fetch(
+    `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${encodeURIComponent(tabName + "!A3")}?valueInputOption=RAW`,
+    { method: "PUT", headers: { "Content-Type": "application/json", Authorization: "Bearer " + token },
+      body: JSON.stringify({ values: [STOCKTAKE_HEADERS] }) }
+  );
+
+  // Step 3: build one row per item the user counted
+  // Collect items in section order first so row numbers are stable
+  const itemRows = ITEM_SECTIONS.flatMap(sec =>
+    sec.items
+      .filter(name => (record.items[name] !== undefined) && record.items[name] !== "")
+      .map(name => ({ name, section: sec.name, qty: Number(record.items[name]) }))
+  );
+  const totalRows = itemRows.length;
+  // Stock Take ID gets a total-row suffix matching the delivery log convention
+  // e.g. ST-2026-03-16-1234 (7)
+  const stRefWithTotal = record.id + " (" + totalRows + ")";
+
+  const rows = itemRows.map((item, i) => [
+    stRefWithTotal,              // A: Stock Take ID (with total row count)
+    i + 1,                       // B: Row (1-based within this stock take)
+    record.datetime,             // C: Date — plain "YYYY-MM-DD" string, parsed by Sheets as a date value
+    record.user,                 // D: User
+    item.name,                   // E: Item Category
+    item.section,                // F: Section
+    Math.floor(Number(item.qty) || 0),  // G: Quantity — explicitly integer, never a string
+    ITEM_CODE_MAP[item.name] || ""      // H: Item Code — join key for Tab 4 SUMIFS
+  ]);
+
+  if (!rows.length) throw new Error("No items to save — enter at least one quantity");
+
+  // Step 4: append rows
+  const r = await fetch(
+    `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${encodeURIComponent(tabName)}:append?valueInputOption=USER_ENTERED&insertDataOption=INSERT_ROWS`,
+    { method: "POST", headers: { "Content-Type": "application/json", Authorization: "Bearer " + token },
+      body: JSON.stringify({ values: rows }) }
+  );
+  if (!r.ok) { const e = await r.json(); throw new Error(e.error?.message || "Stock take append failed"); }
+}
+
+async function writeStockLevelsToLedger(items) {
+  // OPTION A: Stock Ledger col D is now formula-driven.
+  // The HTML no longer writes directly to col D.
+  // Stock take data is written to tab 11 (item-level rows) instead.
+  // Google Sheets formulas in col D calculate current stock from:
+  //   tab 11 col G (qty from most recent stock take per item, keyed on col E=item name, col C=date)
+  //   + tab 5 col K (deliveries since that date, keyed on col I=item name, col F=received date)
+  //   - picks tab (when built)
+  console.log("[OBA] writeStockLevelsToLedger called but disabled under Option A");
+}
+
+
+
+
+
+// ─── Generic sheet append (Restock + Stocktake) ─────────────
+async function appendGenericToSheet(tabName, record) {
+  // Restock and Stock Take use LONG FORMAT matching the Delivery Log style:
+  // one row per item, columns: ID | Date | Saved At | Item Category | Section | Quantity
+  const token    = await getOAuthToken();
+  const expHdrs  = ["ID", "Date", "Saved At", "Item Category", "Section", "Quantity"];
+  const created  = await ensureTabExists(token, tabName);
+  if (created) {
+    await fetch(
+      `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${encodeURIComponent(tabName + "!A1")}?valueInputOption=RAW`,
+      { method: "PUT", headers: { "Content-Type": "application/json", Authorization: "Bearer " + token },
+        body: JSON.stringify({ values: [expHdrs] }) }
+    );
+  } else {
+    // Check existing columns
+    const rr = await fetch(
+      `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${encodeURIComponent(tabName + "!1:1")}`,
+      { headers: { Authorization: "Bearer " + token } }
+    );
+    if (rr.ok) {
+      const existing = ((await rr.json()).values || [[]])[0] || [];
+      if (existing.length) {
+        const missing = expHdrs.filter(h => !existing.includes(h));
+        const extra   = existing.filter(h => !expHdrs.includes(h));
+        if (missing.length || extra.length) {
+          const ok = await showMismatchModal(
+            "Column mismatch on “" + tabName + "”",
+            "The spreadsheet columns do not match what this app expects.",
+            buildMismatchLines(missing, extra),
+            "Save anyway? Data will be written in the app’s column order."
+          );
+          if (!ok) throw new Error("Cancelled — column mismatch on '" + tabName + "'.");
+        }
+      }
+    }
+  }
+  // Write one row per item in long format
+  const rows = ITEM_SECTIONS.flatMap(s =>
+    s.items
+      .filter(name => (record.items || {})[name] > 0)
+      .map(name => [record.id, record.date, record.savedAt, name, s.name, Number((record.items || {})[name])])
+  );
+  if (!rows.length) return;
+  const ar = await fetch(
+    `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${encodeURIComponent(tabName)}:append?valueInputOption=USER_ENTERED&insertDataOption=INSERT_ROWS`,
+    { method: "POST", headers: { "Content-Type": "application/json", Authorization: "Bearer " + token },
+      body: JSON.stringify({ values: rows }) }
+  );
+  if (!ar.ok) { const e = await ar.json(); throw new Error(e.error?.message || "Append failed on " + tabName); }
+}
+
+
+// ─── Reference Data tab ─────────────────────────────────────
+const REF_SOURCES = [
+  "Trussell Trust", "Public Donation", "Supermarket Collection",
+  "Community Drive", "Restock Return", "Other"
+];
+
+async function ensureRefDataTab(token) {
+  const created = await ensureTabExists(token, REF_TAB);
+  if (!created) return; // already exists — don't overwrite
+  // Write reference data: sources in col A, donors in col C
+  const sources = [["Sources"], ...REF_SOURCES.map(s => [s])];
+  const donors  = [["Donors"], ...getDonors().map(d => [d])];
+  // Write sources to col A
+  await fetch(
+    `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${encodeURIComponent(REF_TAB + "!A1")}?valueInputOption=RAW`,
+    { method: "PUT", headers: { "Content-Type": "application/json", Authorization: "Bearer " + token },
+      body: JSON.stringify({ values: sources }) }
+  );
+  // Write donors to col C
+  await fetch(
+    `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${encodeURIComponent(REF_TAB + "!C1")}?valueInputOption=RAW`,
+    { method: "PUT", headers: { "Content-Type": "application/json", Authorization: "Bearer " + token },
+      body: JSON.stringify({ values: donors }) }
+  );
+  showToast("Reference data written to \"" + REF_TAB + "\"", "success");
+}
+
+// Sync a newly added donor back to the reference tab
+async function syncDonorToRefTab(donorName) {
+  if (SHEET_ID === "YOUR_SHEET_ID" || CLIENT_ID === "YOUR_CLIENT_ID") return;
+  try {
+    const token = await getOAuthToken();
+    await ensureRefDataTab(token); // ensure tab exists
+    // Append to col C
+    await fetch(
+      `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${encodeURIComponent(REF_TAB + "!C:C")}:append?valueInputOption=RAW&insertDataOption=INSERT_ROWS`,
+      { method: "POST", headers: { "Content-Type": "application/json", Authorization: "Bearer " + token },
+        body: JSON.stringify({ values: [[donorName]] }) }
+    );
+  } catch(e) { console.warn("syncDonorToRefTab failed:", e.message); }
+}
+
+// ═══════════════════════════════════════════════════════════
+// EXPORT CSV
+// ═══════════════════════════════════════════════════════════
+function exportCSV() {
+  const h = getHistory();
+  if (!h.length) { showToast("No deliveries to export.", "warn"); return; }
+  const allItems = ITEM_SECTIONS.flatMap(s => s.items);
+  const headers = ["Delivery ID","Date","Source","Donor","Weight (kg)","Reference","Notes","Saved At", ...allItems];
+  const rows = h.map(d => [
+    d.id, d.date, d.source, d.donor, d.weight ? parseFloat(d.weight) : "", d.ref, d.notes, d.savedAt,
+    ...allItems.map(n => (d.items||{})[n] || "")
+  ]);
+  const csvContent = [headers, ...rows]
+    .map(r => r.map(v => `"${String(v||"").replace(/"/g,'""')}"`).join(","))
+    .join("\n");
+  const blob = new Blob([csvContent], {type:"text/csv"});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url; a.download = `OBA_Deliveries_${new Date().toISOString().slice(0,10)}.csv`;
+  a.click(); URL.revokeObjectURL(url);
+  showToast("CSV exported.", "success");
+}
+
+// ═══════════════════════════════════════════════════════════
+// UTILITIES
+// ═══════════════════════════════════════════════════════════
+function updateWeight() {
+  // live weight display — no-op placeholder for future live total
+}
+function formatDateShort(d) {
+  if (!d) return "—";
+  try {
+    const dt = new Date(d + "T12:00:00");
+    return dt.toLocaleDateString("en-GB",{day:"2-digit",month:"short",year:"numeric"});
+  } catch(e) { return d; }
+}
+function esc(s) {
+  return String(s??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#39;");
+}
+function showToast(msg, type="success") {
+  const t = document.getElementById("toast");
+  t.textContent = msg; t.className = `toast ${type} show`;
+  setTimeout(() => { t.className = `toast ${type}`; }, 3500);
+}
+function showModal(title, body, okLabel, onOk) {
+  document.getElementById("modal-title").textContent = title;
+  document.getElementById("modal-body").textContent = body;
+  const btn = document.getElementById("modal-ok");
+  btn.textContent = okLabel; btn.onclick = onOk;
+  document.getElementById("modal").classList.add("show");
+}
+function closeModal() { document.getElementById("modal").classList.remove("show"); }
+</script>
+</body>
+</html>

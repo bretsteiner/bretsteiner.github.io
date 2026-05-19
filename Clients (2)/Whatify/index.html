@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>whatifI — Presentation Collateral</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+:root {
+  --cream:  #FDFAF4;
+  --warm:   #F5EFE0;
+  --orange: #E8571A;
+  --amber:  #F5A623;
+  --indigo: #3D3AF5;
+  --teal:   #0ABFBC;
+  --ink:    #1A1410;
+  --stone:  #6B5E4E;
+  --pebble: #C4B9A8;
+  --serif:  'Playfair Display', Georgia, serif;
+  --sans:   'Plus Jakarta Sans', system-ui, sans-serif;
+}
+
+body {
+  font-family: var(--sans);
+  background: var(--cream);
+  color: var(--ink);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 24px;
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* Soft background texture */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 70% 50% at 10% 20%, rgba(232,87,26,0.07) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 50% at 90% 80%, rgba(61,58,245,0.06) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 40% at 50% 50%, rgba(245,166,35,0.04) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Decorative grain */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.4;
+}
+
+.page {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 680px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+}
+
+/* ─── HEADER ─── */
+.header {
+  text-align: center;
+  margin-bottom: 56px;
+  animation: fadeUp 0.8s ease forwards;
+}
+
+.logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 32px;
+}
+
+.logo-icon {
+  width: 48px; height: 48px;
+  background: var(--orange);
+  border-radius: 14px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.3rem;
+  box-shadow: 0 6px 20px rgba(232,87,26,0.3);
+}
+
+.logo-text {
+  font-family: var(--serif);
+  font-size: 1.8rem;
+  font-weight: 900;
+  color: var(--ink);
+  letter-spacing: -0.02em;
+}
+
+.logo-text span { color: var(--orange); }
+
+.header-eyebrow {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--pebble);
+  margin-bottom: 20px;
+}
+
+.header h1 {
+  font-family: var(--serif);
+  font-size: clamp(2.4rem, 5vw, 3.8rem);
+  font-weight: 900;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  color: var(--ink);
+  margin-bottom: 16px;
+}
+
+.header h1 em {
+  font-style: italic;
+  color: var(--orange);
+}
+
+.header p {
+  font-size: 1rem;
+  color: var(--stone);
+  line-height: 1.7;
+  font-weight: 300;
+  max-width: 460px;
+  margin: 0 auto;
+}
+
+/* ─── DIVIDER ─── */
+.divider {
+  width: 48px;
+  height: 2px;
+  background: linear-gradient(90deg, var(--orange), var(--amber));
+  border-radius: 100px;
+  margin: 0 auto 56px;
+  animation: fadeUp 0.8s ease 0.1s both;
+}
+
+/* ─── CARDS ─── */
+.cards {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.card {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  background: white;
+  border-radius: 20px;
+  padding: 28px 32px;
+  border: 1px solid rgba(196,185,168,0.2);
+  text-decoration: none;
+  color: inherit;
+  box-shadow: 0 2px 16px rgba(26,20,16,0.05);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.card.visible {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.6s ease, transform 0.6s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+.card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 3px;
+  height: 100%;
+  border-radius: 100px 0 0 100px;
+  transition: width 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-4px) !important;
+  box-shadow: 0 16px 48px rgba(26,20,16,0.10);
+}
+
+.card:hover::before { width: 5px; }
+
+/* Card accent colours */
+.card-1::before { background: linear-gradient(180deg, var(--orange), var(--amber)); }
+.card-2::before { background: linear-gradient(180deg, var(--indigo), var(--teal)); }
+.card-3::before { background: linear-gradient(180deg, var(--teal), #22D3EE); }
+
+.card-1:hover { border-color: rgba(232,87,26,0.2); }
+.card-2:hover { border-color: rgba(61,58,245,0.2); }
+.card-3:hover { border-color: rgba(10,191,188,0.2); }
+
+/* Card icon */
+.card-icon {
+  width: 56px; height: 56px;
+  border-radius: 16px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.6rem;
+  flex-shrink: 0;
+  transition: transform 0.3s ease;
+}
+
+.card:hover .card-icon { transform: scale(1.08) rotate(3deg); }
+
+.ci-1 { background: linear-gradient(135deg, #FFF0E8, #FFE4D0); }
+.ci-2 { background: linear-gradient(135deg, #EEEEFF, #E4E3FF); }
+.ci-3 { background: linear-gradient(135deg, #E8FFFE, #D0F9F8); }
+
+/* Card content */
+.card-content { flex: 1; min-width: 0; }
+
+.card-label {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+
+.cl-1 { color: var(--orange); }
+.cl-2 { color: var(--indigo); }
+.cl-3 { color: var(--teal); }
+
+.card-title {
+  font-family: var(--serif);
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 6px;
+  line-height: 1.2;
+}
+
+.card-desc {
+  font-size: 0.83rem;
+  color: var(--stone);
+  line-height: 1.55;
+  font-weight: 300;
+}
+
+/* Card tags */
+.card-tags {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-top: 12px;
+}
+
+.ctag {
+  padding: 3px 10px;
+  border-radius: 100px;
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  background: rgba(196,185,168,0.15);
+  color: var(--stone);
+}
+
+/* Arrow */
+.card-arrow {
+  font-size: 1.2rem;
+  color: var(--pebble);
+  flex-shrink: 0;
+  transition: all 0.3s ease;
+  opacity: 0.5;
+}
+
+.card:hover .card-arrow {
+  opacity: 1;
+  transform: translateX(4px);
+}
+
+.card-1:hover .card-arrow { color: var(--orange); }
+.card-2:hover .card-arrow { color: var(--indigo); }
+.card-3:hover .card-arrow { color: var(--teal); }
+
+/* ─── FOOTER ─── */
+.footer {
+  margin-top: 56px;
+  text-align: center;
+  animation: fadeUp 0.8s ease 0.6s both;
+}
+
+.footer-logo {
+  font-family: var(--serif);
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--pebble);
+  margin-bottom: 8px;
+}
+
+.footer-logo span { color: var(--orange); }
+
+.footer-note {
+  font-size: 0.72rem;
+  color: var(--pebble);
+  letter-spacing: 0.5px;
+}
+
+/* ─── ANIMATIONS ─── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ─── RESPONSIVE ─── */
+@media (max-width: 480px) {
+  .card { padding: 22px 20px; gap: 16px; }
+  .card-icon { width: 48px; height: 48px; font-size: 1.3rem; }
+  .header h1 { font-size: 2.2rem; }
+}
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <!-- Header -->
+  <div class="header">
+    <div class="logo">
+      <div class="logo-icon">💡</div>
+      <div class="logo-text">whatif<span>I</span></div>
+    </div>
+    <div class="header-eyebrow">Presentation Materials</div>
+    <h1>The <em>story</em> so far.</h1>
+    <p>Everything you need to understand what whatifI is, who it's for, and where it's going — in one place.</p>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- Cards -->
+  <div class="cards">
+
+    <a href="whatifyshowcase.html" class="card card-1">
+      <div class="card-icon ci-1">🚀</div>
+      <div class="card-content">
+        <div class="card-label cl-1">Platform Overview</div>
+        <div class="card-title">Showcase</div>
+        <div class="card-desc">The full story — what the platform does, who it's for, and why it matters. Built like a Kickstarter campaign for the idea itself.</div>
+        <div class="card-tags">
+          <span class="ctag">Problem & Solution</span>
+          <span class="ctag">Features</span>
+        </div>
+      </div>
+      <div class="card-arrow">→</div>
+    </a>
+
+    <a href="whatifyuserjourney.html" class="card card-2">
+      <div class="card-icon ci-2">🗺️</div>
+      <div class="card-content">
+        <div class="card-label cl-2">Experience Design</div>
+        <div class="card-title">User Journey</div>
+        <div class="card-desc">Two paths, one platform. Explore the step-by-step journeys of the Ideator and Inspirator — from first spark to community-backed venture.</div>
+        <div class="card-tags">
+          <span class="ctag">💡 Ideator — 8 stages</span>
+          <span class="ctag">⚡ Inspirator — 8 stages</span>
+        </div>
+      </div>
+      <div class="card-arrow">→</div>
+    </a>
+
+    <a href="https://www.figma.com/proto/k13Yx44rYyRiyy8VcORjLc/Whatify?node-id=0-1&t=lbQRskMPQ2rUlaFT-1" class="card card-3">
+      <div class="card-icon ci-3">📐</div>
+      <div class="card-content">
+        <div class="card-label cl-3">Product Design</div>
+        <div class="card-title">Wireframes</div>
+        <div class="card-desc">Screen-by-screen designs of the platform — from the landing page and idea submission flow through to the dashboard, community board and pitch deck builder.</div>
+        <div class="card-tags">
+          <span class="ctag">MVP Screens</span>
+          <span class="ctag">Ideator Flow</span>
+          <span class="ctag">Inspirator Flow</span>
+        </div>
+      </div>
+      <div class="card-arrow">→</div>
+    </a>
+
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    <div class="footer-logo">whatif<span>I</span></div>
+  </div>
+
+</div>
+
+<script>
+  // Stagger card animations on load
+  document.querySelectorAll('.card').forEach((card, i) => {
+    setTimeout(() => {
+      card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+      card.classList.add('visible');
+    }, 300 + i * 120);
+  });
+</script>
+
+</body>
+</html>

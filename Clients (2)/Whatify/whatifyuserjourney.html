@@ -1,0 +1,1185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>What If I — User Journeys</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ideator-a: #F97316;
+  --ideator-b: #FBBF24;
+  --inspirator-a: #6366F1;
+  --inspirator-b: #22D3EE;
+  --bg: #FAFAF7;
+  --surface: #FFFFFF;
+  --surface2: #F4F3EE;
+  --text: #1C1917;
+  --muted: #78716C;
+  --border: rgba(0,0,0,0.07);
+}
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  overflow-x: hidden;
+  line-height: 1.6;
+}
+
+/* ─── HERO ─── */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 80px 24px 60px;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-bg {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 80% 60% at 20% 50%, rgba(249,115,22,0.10) 0%, transparent 60%),
+              radial-gradient(ellipse 80% 60% at 80% 50%, rgba(99,102,241,0.09) 0%, transparent 60%),
+              linear-gradient(160deg, #FFF9F0 0%, #F0F4FF 50%, #F0FAFB 100%);
+  animation: heroBreath 8s ease-in-out infinite alternate;
+}
+
+@keyframes heroBreath {
+  from { opacity: 0.6; transform: scale(1); }
+  to   { opacity: 1;   transform: scale(1.05); }
+}
+
+.hero-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  animation: orb 12s ease-in-out infinite alternate;
+}
+.orb-1 { width: 400px; height: 400px; background: rgba(249,115,22,0.12); top: -100px; left: -100px; }
+.orb-2 { width: 500px; height: 500px; background: rgba(99,102,241,0.09); bottom: -150px; right: -150px; animation-delay: -4s; }
+.orb-3 { width: 300px; height: 300px; background: rgba(34,211,238,0.10); top: 40%; left: 40%; animation-delay: -8s; }
+
+@keyframes orb {
+  from { transform: translate(0,0) scale(1); }
+  to   { transform: translate(30px, -20px) scale(1.1); }
+}
+
+.hero-label {
+  font-family: 'Syne', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: #A8A29E;
+  margin-bottom: 24px;
+  position: relative;
+}
+
+.hero h1 {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(3rem, 8vw, 7rem);
+  font-weight: 800;
+  line-height: 1;
+  position: relative;
+  margin-bottom: 16px;
+}
+
+.hero h1 em {
+  font-style: normal;
+  background: linear-gradient(135deg, var(--ideator-a), var(--ideator-b) 40%, var(--inspirator-a) 60%, var(--inspirator-b));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.hero-sub {
+  font-size: clamp(1rem, 2vw, 1.3rem);
+  color: var(--muted);
+  max-width: 600px;
+  margin: 0 auto 60px;
+  position: relative;
+  font-weight: 300;
+}
+
+.persona-toggle {
+  display: flex;
+  gap: 16px;
+  position: relative;
+  z-index: 2;
+}
+
+.persona-pill {
+  padding: 14px 32px;
+  border-radius: 100px;
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  border: 1.5px solid transparent;
+}
+
+.pill-ideator {
+  background: linear-gradient(135deg, var(--ideator-a), var(--ideator-b));
+  color: white;
+  box-shadow: 0 8px 32px rgba(255,92,53,0.35);
+}
+.pill-ideator:hover { transform: translateY(-2px); box-shadow: 0 12px 40px rgba(255,92,53,0.5); }
+
+.pill-inspirator {
+  background: linear-gradient(135deg, var(--inspirator-a), var(--inspirator-b));
+  color: white;
+  box-shadow: 0 8px 32px rgba(79,70,229,0.35);
+}
+.pill-inspirator:hover { transform: translateY(-2px); box-shadow: 0 12px 40px rgba(79,70,229,0.5); }
+
+.scroll-hint {
+  position: absolute;
+  bottom: 32px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  color: #A8A29E;
+  font-size: 0.75rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  animation: scrollBob 2s ease-in-out infinite;
+}
+
+@keyframes scrollBob {
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  50%       { transform: translateX(-50%) translateY(6px); }
+}
+
+.scroll-line {
+  width: 1px;
+  height: 40px;
+  background: linear-gradient(to bottom, transparent, #A8A29E);
+}
+
+/* ─── SECTION BACKGROUNDS ─── */
+#ideator {
+  background: linear-gradient(180deg, #FFF9F5 0%, #FAFAF7 100%);
+}
+
+#inspirator {
+  background: linear-gradient(180deg, #F5F5FF 0%, #F0FAFB 60%, #FAFAF7 100%);
+}
+
+/* ─── SECTION HEADERS ─── */
+.section-header {
+  text-align: center;
+  padding: 100px 24px 60px;
+  position: relative;
+}
+
+.section-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 20px;
+  border-radius: 100px;
+  font-family: 'Syne', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 24px;
+}
+
+.badge-ideator {
+  background: rgba(255,92,53,0.15);
+  border: 1px solid rgba(255,92,53,0.3);
+  color: var(--ideator-a);
+}
+
+.badge-inspirator {
+  background: rgba(79,70,229,0.15);
+  border: 1px solid rgba(79,70,229,0.3);
+  color: #7C75F5;
+}
+
+.section-header h2 {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(2.2rem, 5vw, 4rem);
+  font-weight: 800;
+  line-height: 1.1;
+  margin-bottom: 16px;
+}
+
+.section-header p {
+  color: var(--muted);
+  font-size: 1.1rem;
+  max-width: 520px;
+  margin: 0 auto;
+  font-weight: 300;
+}
+
+/* ─── JOURNEY TIMELINE ─── */
+.journey-section {
+  padding: 0 24px 120px;
+  max-width: 1200px;
+  margin: 0 auto;
+  position: relative;
+}
+
+.timeline {
+  position: relative;
+}
+
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  transform: translateX(-50%);
+  background: linear-gradient(to bottom, transparent, rgba(0,0,0,0.08) 10%, rgba(0,0,0,0.08) 90%, transparent);
+}
+
+.step {
+  display: grid;
+  grid-template-columns: 1fr 80px 1fr;
+  gap: 0;
+  margin-bottom: 80px;
+  position: relative;
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+
+.step.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.step:nth-child(odd) .step-card { grid-column: 1; }
+.step:nth-child(odd) .step-node { grid-column: 2; }
+.step:nth-child(odd) .step-empty { grid-column: 3; }
+
+.step:nth-child(even) .step-empty { grid-column: 1; order: 1; }
+.step:nth-child(even) .step-node  { grid-column: 2; order: 2; }
+.step:nth-child(even) .step-card  { grid-column: 3; order: 3; }
+
+.step-card {
+  background: var(--surface);
+  border-radius: 20px;
+  padding: 32px;
+  border: 1px solid var(--border);
+  position: relative;
+  transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+}
+
+.step-card:hover {
+  transform: translateY(-4px);
+}
+
+.step-node {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: 32px;
+}
+
+.node-dot {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  position: relative;
+  flex-shrink: 0;
+  z-index: 2;
+}
+
+.node-ring {
+  position: absolute;
+  inset: -6px;
+  border-radius: 50%;
+  border: 1px solid currentColor;
+  opacity: 0.3;
+  animation: ringPulse 3s ease-in-out infinite;
+}
+
+@keyframes ringPulse {
+  0%, 100% { transform: scale(1); opacity: 0.3; }
+  50%       { transform: scale(1.2); opacity: 0.1; }
+}
+
+/* Ideator colors */
+.ideator .step-card:hover { border-color: rgba(249,115,22,0.25); }
+.ideator .node-dot { background: linear-gradient(135deg, var(--ideator-a), var(--ideator-b)); box-shadow: 0 0 24px rgba(249,115,22,0.35); color: var(--ideator-a); }
+.ideator .step-num { color: var(--ideator-a); }
+.ideator .emotion-tag { background: rgba(249,115,22,0.08); border-color: rgba(249,115,22,0.2); color: #C2510A; }
+.ideator .feature-dot { background: var(--ideator-a); }
+.ideator .step-card { box-shadow: 0 2px 12px rgba(0,0,0,0.04); }
+.ideator .step-card:hover { box-shadow: 0 20px 60px rgba(249,115,22,0.10); }
+
+/* Inspirator colors */
+.inspirator .step-card:hover { border-color: rgba(99,102,241,0.25); }
+.inspirator .node-dot { background: linear-gradient(135deg, var(--inspirator-a), var(--inspirator-b)); box-shadow: 0 0 24px rgba(99,102,241,0.3); color: var(--inspirator-a); }
+.inspirator .step-num { color: var(--inspirator-a); }
+.inspirator .emotion-tag { background: rgba(99,102,241,0.08); border-color: rgba(99,102,241,0.2); color: #4F46E5; }
+.inspirator .feature-dot { background: var(--inspirator-b); }
+.inspirator .step-card:hover { box-shadow: 0 20px 60px rgba(99,102,241,0.10); }
+
+.step-num {
+  font-family: 'Syne', sans-serif;
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  opacity: 0.7;
+}
+
+.step-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 1.4rem;
+  font-weight: 700;
+  margin-bottom: 12px;
+  color: var(--text);
+}
+
+.step-desc {
+  color: #78716C;
+  font-size: 0.93rem;
+  line-height: 1.7;
+  margin-bottom: 20px;
+  font-weight: 300;
+}
+
+.emotion-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 14px;
+  border-radius: 100px;
+  border: 1px solid;
+  font-size: 0.78rem;
+  font-weight: 500;
+  margin-bottom: 20px;
+}
+
+.features {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+}
+
+.feature-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.875rem;
+  color: #57534E;
+}
+
+.feature-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.step-empty {
+  /* placeholder for alternating layout */
+}
+
+/* ─── CONNECTOR ─── */
+.journey-connector {
+  text-align: center;
+  padding: 20px 0 80px;
+  position: relative;
+}
+
+.connector-line {
+  width: 1px;
+  height: 80px;
+  margin: 0 auto;
+  background: linear-gradient(to bottom, var(--ideator-b), var(--inspirator-a));
+  position: relative;
+}
+
+.connector-badge {
+  display: inline-block;
+  padding: 12px 28px;
+  border-radius: 100px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  font-family: 'Syne', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--muted);
+  letter-spacing: 1px;
+  margin: 20px 0;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+}
+
+/* ─── MOMENTUM BAR ─── */
+.momentum {
+  max-width: 1200px;
+  margin: 0 auto 120px;
+  padding: 0 24px;
+}
+
+.momentum-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+}
+
+.momentum-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 28px 24px;
+  text-align: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+}
+
+.momentum-card:hover { transform: translateY(-4px); box-shadow: 0 12px 40px rgba(0,0,0,0.08); }
+
+.momentum-num {
+  font-family: 'Syne', sans-serif;
+  font-size: 2.5rem;
+  font-weight: 800;
+  margin-bottom: 6px;
+}
+
+.momentum-label {
+  font-size: 0.8rem;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+}
+
+/* ─── WHERE THEY MEET ─── */
+.meeting-section {
+  max-width: 1200px;
+  margin: 0 auto 120px;
+  padding: 0 24px;
+}
+
+.meeting-header {
+  text-align: center;
+  margin-bottom: 60px;
+}
+
+.meeting-diagram {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: 24px;
+  align-items: center;
+}
+
+.meeting-side {
+  background: var(--surface);
+  border-radius: 20px;
+  padding: 36px;
+  border: 1px solid var(--border);
+  box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+}
+
+.meeting-side h3 {
+  font-family: 'Syne', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 20px;
+}
+
+.meeting-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.88rem;
+  color: #57534E;
+}
+
+.meeting-item:last-child { border-bottom: none; }
+
+.meeting-icon { font-size: 1.1rem; flex-shrink: 0; margin-top: 1px; }
+
+.meeting-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+}
+
+.center-circle {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #FFF9F0, #F0F4FF);
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.5rem;
+  position: relative;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.06);
+}
+
+.center-circle::before {
+  content: '';
+  position: absolute;
+  inset: -8px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  animation: ringPulse 4s ease-in-out infinite;
+}
+
+.meeting-label {
+  font-family: 'Syne', sans-serif;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: #A8A29E;
+  text-transform: uppercase;
+  text-align: center;
+  margin-top: 16px;
+}
+
+.meeting-arrow {
+  color: var(--muted);
+  font-size: 1.5rem;
+  opacity: 0.4;
+}
+
+/* ─── FOOTER ─── */
+.footer {
+  text-align: center;
+  padding: 60px 24px;
+  border-top: 1px solid var(--border);
+  color: var(--muted);
+  font-size: 0.85rem;
+  background: var(--surface2);
+}
+
+.footer-logo {
+  font-family: 'Syne', sans-serif;
+  font-size: 1.4rem;
+  font-weight: 800;
+  margin-bottom: 12px;
+}
+
+.footer-logo em {
+  font-style: normal;
+  background: linear-gradient(135deg, var(--ideator-a), var(--inspirator-b));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ─── DIVIDER ─── */
+.divider {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+  border-top: 1px solid var(--border);
+}
+
+/* ─── RESPONSIVE ─── */
+@media (max-width: 768px) {
+  .persona-toggle { flex-direction: column; align-items: center; }
+  
+  .timeline::before { left: 28px; }
+  
+  .step {
+    grid-template-columns: 56px 1fr;
+    gap: 16px;
+    margin-bottom: 40px;
+  }
+
+  .step:nth-child(odd) .step-card,
+  .step:nth-child(even) .step-card { grid-column: 2; order: 2; }
+  .step:nth-child(odd) .step-node,
+  .step:nth-child(even) .step-node  { grid-column: 1; order: 1; padding-top: 28px; }
+  .step-empty { display: none; }
+  
+  .node-dot { width: 40px; height: 40px; font-size: 1rem; }
+  
+  .meeting-diagram { grid-template-columns: 1fr; }
+  .meeting-arrow { transform: rotate(90deg); }
+  
+  .momentum-grid { grid-template-columns: 1fr 1fr; }
+}
+
+/* ─── ANIMATIONS ON SCROLL ─── */
+.fade-up {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+.fade-up.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ─── GRADIENT TEXT UTILITIES ─── */
+.grad-ideator {
+  background: linear-gradient(135deg, var(--ideator-a), var(--ideator-b));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.grad-inspirator {
+  background: linear-gradient(135deg, var(--inspirator-a), var(--inspirator-b));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Floating particles */
+.particle {
+  position: fixed;
+  border-radius: 50%;
+  pointer-events: none;
+  animation: float linear infinite;
+  opacity: 0;
+}
+
+@keyframes float {
+  0%   { transform: translateY(100vh) rotate(0deg);   opacity: 0; }
+  10%  { opacity: 0.4; }
+  90%  { opacity: 0.2; }
+  100% { transform: translateY(-100px) rotate(720deg); opacity: 0; }
+}
+
+</style>
+</head>
+<body>
+
+<!-- Floating particles -->
+<div id="particles"></div>
+
+<!-- ─── HERO ─── -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-orb orb-1"></div>
+  <div class="hero-orb orb-2"></div>
+  <div class="hero-orb orb-3"></div>
+
+  <p class="hero-label">What If I — Platform Journey</p>
+  <h1><em>Two Paths,<br>One Vision</em></h1>
+  <p class="hero-sub">From spark of an idea to a community of believers — explore how the Ideator and Inspirator journeys flow, connect, and create momentum together.</p>
+
+  <div class="persona-toggle">
+    <a href="#ideator" class="persona-pill pill-ideator">💡 The Ideator</a>
+    <a href="#inspirator" class="persona-pill pill-inspirator">⚡ The Inspirator</a>
+  </div>
+
+  <div class="scroll-hint">
+    <div class="scroll-line"></div>
+    scroll
+  </div>
+</section>
+
+<!-- ─── IDEATOR JOURNEY ─── -->
+<section id="ideator">
+  <div class="section-header fade-up">
+    <span class="section-badge badge-ideator">💡 Journey One</span>
+    <h2>The <span class="grad-ideator">Ideator</span></h2>
+    <p>You have a spark. A business idea, a book concept, an event waiting to happen. This is how you go from "what if…" to a polished, validated idea with real community backing.</p>
+  </div>
+
+  <div class="journey-section">
+    <div class="timeline ideator">
+
+      <div class="step ideator">
+        <div class="step-card">
+          <div class="step-num">Step 01 — Discovery</div>
+          <h3 class="step-title">The Landing Page</h3>
+          <p class="step-desc">You stumble across What If I through social media, a friend's share, or a search for "how do I validate my business idea." You arrive curious, maybe a little cautious. The platform makes its value clear immediately.</p>
+          <span class="emotion-tag">😮 Curious & Cautious</span>
+          <div class="features">
+            <div class="feature-item"><span class="feature-dot"></span>Compelling headline that speaks directly to you</div>
+            <div class="feature-item"><span class="feature-dot"></span>Browse featured ideas to understand the vibe</div>
+            <div class="feature-item"><span class="feature-dot"></span>Success stories from founders like you</div>
+            <div class="feature-item"><span class="feature-dot"></span>A single, inviting CTA: <em>Submit Your Idea</em></div>
+          </div>
+        </div>
+        <div class="step-node">
+          <div class="node-dot">🔢
+            <div class="node-ring"></div>
+          </div>
+        </div>
+        <div class="step-empty"></div>
+      </div>
+
+      <div class="step ideator">
+        <div class="step-empty"></div>
+        <div class="step-node">
+          <div class="node-dot">📋
+            <div class="node-ring"></div>
+          </div>
+        </div>
+        <div class="step-card">
+          <div class="step-num">Step 02 — First Commitment</div>
+          <h3 class="step-title">Idea Submission</h3>
+          <p class="step-desc">A beautifully simple form — just enough to capture the heart of your idea without overwhelming you. You choose what type of "What If" you're asking the world.</p>
+          <span class="emotion-tag">🤔 Hesitant but Hopeful</span>
+          <div class="features">
+            <div class="feature-item"><span class="feature-dot"></span>Choose your idea type: Business, Book, Event, Cause…</div>
+            <div class="feature-item"><span class="feature-dot"></span>Working title & short description (under 500 words)</div>
+            <div class="feature-item"><span class="feature-dot"></span>What does success look like for you?</div>
+            <div class="feature-item"><span class="feature-dot"></span>Safe, low-pressure — no NDA yet, just the idea</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step ideator">
+        <div class="step-card">
+          <div class="step-num">Step 03 — Joining the Community</div>
+          <h3 class="step-title">Account Creation & Community Vibe</h3>
+          <p class="step-desc">Create your account with a quick social login. Then, before anything goes live, you read and agree to the Community Vibe — a human, readable set of values that protects everyone's ideas in this space.</p>
+          <span class="emotion-tag">😤 "I hate signing up…" → ✅ That was easy</span>
+          <div class="features">
+            <div class="feature-item"><span class="feature-dot"></span>Google / social sign-in for speed</div>
+            <div class="feature-item"><span class="feature-dot"></span>Community vibe page — values, not legalese</div>
+            <div class="feature-item"><span class="feature-dot"></span>NDA-style protection in plain language</div>
+            <div class="feature-item"><span class="feature-dot"></span>LinkedIn profile to build credibility</div>
+          </div>
+        </div>
+        <div class="step-node">
+          <div class="node-dot">🔐
+            <div class="node-ring"></div>
+          </div>
+        </div>
+        <div class="step-empty"></div>
+      </div>
+
+      <div class="step ideator">
+        <div class="step-empty"></div>
+        <div class="step-node">
+          <div class="node-dot">🎯
+            <div class="node-ring"></div>
+          </div>
+        </div>
+        <div class="step-card">
+          <div class="step-num">Step 04 — Your Command Centre</div>
+          <h3 class="step-title">Ideator Dashboard</h3>
+          <p class="step-desc">Your home base. Track all your ideas at a glance. Each idea has its own Idea Readiness Score — a living indicator of how developed and ready your concept is to share with the world.</p>
+          <span class="emotion-tag">🌱 Oriented & Building Momentum</span>
+          <div class="features">
+            <div class="feature-item"><span class="feature-dot"></span>Idea cards with completeness scores (Seed → Grove)</div>
+            <div class="feature-item"><span class="feature-dot"></span>Audience engagement metrics at a glance</div>
+            <div class="feature-item"><span class="feature-dot"></span>To-do list: what to do next to grow your idea</div>
+            <div class="feature-item"><span class="feature-dot"></span>Milestones calendar and submission history</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step ideator">
+        <div class="step-card">
+          <div class="step-num">Step 05 — Developing the Idea</div>
+          <h3 class="step-title">Idea Clarifier & AI Business Coach</h3>
+          <p class="step-desc">Using a conversational AI guide, you work through the key dimensions of your idea — the problem, your solution, market size, and business model. The AI doesn't replace your thinking; it unlocks it.</p>
+          <span class="emotion-tag">🧠 Focused & Discovering New Angles</span>
+          <div class="features">
+            <div class="feature-item"><span class="feature-dot"></span>AI-led interview style Q&A to flesh out your idea</span></div>
+            <div class="feature-item"><span class="feature-dot"></span>Business services checklist: marketing, legal, finance</div>
+            <div class="feature-item"><span class="feature-dot"></span>MBA-style frameworks made simple and visual</div>
+            <div class="feature-item"><span class="feature-dot"></span>Idea Readiness Score updates with every step</div>
+          </div>
+        </div>
+        <div class="step-node">
+          <div class="node-dot">🤖
+            <div class="node-ring"></div>
+          </div>
+        </div>
+        <div class="step-empty"></div>
+      </div>
+
+      <div class="step ideator">
+        <div class="step-empty"></div>
+        <div class="step-node">
+          <div class="node-dot">✨
+            <div class="node-ring"></div>
+          </div>
+        </div>
+        <div class="step-card">
+          <div class="step-num">Step 06 — Going Public</div>
+          <h3 class="step-title">Your Pitch Deck & Idea Page</h3>
+          <p class="step-desc">Everything you've built comes together in a polished, public-facing pitch deck and idea page. Share it with the world and start attracting your first Inspirators — the people who believe in you before anyone else does.</p>
+          <span class="emotion-tag">🚀 Proud & Ready to Share</span>
+          <div class="features">
+            <div class="feature-item"><span class="feature-dot"></span>Auto-generated pitch deck with AI polish</div>
+            <div class="feature-item"><span class="feature-dot"></span>Beautifully designed public idea landing page</div>
+            <div class="feature-item"><span class="feature-dot"></span>Share assets for social media — LinkedIn, Instagram</div>
+            <div class="feature-item"><span class="feature-dot"></span>Start collecting votes, comments, and commitments</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step ideator">
+        <div class="step-card">
+          <div class="step-num">Step 07 — Building Your Audience</div>
+          <h3 class="step-title">Engage & Grow Your Community</h3>
+          <p class="step-desc">Your idea is live. Now you nurture it. Respond to Inspirators, see who's backing you and why, understand the demographic breakdown of your supporters, and use their feedback to sharpen and evolve your idea.</p>
+          <span class="emotion-tag">💬 Energised by Real Feedback</span>
+          <div class="features">
+            <div class="feature-item"><span class="feature-dot"></span>Comment thread and direct responses to supporters</div>
+            <div class="feature-item"><span class="feature-dot"></span>Demographic breakdown of who is backing you</div>
+            <div class="feature-item"><span class="feature-dot"></span>Import your own contact list to rally your network</div>
+            <div class="feature-item"><span class="feature-dot"></span>Run polls and surveys to get deeper insights</div>
+          </div>
+        </div>
+        <div class="step-node">
+          <div class="node-dot">📣
+            <div class="node-ring"></div>
+          </div>
+        </div>
+        <div class="step-empty"></div>
+      </div>
+
+      <div class="step ideator">
+        <div class="step-empty"></div>
+        <div class="step-node">
+          <div class="node-dot">🌳
+            <div class="node-ring"></div>
+          </div>
+        </div>
+        <div class="step-card">
+          <div class="step-num">Step 08 — Execution</div>
+          <h3 class="step-title">From Idea to Reality</h3>
+          <p class="step-desc">Once your idea has traction, the platform guides you toward action — forming your team, formalising the business, finding partners, and connecting with investors. Your idea has become a venture.</p>
+          <span class="emotion-tag">🌿 Confident & Moving Forward</span>
+          <div class="features">
+            <div class="feature-item"><span class="feature-dot"></span>Entrepreneur aptitude assessment & strengths profile</div>
+            <div class="feature-item"><span class="feature-dot"></span>Investor introductions when the time is right</div>
+            <div class="feature-item"><span class="feature-dot"></span>Marketplace to find co-founders and collaborators</div>
+            <div class="feature-item"><span class="feature-dot"></span>Merge ideas with complementary Ideators</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ─── CONNECTOR ─── -->
+<div class="journey-connector fade-up">
+  <div class="connector-line"></div>
+  <div class="connector-badge">Where the two journeys meet</div>
+  <div class="connector-line" style="background: linear-gradient(to bottom, var(--inspirator-a), transparent)"></div>
+</div>
+
+<!-- ─── INSPIRATOR JOURNEY ─── -->
+<section id="inspirator">
+  <div class="section-header fade-up">
+    <span class="section-badge badge-inspirator">⚡ Journey Two</span>
+    <h2>The <span class="grad-inspirator">Inspirator</span></h2>
+    <p>You're a curious explorer, a tastemaker, an early adopter. You love discovering what's next before it's mainstream — and your opinion actually shapes the future of new ideas.</p>
+  </div>
+
+  <div class="journey-section">
+    <div class="timeline inspirator">
+
+      <div class="step inspirator">
+        <div class="step-card">
+          <div class="step-num">Step 01 — Discovery</div>
+          <h3 class="step-title">Finding What If I</h3>
+          <p class="step-desc">A post appears in your LinkedIn feed. A friend shares an idea link. You click out of curiosity — and land on an idea page that's genuinely interesting. No commitment required to browse.</p>
+          <span class="emotion-tag">👀 Curious, casual, low-stakes</span>
+          <div class="features">
+            <div class="feature-item"><span class="feature-dot"></span>Browse ideas freely — no account needed to explore</div>
+            <div class="feature-item"><span class="feature-dot"></span>Pinterest-style discovery feed of live ideas</div>
+            <div class="feature-item"><span class="feature-dot"></span>Category filters: Business, Books, Events, Causes</div>
+            <div class="feature-item"><span class="feature-dot"></span>Featured ideas, trending concepts, recent launches</div>
+          </div>
+        </div>
+        <div class="step-node">
+          <div class="node-dot">🔍
+            <div class="node-ring"></div>
+          </div>
+        </div>
+        <div class="step-empty"></div>
+      </div>
+
+      <div class="step inspirator">
+        <div class="step-empty"></div>
+        <div class="step-node">
+          <div class="node-dot">✍️
+            <div class="node-ring"></div>
+          </div>
+        </div>
+        <div class="step-card">
+          <div class="step-num">Step 02 — Joining</div>
+          <h3 class="step-title">Quick Registration & Community Vibe</h3>
+          <p class="step-desc">You click to support or comment — and are invited to join. A quick social login gets you in within seconds. You're introduced to the Community Vibe page: why this place exists, how to behave, what makes it different.</p>
+          <span class="emotion-tag">🤝 Welcomed & Safe</span>
+          <div class="features">
+            <div class="feature-item"><span class="feature-dot"></span>Google / social login — takes 15 seconds</div>
+            <div class="feature-item"><span class="feature-dot"></span>Select your interests so we surface relevant ideas</div>
+            <div class="feature-item"><span class="feature-dot"></span>Community values page — positive, constructive, real</div>
+            <div class="feature-item"><span class="feature-dot"></span>You choose: just browsing or active Inspirator</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step inspirator">
+        <div class="step-card">
+          <div class="step-num">Step 03 — First Interaction</div>
+          <h3 class="step-title">React, Vote & Follow</h3>
+          <p class="step-desc">You see an idea that makes you lean forward. You give it a 🔥 for hot idea, a 💡 for clever, a ❤️ for passion. You follow the idea and the Ideator. You're part of something before it's famous.</p>
+          <span class="emotion-tag">🔥 Entertained & Inspired</span>
+          <div class="features">
+            <div class="feature-item"><span class="feature-dot"></span>Nuanced reactions — not just a like button</div>
+            <div class="feature-item"><span class="feature-dot"></span>1–10 sliding scale for more honest feedback</div>
+            <div class="feature-item"><span class="feature-dot"></span>Follow an idea or follow an Ideator</div>
+            <div class="feature-item"><span class="feature-dot"></span>See your vote reflected in real-time on the page</div>
+          </div>
+        </div>
+        <div class="step-node">
+          <div class="node-dot">❤️
+            <div class="node-ring"></div>
+          </div>
+        </div>
+        <div class="step-empty"></div>
+      </div>
+
+      <div class="step inspirator">
+        <div class="step-empty"></div>
+        <div class="step-node">
+          <div class="node-dot">💬
+            <div class="node-ring"></div>
+          </div>
+        </div>
+        <div class="step-card">
+          <div class="step-num">Step 04 — Going Deeper</div>
+          <h3 class="step-title">Comment & Engage</h3>
+          <p class="step-desc">You have something real to say. You leave a comment — sharing personal experience, asking a question the Ideator hasn't considered, or simply saying "keep going, this matters." The AI checks tone to keep things constructive and kind.</p>
+          <span class="emotion-tag">🧢 Helpful & Heard</span>
+          <div class="features">
+            <div class="feature-item"><span class="feature-dot"></span>Leave public or private comments on ideas</div>
+            <div class="feature-item"><span class="feature-dot"></span>Tag others, reply to threads, upvote comments</div>
+            <div class="feature-item"><span class="feature-dot"></span>AI sentiment check ensures constructive tone</div>
+            <div class="feature-item"><span class="feature-dot"></span>Six Thinking Hats labels: Creative, Critical, Optimist…</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step inspirator">
+        <div class="step-card">
+          <div class="step-num">Step 05 — Building Your Profile</div>
+          <h3 class="step-title">Inspirator Identity</h3>
+          <p class="step-desc">Your participation reveals who you are as a thinker. The platform builds your Inspirator profile — your contribution archetype, thinking style, and Scout Score — a measure of your real-world influence and insight quality.</p>
+          <span class="emotion-tag">🏆 Finding Your Tribe & Identity</span>
+          <div class="features">
+            <div class="feature-item"><span class="feature-dot"></span>Scout Score: reputation based on upvoted comments</div>
+            <div class="feature-item"><span class="feature-dot"></span>Contribution archetype: Visionary, Strategist, Catalyst…</div>
+            <div class="feature-item"><span class="feature-dot"></span>Badge system tied to depth of engagement</div>
+            <div class="feature-item"><span class="feature-dot"></span>Leaderboard and community ranking</div>
+          </div>
+        </div>
+        <div class="step-node">
+          <div class="node-dot">⭐
+            <div class="node-ring"></div>
+          </div>
+        </div>
+        <div class="step-empty"></div>
+      </div>
+
+      <div class="step inspirator">
+        <div class="step-empty"></div>
+        <div class="step-node">
+          <div class="node-dot">📢
+            <div class="node-ring"></div>
+          </div>
+        </div>
+        <div class="step-card">
+          <div class="step-num">Step 06 — Spreading the Word</div>
+          <h3 class="step-title">Share & Advocate</h3>
+          <p class="step-desc">You add "Community Contributor at What If I" to your LinkedIn bio. You share an idea you believe in with your network. Your endorsement carries real weight — and your Scout Score grows with every new follower you bring to a project.</p>
+          <span class="emotion-tag">📣 "I have good taste. People should know."</span>
+          <div class="features">
+            <div class="feature-item"><span class="feature-dot"></span>Share ideas with personalised "I supported this" posts</div>
+            <div class="feature-item"><span class="feature-dot"></span>Invite your contacts to follow ideas you believe in</div>
+            <div class="feature-item"><span class="feature-dot"></span>FOMO-driven milestones: "247 people said yes!"</div>
+            <div class="feature-item"><span class="feature-dot"></span>Scout Score boosts for bringing new supporters</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step inspirator">
+        <div class="step-card">
+          <div class="step-num">Step 07 — Your Dashboard</div>
+          <h3 class="step-title">Inspirator Hub</h3>
+          <p class="step-desc">Your personal feed of ideas you're following — what's trending, what's new, what you've commented on. Notifications when an Ideator responds. A curated view built around your interests and your contribution style.</p>
+          <span class="emotion-tag">🗺️ Invested & In the Loop</span>
+          <div class="features">
+            <div class="feature-item"><span class="feature-dot"></span>List of all ideas you're following and supporting</div>
+            <div class="feature-item"><span class="feature-dot"></span>Trending ideas filtered by category, stage, location</div>
+            <div class="feature-item"><span class="feature-dot"></span>Notifications for replies, milestone hits, new updates</div>
+            <div class="feature-item"><span class="feature-dot"></span>Profile completeness score and Human Score (anti-bot)</div>
+          </div>
+        </div>
+        <div class="step-node">
+          <div class="node-dot">📊
+            <div class="node-ring"></div>
+          </div>
+        </div>
+        <div class="step-empty"></div>
+      </div>
+
+      <div class="step inspirator">
+        <div class="step-empty"></div>
+        <div class="step-node">
+          <div class="node-dot">🚀
+            <div class="node-ring"></div>
+          </div>
+        </div>
+        <div class="step-card">
+          <div class="step-num">Step 08 — The Leap</div>
+          <h3 class="step-title">Become an Ideator</h3>
+          <p class="step-desc">You've been watching ideas come to life. Backing them. Shaping them. And now you realise — you have an idea of your own. The platform makes it seamless to cross over. Your Inspirator reputation follows you.</p>
+          <span class="emotion-tag">💡 "What if I…?"</span>
+          <div class="features">
+            <div class="feature-item"><span class="feature-dot"></span>Convert your profile to include Ideator access</div>
+            <div class="feature-item"><span class="feature-dot"></span>Your Scout Score lends immediate credibility to your idea</div>
+            <div class="feature-item"><span class="feature-dot"></span>Your network is already here — invite them first</div>
+            <div class="feature-item"><span class="feature-dot"></span>The community welcomes you — they already know you</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ─── WHERE THEY MEET ─── -->
+<section class="meeting-section">
+  <div class="meeting-header fade-up">
+    <span class="section-badge" style="background:rgba(255,255,255,0.05); border:1px solid var(--border); color:var(--muted);">🤝 The Connection</span>
+    <h2 style="font-family:'Syne',sans-serif;font-size:clamp(2rem,4vw,3rem);font-weight:800;margin:16px 0;">Where Paths Converge</h2>
+    <p style="color:var(--muted);max-width:480px;margin:0 auto;">The magic happens when Ideators and Inspirators meet — a feedback loop that makes ideas stronger, communities tighter, and ventures more likely to succeed.</p>
+  </div>
+
+  <div class="meeting-diagram fade-up">
+    <div class="meeting-side">
+      <h3 class="grad-ideator">Ideator gives →</h3>
+      <div class="meeting-item"><span class="meeting-icon">💡</span>A raw, honest idea worth believing in</div>
+      <div class="meeting-item"><span class="meeting-icon">📖</span>Their story and the problem they're solving</div>
+      <div class="meeting-item"><span class="meeting-icon">🎤</span>Questions, polls and surveys to gather real input</div>
+      <div class="meeting-item"><span class="meeting-icon">🏅</span>Early access and founding member status</div>
+      <div class="meeting-item"><span class="meeting-icon">📣</span>A mission worth sharing with their networks</div>
+    </div>
+
+    <div class="meeting-center">
+      <div class="center-circle">🌱</div>
+      <p class="meeting-label">The Idea<br>Page</p>
+    </div>
+
+    <div class="meeting-side">
+      <h3 class="grad-inspirator">← Inspirator gives</h3>
+      <div class="meeting-item"><span class="meeting-icon">✅</span>Validated demand — "yes, I'd use this"</div>
+      <div class="meeting-item"><span class="meeting-icon">💬</span>Constructive feedback that sharpens the idea</div>
+      <div class="meeting-item"><span class="meeting-icon">🔗</span>Network reach — sharing with their community</div>
+      <div class="meeting-item"><span class="meeting-icon">🧠</span>Domain expertise and lived experience</div>
+      <div class="meeting-item"><span class="meeting-icon">🙌</span>Encouragement: "keep going, this matters"</div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── MOMENTUM BAR ─── -->
+<div class="momentum fade-up">
+  <div class="momentum-grid">
+    <div class="momentum-card">
+      <div class="momentum-num grad-ideator">8</div>
+      <div class="momentum-label">Ideator Milestones</div>
+    </div>
+    <div class="momentum-card">
+      <div class="momentum-num grad-inspirator">8</div>
+      <div class="momentum-label">Inspirator Touchpoints</div>
+    </div>
+    <div class="momentum-card">
+      <div class="momentum-num" style="background:linear-gradient(135deg,var(--ideator-b),var(--inspirator-b));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">1</div>
+      <div class="momentum-label">Shared Idea Page</div>
+    </div>
+    <div class="momentum-card">
+      <div class="momentum-num" style="color:var(--ideator-a);">∞</div>
+      <div class="momentum-label">Possibilities</div>
+    </div>
+  </div>
+</div>
+
+<!-- ─── FOOTER ─── -->
+<footer class="footer">
+  <div class="footer-logo"><em>What If I</em></div>
+  <p style="margin-top:8px;font-size:0.75rem;opacity:0.5;">User Journey Overview — MVP Planning Document</p>
+</footer>
+
+<script>
+// Intersection Observer for scroll animations
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+    }
+  });
+}, { threshold: 0.1, rootMargin: '0px 0px -60px 0px' });
+
+document.querySelectorAll('.step, .fade-up').forEach(el => observer.observe(el));
+
+// Stagger step animations
+document.querySelectorAll('.step').forEach((step, i) => {
+  step.style.transitionDelay = `${(i % 3) * 0.1}s`;
+});
+
+// Floating particles
+const particleContainer = document.getElementById('particles');
+const colors = ['#F97316','#FBBF24','#6366F1','#22D3EE','#EC4899','#84CC16'];
+
+for (let i = 0; i < 20; i++) {
+  const p = document.createElement('div');
+  p.className = 'particle';
+  const size = Math.random() * 4 + 2;
+  p.style.cssText = `
+    width: ${size}px;
+    height: ${size}px;
+    background: ${colors[Math.floor(Math.random() * colors.length)]};
+    left: ${Math.random() * 100}vw;
+    animation-duration: ${Math.random() * 20 + 15}s;
+    animation-delay: ${Math.random() * 20}s;
+    filter: blur(1px);
+  `;
+  particleContainer.appendChild(p);
+}
+
+// Smooth scroll for nav pills
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    e.preventDefault();
+    const target = document.querySelector(a.getAttribute('href'));
+    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+});
+</script>
+</body>
+</html>

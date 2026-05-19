@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OBA - Food Parcel & Stock Control System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@900&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --brand-navy: #1a2f4a;
+            --brand-coral: #ff6f61;
+            --brand-teal: #00bcd4;
+            --brand-babyblue: #81d2f6;
+            --brand-light: #fef2f2;
+            --brand-white: #ffffff;
+            --brand-green: #22c55e;
+            --brand-amber: #f59e0b;
+            --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            --bg-dark: #1a2f4a;
+            --text-light: #f7f8f9;
+            --accent-coral: #ff6f61;
+            --space-md: 1rem;
+            --space-xl: 2rem;
+            --space-2xl: 3rem;
+            --radius-md: 0.75rem;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f0f4f8;
+            background-image: radial-gradient(var(--brand-teal) 0.5px, transparent 0.5px);
+            background-size: 30px 30px;
+            margin: 0;
+            color: var(--brand-navy);
+        }
+
+        /* HEADER */
+        header.minihero {
+            background: var(--brand-navy);
+            color: var(--brand-white);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            min-height: 15vh;
+            padding: 1.5rem 10%;
+        }
+        .header-logo { height: 60px; width: auto; background-color: white; border-radius: 1em; padding: 0.8em; }
+        .minihero h2 { font-family: 'Inter', sans-serif; font-weight: 900; font-size: 1.8rem; margin: 0; }
+        .sub-heading { font-weight: 700; margin-top: 5px; color: var(--accent-coral); font-size: 1rem; }
+
+        /* HERO */
+        section.align--centered { text-align: center; padding: 60px 0 20px 0; }
+        h1 { font-family: 'Inter', sans-serif; font-weight: 900; font-size: clamp(2.5rem, 6vw, 4.5rem); text-transform: uppercase; line-height: 0.9; margin: 0; }
+        .subtitle { font-size: 1.2rem; color: var(--brand-coral); font-weight: 700; margin-top: 10px; }
+
+        /* JOURNEY CONTAINER */
+        .journey-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+            padding: 60px 20px;
+        }
+
+        .journey-container::before {
+            content: '';
+            position: absolute;
+            left: calc(20px + 40px + 42.5px);
+            top: 150px;
+            bottom: 100px;
+            width: 4px;
+            background: repeating-linear-gradient(to bottom, var(--brand-teal), var(--brand-teal) 15px, transparent 15px, transparent 30px);
+            z-index: 1;
+        }
+
+        /* TRACK LABELS */
+        .track-labels {
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            gap: 40px;
+            margin-bottom: 60px;
+            position: relative;
+            z-index: 3;
+        }
+        .label-pill {
+            background: var(--brand-navy);
+            color: white;
+            padding: 15px;
+            border-radius: 50px;
+            text-align: center;
+            font-family: 'Inter';
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-size: 0.9rem;
+            box-shadow: var(--shadow-lg);
+        }
+
+        /* DUAL ROW */
+        .dual-step-row {
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            gap: 40px;
+            margin-bottom: 40px;
+            position: relative;
+        }
+        .side-column-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            justify-content: flex-start;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* CARDS */
+        .main-stage-card {
+            background: var(--brand-white);
+            padding: 60px 40px 40px 40px;
+            border-radius: 2.5rem;
+            box-shadow: var(--shadow-lg);
+            position: relative;
+            z-index: 2;
+        }
+        .icon-circle {
+            width: 85px; height: 85px;
+            background: var(--brand-navy);
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 40px;
+            position: absolute; top: -42px; left: 40px;
+            border: 6px solid var(--brand-white);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            z-index: 5;
+        }
+        .data-card {
+            background: #eef2f7; padding: 30px; border-radius: 2.5rem;
+            border: 2px dashed var(--brand-teal);
+        }
+        .system-card {
+            background: #f0fdf4; padding: 30px; border-radius: 2.5rem;
+            border: 2px dashed var(--brand-green);
+        }
+        .alert-card {
+            background: #fffbeb; padding: 30px; border-radius: 2.5rem;
+            border: 2px dashed var(--brand-amber);
+        }
+
+        .step-tag { font-family: 'Inter'; font-weight: 900; color: var(--brand-coral); font-size: 0.8rem; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 10px; display: block; }
+        h3 { margin: 10px 0 15px 0; font-family: 'Inter'; font-size: 1.6rem; }
+
+        /* CHILD BOX GRID */
+        .child-box-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 15px; margin: 25px 0; }
+        .sub-box { background: #f8fafc; padding: 20px; border-radius: 1.2rem; border-top: 5px solid var(--brand-coral); position: relative; }
+        .sub-box.teal-top { border-top-color: var(--brand-teal); }
+        .sub-box.green-top { border-top-color: var(--brand-green); }
+        .sub-box.amber-top { border-top-color: var(--brand-amber); }
+        .sub-box h4 { margin: 0 0 8px 0; font-family: 'Inter'; font-size: 0.85rem; text-transform: uppercase; }
+        .sub-box p { margin: 0; font-size: 0.8rem; line-height: 1.5; color: #4a5568; }
+        .sub-num {
+            position: absolute; top: -10px; right: 10px;
+            background: var(--brand-navy); color: white;
+            width: 22px; height: 22px; border-radius: 50%;
+            font-size: 0.7rem; display: flex; align-items: center; justify-content: center; font-weight: 900;
+        }
+
+        /* RESULT NODE */
+        .result-node { background: var(--brand-navy); color: white; padding: 20px 25px; border-radius: 1.2rem; display: flex; align-items: center; gap: 20px; margin-top: 20px; }
+        .result-node.teal { background: var(--brand-teal); }
+        .result-node.coral { background: var(--brand-coral); }
+        .result-node.green { background: var(--brand-green); }
+        .result-icon { font-size: 2rem; width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; border-radius: 50%; background: rgba(255,255,255,0.1); }
+        .result-text h4 { margin: 0; font-family: 'Inter'; color: var(--brand-teal); text-transform: uppercase; font-size: 0.9rem; }
+        .result-node.teal .result-text h4,
+        .result-node.coral .result-text h4,
+        .result-node.green .result-text h4 { color: white; }
+        .result-text p { margin: 5px 0 0 0; font-size: 0.85rem; opacity: 0.9; }
+
+        /* WAIT BLOCK */
+        .wait-block { grid-column: 1 / -1; text-align: center; padding: 20px 0 60px 0; position: relative; z-index: 2; }
+        .wait-pill { background: var(--brand-coral); color: white; padding: 10px 30px; border-radius: 50px; font-weight: 900; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; display: inline-block; }
+        .wait-pill.teal { background: var(--brand-teal); }
+
+        /* DATA ITEMS */
+        .data-item label { display: block; font-family: 'Inter'; font-weight: 900; font-size: 0.75rem; text-transform: uppercase; color: #718096; margin-top: 15px; }
+        .data-item span { font-size: 0.88rem; color: var(--brand-navy); line-height: 1.5; display: block; }
+        .time-header { font-family: 'Inter'; font-weight: 900; color: var(--brand-teal); font-size: 1.1rem; margin-bottom: 15px; display: flex; align-items: center; gap: 10px; }
+        .system-header { font-family: 'Inter'; font-weight: 900; color: var(--brand-green); font-size: 1rem; margin-bottom: 15px; display: flex; align-items: center; gap: 10px; }
+        .alert-header { font-family: 'Inter'; font-weight: 900; color: var(--brand-amber); font-size: 1rem; margin-bottom: 15px; display: flex; align-items: center; gap: 10px; }
+
+        /* RAG BADGES */
+        .rag-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 12px; }
+        .rag-badge { padding: 6px 14px; border-radius: 50px; font-weight: 900; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 1px; }
+        .rag-badge.red { background: #fee2e2; color: #dc2626; border: 1px solid #dc2626; }
+        .rag-badge.amber { background: #fffbeb; color: #d97706; border: 1px solid #d97706; }
+        .rag-badge.green { background: #f0fdf4; color: #16a34a; border: 1px solid #16a34a; }
+
+        /* SHEET MAP */
+        .sheet-map { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; margin-top: 20px; }
+        .sheet-tab { background: var(--brand-navy); color: white; padding: 12px 15px; border-radius: 0.8rem; font-family: 'Inter'; font-size: 0.75rem; font-weight: 900; text-align: center; text-transform: uppercase; letter-spacing: 1px; border-bottom: 4px solid var(--brand-teal); }
+        .sheet-tab.coral-bottom { border-bottom-color: var(--brand-coral); }
+        .sheet-tab.green-bottom { border-bottom-color: var(--brand-green); }
+        .sheet-tab span { display: block; font-family: 'Roboto'; font-weight: 300; font-size: 0.7rem; text-transform: none; letter-spacing: 0; margin-top: 4px; opacity: 0.8; }
+
+        /* FULL WIDTH ROW */
+        .full-row { margin-bottom: 40px; }
+
+        /* FOOTER */
+        .footer { background-color: var(--bg-dark); color: var(--text-light); padding: var(--space-2xl) 0; margin-top: 100px; }
+        .footer__top { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 0 var(--space-xl); }
+        .footer__bottom { max-width: 1200px; margin: 0 auto; padding: var(--space-2xl) var(--space-xl) 0; border-top: 1px solid rgba(255,255,255,0.1); text-align: center; }
+        .footer__copyright { font-size: 0.875rem; opacity: 0.7; margin: 0; }
+
+        @media (max-width: 1000px) {
+            .journey-container::before { display: none; }
+            .track-labels, .dual-step-row { grid-template-columns: 1fr; }
+            .icon-circle { left: 50%; transform: translateX(-50%); }
+            header.minihero { flex-direction: column; text-align: center; gap: 20px; }
+        }
+    </style>
+</head>
+<body>
+
+<header class="minihero">
+    <div class="header-text">
+        <h2>Bret Steiner</h2>
+        <h3 class="sub-heading">Product <span style="color:white">Accelerator</span></h3>
+    </div>
+    <img src="https://olivebranchaid.org/wp-content/uploads/2023/08/logo3.svg" alt="Olive Branch Aid Logo" class="header-logo">
+</header>
+
+<section class="align--centered">
+    <div style="font-size: 4rem; margin-bottom: 10px;">📦</div>
+    <h1>Food Parcel & Stock Control</h1>
+    <div class="subtitle">From donation to doorstep — every item tracked, every family served</div>
+</section>
+
+<div class="journey-container">
+
+    <!-- SYSTEM MAP -->
+    <div class="full-row">
+        <div class="main-stage-card" style="padding: 40px;">
+            <div style="font-family:'Inter'; font-weight:900; font-size:0.8rem; letter-spacing:3px; text-transform:uppercase; color:var(--brand-coral); margin-bottom:15px;">The Google Workspace System</div>
+            <h3 style="margin-top:0;">How the System is Built</h3>
+            <p style="color:#4a5568; font-size:0.9rem;">Everything runs in Google Sheets, Google Forms, and Google Docs. Admin-only access. Volunteers receive printed pick sheets only. No external tools, no technical maintenance required.</p>
+            <div class="sheet-map">
+                <div class="sheet-tab">Tab 1<span>Beneficiary Database</span></div>
+                <div class="sheet-tab coral-bottom">Tab 2<span>Pick Plan</span></div>
+                <div class="sheet-tab">Tab 3<span>2-Week To-Do List</span></div>
+                <div class="sheet-tab green-bottom">Tab 4<span>Stock Ledger</span></div>
+                <div class="sheet-tab green-bottom">Tab 5<span>Delivery Log</span></div>
+                <div class="sheet-tab coral-bottom">Tab 6<span>Stock Forecast</span></div>
+                <div class="sheet-tab">Tab 7<span>Admin Dashboard</span></div>
+                <div class="sheet-tab coral-bottom">Tab 8<span>Post-Pick Log</span></div>
+                <div class="sheet-tab green-bottom">Tab 9<span>Template Config</span></div>
+            </div>
+            <div class="result-node" style="margin-top:25px;">
+                <div class="result-icon">🔗</div>
+                <div class="result-text">
+                    <h4>All Connected, All Automated</h4>
+                    <p>Tabs feed each other via formulas. Admin enters data in one place — the dashboard, forecast, and stock levels update automatically across the whole system.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="track-labels">
+        <div class="label-pill">📋 The Process Steps</div>
+        <div class="label-pill" style="background: var(--brand-teal);">⚙️ System & Data Details</div>
+    </div>
+
+    <!-- STEP 1: STOCK INTAKE -->
+    <div class="dual-step-row">
+        <div class="main-stage-card">
+            <div class="icon-circle">📦</div>
+            <div class="step-tag">Step 01</div>
+            <h3>Stock Intake</h3>
+            <p>When a donation arrives, stock is counted by category and logged into the system. This is the only point at which physical stock levels rise.</p>
+
+            <div class="child-box-grid">
+                <div class="sub-box">
+                    <div class="sub-num">1</div>
+                    <h4>Count & Categorise</h4>
+                    <p>Sort items into the standard categories matching the Goods Out Master. Count quantities per category.</p>
+                </div>
+                <div class="sub-box teal-top">
+                    <div class="sub-num">2</div>
+                    <h4>Record Delivery</h4>
+                    <p>Admin opens the Delivery Log (Tab 5). Enters donor name, date received, total donation weight, and quantity per item category.</p>
+                </div>
+                <div class="sub-box green-top">
+                    <div class="sub-num">3</div>
+                    <h4>Stock Rises</h4>
+                    <p>Once a received date is confirmed (today or earlier), physical stock levels in the Stock Ledger (Tab 4) update automatically.</p>
+                </div>
+            </div>
+
+            <div class="result-node">
+                <div class="result-icon">✅</div>
+                <div class="result-text">
+                    <h4>Stock Ledger Updated</h4>
+                    <p>Current physical stock is now accurate. The Dashboard and Forecast reflect the new levels immediately.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="side-column-grid">
+            <div class="data-card">
+                <div class="time-header">📋 Delivery Log — Tab 5</div>
+                <div class="data-item">
+                    <label>One Row Per Item Per Delivery</label>
+                    <span>Each donation creates multiple rows — one per item category — all sharing the same delivery reference.</span>
+                </div>
+                <div class="data-item">
+                    <label>Fields Captured</label>
+                    <span>Delivery Reference · Donor Name · Expected Date · Received Date · Total Donation Weight · Item Category · Quantity</span>
+                </div>
+                <div class="data-item">
+                    <label>Expected vs Confirmed</label>
+                    <span>If Received Date is blank or future → feeds Forecast only. If Received Date is today or earlier → adds to physical stock.</span>
+                </div>
+            </div>
+            <div class="system-card">
+                <div class="system-header">📊 Future Deliveries</div>
+                <div class="data-item">
+                    <label>Same Log, Smarter Flag</label>
+                    <span>Expected donations are entered in the same Delivery Log with an expected date only. They appear in the 2-month forecast but not in current stock until confirmed received.</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="wait-block">
+        <span class="wait-pill teal">⬇️ Stock is now live in the system — ready for planning</span>
+    </div>
+
+    <!-- STEP 2: BENEFICIARY REGISTRATION -->
+    <div class="dual-step-row">
+        <div class="main-stage-card">
+            <div class="icon-circle">👤</div>
+            <div class="step-tag">Step 02</div>
+            <h3>Beneficiary Registration</h3>
+            <p>Following the referral and onboarding process, admin creates the beneficiary's record in the system. This is the starting point for all planning and picking.</p>
+
+            <div class="child-box-grid">
+                <div class="sub-box">
+                    <div class="sub-num">1</div>
+                    <h4>Create Record</h4>
+                    <p>Admin enters the beneficiary into Tab 1 (Beneficiary Database). A unique reference number is auto-generated.</p>
+                </div>
+                <div class="sub-box teal-top">
+                    <div class="sub-num">2</div>
+                    <h4>Household Details</h4>
+                    <p>Total adults, number male/female, children with birth month/year, dietary requirements and any notes.</p>
+                </div>
+                <div class="sub-box">
+                    <div class="sub-num">3</div>
+                    <h4>Logistics Flags</h4>
+                    <p>Group 1 or 2 (which half of the month), Collection or Delivery (C/D), PR or DR referral type, collection frequency.</p>
+                </div>
+                <div class="sub-box teal-top">
+                    <div class="sub-num">4</div>
+                    <h4>Support Period</h4>
+                    <p>Support start and end dates entered. Status set to Active. Record is now visible across the system.</p>
+                </div>
+            </div>
+
+            <div class="result-node">
+                <div class="result-icon">🆔</div>
+                <div class="result-text">
+                    <h4>Beneficiary Record Live</h4>
+                    <p>Unique reference number created. Record feeds the pick plan, to-do list, and dashboard. No address or contact details stored here — those remain in the referral system.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="side-column-grid">
+            <div class="data-card">
+                <div class="time-header">📋 Tab 1 — Beneficiary Database</div>
+                <div class="data-item">
+                    <label>Fields Stored</label>
+                    <span>Reference Number · First Name · Total Household · Adults · Male · Female · Children (with DOB) · Dietary Requirements · Notes · Group (1/2) · C/D · PR/DR · Frequency · Start Date · End Date · Status</span>
+                </div>
+                <div class="data-item">
+                    <label>GDPR Note</label>
+                    <span>First name and household composition only. Full contact details held exclusively in the referral system.</span>
+                </div>
+                <div class="data-item">
+                    <label>Key Flags Explained</label>
+                    <span><strong>Group 1/2:</strong> Which half of the month they collect.<br><strong>C/D:</strong> Collection from foodbank or Delivery to them.<br><strong>PR/DR:</strong> Professional or Direct Referral (reporting only).</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="wait-block">
+        <span class="wait-pill">⬇️ Beneficiary registered — time to build their plan</span>
+    </div>
+
+    <!-- STEP 3: PICK PLAN -->
+    <div class="dual-step-row">
+        <div class="main-stage-card">
+            <div class="icon-circle">🗓️</div>
+            <div class="step-tag">Step 03</div>
+            <h3>Building the Pick Plan</h3>
+            <p>Admin creates the full support plan for the beneficiary — all scheduled picks for their support period. A template auto-populates quantities based on household size and composition, which admin can then adjust.</p>
+
+            <div class="child-box-grid">
+                <div class="sub-box">
+                    <div class="sub-num">1</div>
+                    <h4>Open Plan Form</h4>
+                    <p>Admin opens the plan entry view in Tab 2. The form layout mirrors the Goods Out Master — categories grouped identically.</p>
+                </div>
+                <div class="sub-box teal-top">
+                    <div class="sub-num">2</div>
+                    <h4>Select Template</h4>
+                    <p>Admin selects the base template from a dropdown. Quantities auto-populate based on the beneficiary's household size, adult/child split pulled from Tab 1.</p>
+                </div>
+                <div class="sub-box">
+                    <div class="sub-num">3</div>
+                    <h4>Review & Adjust</h4>
+                    <p>Admin reviews all quantities and adjusts as needed for dietary requirements, preferences, or stock availability. Free-from items toggled separately.</p>
+                </div>
+                <div class="sub-box teal-top">
+                    <div class="sub-num">4</div>
+                    <h4>Set Pick Dates</h4>
+                    <p>Admin sets all scheduled pick dates for the support period. Each date becomes a separate row in Tab 2. A unique Pick Code is generated per pick (e.g. MAR25-001).</p>
+                </div>
+            </div>
+
+            <div class="result-node">
+                <div class="result-icon">📋</div>
+                <div class="result-text">
+                    <h4>Plan Committed — Stock Reserved</h4>
+                    <p>All scheduled picks now appear in the system. Stock is shown as <strong>Committed</strong> on the dashboard and forecast — but is NOT yet deducted from physical stock. Nothing leaves the ledger until a pick is confirmed complete.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="side-column-grid">
+            <div class="data-card">
+                <div class="time-header">📋 Tab 2 — Pick Plan</div>
+                <div class="data-item">
+                    <label>Structure</label>
+                    <span>One row per scheduled pick. A beneficiary on a 3-month monthly plan has 3 rows. A fortnightly beneficiary has more. Each row is one pick event.</span>
+                </div>
+                <div class="data-item">
+                    <label>Pick Code Format</label>
+                    <span>Month + Year + Sequential Number. e.g. MAR25-001, MAR25-002. Resets each month. Printed prominently on the pick sheet.</span>
+                </div>
+                <div class="data-item">
+                    <label>Plan Changes</label>
+                    <span>If a beneficiary's household size or needs change, admin edits their rows directly in Tab 2. The plan is always the live source of truth.</span>
+                </div>
+            </div>
+            <div class="system-card">
+                <div class="system-header">⚙️ Tab 9 — Template Config</div>
+                <div class="data-item">
+                    <label>How Templates Work</label>
+                    <span>One row per item category. Rules define standard quantities based on total household size and adult/child split. Admin adjusts rules here — changes apply to all new plans automatically.</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="wait-block">
+        <span class="wait-pill teal">⬇️ Plan live — picks visible in the 2-week to-do list</span>
+    </div>
+
+    <!-- STEP 4: TO-DO LIST & PRINT -->
+    <div class="dual-step-row">
+        <div class="main-stage-card">
+            <div class="icon-circle">✅</div>
+            <div class="step-tag">Step 04</div>
+            <h3>The 2-Week To-Do List</h3>
+            <p>Admin's daily operational view. Shows all picks due in the next 14 days, organised by day, split by Collection and Delivery. No need to scroll through the full database — everything needed is visible at a glance.</p>
+
+            <div class="child-box-grid">
+                <div class="sub-box">
+                    <div class="sub-num">1</div>
+                    <h4>Today's Picks</h4>
+                    <p>Each day shows as a clear section. Collections and Deliveries shown separately. Each pick shows beneficiary name and pick code only — low cognitive load.</p>
+                </div>
+                <div class="sub-box teal-top">
+                    <div class="sub-num">2</div>
+                    <h4>Status at a Glance</h4>
+                    <p>Planned picks show normally. Completed picks are greyed out or struck through. Admin can instantly see what still needs preparing.</p>
+                </div>
+                <div class="sub-box">
+                    <div class="sub-num">3</div>
+                    <h4>Generate Pick Sheet</h4>
+                    <p>Next to each pick is a button. Admin clicks it — a print-ready Google Doc is generated for that single pick. No need to open Tab 2.</p>
+                </div>
+            </div>
+
+            <div class="result-node teal">
+                <div class="result-icon">🖨️</div>
+                <div class="result-text">
+                    <h4>Pick Sheet Printed</h4>
+                    <p>A clean, accessible printed sheet is handed to the packer. Large font, clear checkboxes, low visual noise. The pick code is printed prominently top and bottom.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="side-column-grid">
+            <div class="data-card">
+                <div class="time-header">🖨️ The Printed Pick Sheet</div>
+                <div class="data-item">
+                    <label>Header — Matches Goods Out Master</label>
+                    <span>Support Date · Month · Support From/To · Group (1/2) · C/D · PR/DR · Beneficiary Name · Dietary Requirements & Notes · No. of Children & Ages · No. of Adults · M/F Split · Total Household · Pick Code</span>
+                </div>
+                <div class="data-item">
+                    <label>Body — Checklist Only</label>
+                    <span>Only items with a planned quantity appear. Each item has a large checkbox and clearly stated quantity. Categories grouped as per Goods Out Master. Items not in this pick are invisible.</span>
+                </div>
+                <div class="data-item">
+                    <label>Footer</label>
+                    <span>Packed By (initials) · Checked By (initials) · Notes · Pick Code (repeated)</span>
+                </div>
+            </div>
+            <div class="system-card">
+                <div class="system-header">⚙️ Tab 3 — To-Do List</div>
+                <div class="data-item">
+                    <label>Auto-Filtered View</label>
+                    <span>Pulls from Tab 2. Shows next 14 days only. Groups by day. Separates Collections from Deliveries within each day. Updates automatically as plans are added or picks completed.</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="wait-block">
+        <span class="wait-pill">⬇️ Volunteer packs the parcel using the printed sheet</span>
+    </div>
+
+    <!-- STEP 5: POST-PICK CHECK-IN -->
+    <div class="dual-step-row">
+        <div class="main-stage-card">
+            <div class="icon-circle">📝</div>
+            <div class="step-tag">Step 05</div>
+            <h3>Post-Pick Check-In</h3>
+            <p>After packing, admin records what actually went out using the post-pick form. This is the moment stock is deducted. The form is mobile-friendly — admin can complete it on phone or tablet, same day or up to a few days later.</p>
+
+            <div class="child-box-grid">
+                <div class="sub-box">
+                    <div class="sub-num">1</div>
+                    <h4>Enter Pick Code</h4>
+                    <p>Admin opens the Google Form and types the pick code from the printed sheet. The form retrieves the planned quantities for that pick.</p>
+                </div>
+                <div class="sub-box teal-top">
+                    <div class="sub-num">2</div>
+                    <h4>Confirm Actuals</h4>
+                    <p>For each item, admin confirms what actually went out. Blank = as planned. Zero = not distributed. Different number = change. Extra items can be added here too.</p>
+                </div>
+                <div class="sub-box">
+                    <div class="sub-num">3</div>
+                    <h4>Log Initials</h4>
+                    <p>Admin records who packed and who checked the parcel. Notes field for anything unusual or items substituted.</p>
+                </div>
+                <div class="sub-box teal-top">
+                    <div class="sub-num">4</div>
+                    <h4>Mark Complete</h4>
+                    <p>Admin taps the Mark as Complete button. This submits the form and triggers all downstream updates simultaneously.</p>
+                </div>
+            </div>
+
+            <div class="result-node coral">
+                <div class="result-icon">📉</div>
+                <div class="result-text">
+                    <h4>Stock Deducted — Pick Closed</h4>
+                    <p>Actual quantities overwrite planned quantities in Tab 2. Status updates to Complete. Physical stock deducts from Tab 4. Pick disappears from the to-do list. Dashboard and forecast update instantly.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="side-column-grid">
+            <div class="data-card">
+                <div class="time-header">📱 Google Form — Post-Pick</div>
+                <div class="data-item">
+                    <label>Access</label>
+                    <span>Mobile, tablet, or desktop. Admin-only link. Designed for quick completion after packing.</span>
+                </div>
+                <div class="data-item">
+                    <label>Stock Deduction Rule</label>
+                    <span>Stock is ONLY deducted when the Mark as Complete button is pressed. Planning picks in advance commits stock to the forecast but does not reduce physical stock levels.</span>
+                </div>
+                <div class="data-item">
+                    <label>Extra Items</label>
+                    <span>Any item added beyond the plan (e.g. fresh produce) is recorded and also deducted from stock. Nothing leaves the warehouse without being counted.</span>
+                </div>
+            </div>
+            <div class="system-card">
+                <div class="system-header">⚙️ Tab 8 — Post-Pick Audit Log</div>
+                <div class="data-item">
+                    <label>Full Audit Trail</label>
+                    <span>Every form submission is preserved in raw form in Tab 8. Planned vs actual quantities visible for every pick ever completed. Used for reporting and dispute resolution.</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="wait-block">
+        <span class="wait-pill teal">⬇️ Pick complete — stock ledger and dashboard updated</span>
+    </div>
+
+    <!-- STEP 6: STOCK & FORECAST -->
+    <div class="dual-step-row">
+        <div class="main-stage-card">
+            <div class="icon-circle">📊</div>
+            <div class="step-tag">Step 06</div>
+            <h3>Stock Control & Forecasting</h3>
+            <p>The system maintains three views of stock at all times — what's physically on the shelf, what's committed to upcoming planned picks, and what's forecast to remain after all planned picks go ahead. The 2-month weekly forecast helps admin plan donation requests proactively.</p>
+
+            <div class="child-box-grid">
+                <div class="sub-box green-top">
+                    <div class="sub-num">1</div>
+                    <h4>Current Stock</h4>
+                    <p>Physical items confirmed on the shelf. Rises when deliveries are confirmed. Falls when picks are marked complete.</p>
+                </div>
+                <div class="sub-box amber-top">
+                    <div class="sub-num">2</div>
+                    <h4>Committed Stock</h4>
+                    <p>Reserved for planned but not yet completed picks. Visible so admin knows what's already spoken for, even though it hasn't left the shelf yet.</p>
+                </div>
+                <div class="sub-box teal-top">
+                    <div class="sub-num">3</div>
+                    <h4>Forecasted Stock</h4>
+                    <p>Current minus committed, plus expected future deliveries. Projects where stock will be if all plans go ahead as scheduled.</p>
+                </div>
+                <div class="sub-box">
+                    <div class="sub-num">4</div>
+                    <h4>2-Month Forecast</h4>
+                    <p>Week-by-week breakdown per item category for the next 8 weeks. RAG indicator flags any week where forecasted stock drops below minimum threshold.</p>
+                </div>
+            </div>
+
+            <div class="result-node">
+                <div class="result-icon">🚦</div>
+                <div class="result-text">
+                    <h4>Early Warning System</h4>
+                    <p>Admin can see weeks in advance when specific items will run low — enabling proactive donation requests before stock runs out, not after.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="side-column-grid">
+            <div class="data-card">
+                <div class="time-header">📋 Tab 4 — Stock Ledger</div>
+                <div class="data-item">
+                    <label>One Row Per Item Category</label>
+                    <span>Matches Goods Out Master categories exactly. Columns: Item · Min Threshold · Current Stock · Committed · Forecasted · RAG Status</span>
+                </div>
+                <div class="data-item">
+                    <label>RAG Thresholds</label>
+                </div>
+                <div class="rag-row">
+                    <span class="rag-badge red">🔴 Below Minimum</span>
+                    <span class="rag-badge amber">🟡 Within 20%</span>
+                    <span class="rag-badge green">🟢 Healthy</span>
+                </div>
+            </div>
+            <div class="system-card">
+                <div class="system-header">📈 Tab 6 — Weekly Forecast</div>
+                <div class="data-item">
+                    <label>8-Week Rolling View</label>
+                    <span>Per item, per week: Opening Stock → Planned Picks Out → Expected Deliveries In → Forecasted Closing Stock. Any week below threshold is highlighted red automatically.</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="wait-block">
+        <span class="wait-pill">⬇️ All data flows into the Admin Dashboard</span>
+    </div>
+
+    <!-- STEP 7: DASHBOARD -->
+    <div class="dual-step-row">
+        <div class="main-stage-card">
+            <div class="icon-circle">🖥️</div>
+            <div class="step-tag">Step 07</div>
+            <h3>Admin Dashboard</h3>
+            <p>A single-screen management view. Everything an admin needs to understand the health of the foodbank at a glance — beneficiary numbers, upcoming picks, stock status, and forecast alerts. No navigation required.</p>
+
+            <div class="child-box-grid">
+                <div class="sub-box">
+                    <div class="sub-num">1</div>
+                    <h4>Beneficiary Summary</h4>
+                    <p>Total active beneficiaries. Breakdown by Group 1/2 and Collection vs Delivery. Picks this week and this month.</p>
+                </div>
+                <div class="sub-box teal-top">
+                    <div class="sub-num">2</div>
+                    <h4>Pending Check-Ins</h4>
+                    <p>Picks marked as complete on the physical sheet but not yet submitted via the post-pick form. Admin can see at a glance what's outstanding.</p>
+                </div>
+                <div class="sub-box">
+                    <div class="sub-num">3</div>
+                    <h4>Stock Health Table</h4>
+                    <p>All items with current, committed, and forecasted stock. Items below minimum threshold surfaced at the top of the list, highlighted red.</p>
+                </div>
+                <div class="sub-box teal-top">
+                    <div class="sub-num">4</div>
+                    <h4>Forecast Alerts</h4>
+                    <p>Any week in the next 8 weeks where any item is forecast to drop below minimum is flagged prominently. Enables proactive donor outreach.</p>
+                </div>
+            </div>
+
+            <div class="result-node green">
+                <div class="result-icon">👁️</div>
+                <div class="result-text">
+                    <h4>Total Operational Visibility</h4>
+                    <p>Admin always knows the state of the foodbank — current, committed, and future. Decisions about donor requests, capacity, and planning are data-driven rather than guesswork.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="side-column-grid">
+            <div class="data-card">
+                <div class="time-header">⚙️ Tab 7 — Dashboard</div>
+                <div class="data-item">
+                    <label>Fully Automated</label>
+                    <span>All figures update automatically via formulas. No manual input required. Admin opens Tab 7 and the current state of the foodbank is instantly visible.</span>
+                </div>
+                <div class="data-item">
+                    <label>Key Metrics</label>
+                    <span>Active Beneficiaries · Picks This Week · Picks This Month · Awaiting Check-In · Items Below Threshold · Forecast Shortfall Weeks</span>
+                </div>
+            </div>
+            <div class="alert-card">
+                <div class="alert-header">⚠️ Low Stock Protocol</div>
+                <div class="data-item">
+                    <label>Minimum Thresholds</label>
+                    <span>Set per item in Tab 4. When current or forecasted stock drops below threshold, item appears red on Dashboard. Admin sees this immediately on opening the system.</span>
+                </div>
+                <div class="data-item">
+                    <label>Action</label>
+                    <span>Admin contacts donors proactively. Anticipated delivery entered into Delivery Log as Expected, immediately improving the forecast view.</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="wait-block">
+        <span class="wait-pill teal">⬇️ Cycle repeats — every pick, every donation, every week</span>
+    </div>
+
+    <!-- STEP 8: RESILIENCE -->
+    <div class="dual-step-row">
+        <div class="main-stage-card" style="border: 3px dashed var(--brand-coral);">
+            <div class="step-tag">Step 08</div>
+            <h3>Plan B — Resilience</h3>
+            <p>The system is built on Google Workspace — widely available and reliable. But operational continuity must be guaranteed even if digital tools are unavailable on a pick day.</p>
+
+            <div class="child-box-grid">
+                <div class="sub-box">
+                    <div class="sub-num">1</div>
+                    <h4>Pre-Print Sheets</h4>
+                    <p>Admin can generate and print all pick sheets for the week in advance. If the system is down on pick day, printed sheets are already in hand.</p>
+                </div>
+                <div class="sub-box teal-top">
+                    <div class="sub-num">2</div>
+                    <h4>Manual Check-In</h4>
+                    <p>Post-pick forms can be completed later when the system is back online. Pick code on the sheet ensures the record can always be reconciled.</p>
+                </div>
+                <div class="sub-box">
+                    <div class="sub-num">3</div>
+                    <h4>Laminated Backup</h4>
+                    <p>A set of laminated category cards can be maintained for emergency use, with pick codes and names written in dry-wipe marker.</p>
+                </div>
+            </div>
+
+            <div class="result-node" style="background: var(--brand-light); border-left: 6px solid var(--brand-coral);">
+                <div class="result-icon" style="font-size: 1.5rem;">💪</div>
+                <div class="result-text">
+                    <h4 style="color: var(--brand-coral);">Service Never Stops</h4>
+                    <p style="color: var(--brand-navy);">The community is served regardless of technology availability. The digital system catches up when it's back online — no data is lost.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="side-column-grid">
+            <div class="alert-card">
+                <div class="alert-header">🔁 Data Integrity</div>
+                <div class="data-item">
+                    <label>Catch-Up Process</label>
+                    <span>When back online, admin submits any outstanding post-pick forms using the pick codes from printed sheets. The audit log in Tab 8 preserves the date of submission, so late entries are clearly identifiable.</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<footer class="footer">
+    <div class="footer__top">
+        <div style="display:flex; align-items:center; gap:15px;">
+            <span style="font-family:'Inter'; font-weight:900; font-size:1.5rem;">Bret Steiner</span>
+            <span style="color:rgba(255,255,255,0.3);">|</span>
+            <span style="color:var(--brand-coral); font-weight:700; text-transform:uppercase; font-size:0.85rem;">Product Accelerator</span>
+        </div>
+        <div style="display:flex; gap:20px;">
+            <a href="mailto:bret@bretsteiner.com" style="color:white; text-decoration:none; font-size:0.9rem;">Email</a>
+            <a href="https://www.linkedin.com/in/bretsteiner/" target="_blank" style="color:white; text-decoration:none; font-size:0.9rem;">LinkedIn</a>
+        </div>
+    </div>
+    <div class="footer__bottom">
+        <p class="footer__copyright">&copy; 2026 Bret Steiner. All rights reserved.</p>
+    </div>
+</footer>
+
+</body>
+</html>

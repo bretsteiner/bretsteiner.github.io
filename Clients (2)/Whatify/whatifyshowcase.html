@@ -1,0 +1,2590 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>whatifI — The Platform for Ideas That Deserve to Exist</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ─── RESET & TOKENS ─── */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; font-size: 16px; }
+
+:root {
+  --cream:   #FDFAF4;
+  --warm:    #F5EFE0;
+  --orange:  #E8571A;
+  --amber:   #F5A623;
+  --indigo:  #3D3AF5;
+  --teal:    #0ABFBC;
+  --ink:     #1A1410;
+  --stone:   #6B5E4E;
+  --pebble:  #C4B9A8;
+  --white:   #FFFFFF;
+
+  --serif:   'Playfair Display', Georgia, serif;
+  --sans:    'Plus Jakarta Sans', system-ui, sans-serif;
+
+  --r-sm: 12px;
+  --r-md: 20px;
+  --r-lg: 32px;
+  --shadow: 0 4px 32px rgba(26,20,16,0.10);
+  --shadow-lg: 0 16px 64px rgba(26,20,16,0.14);
+}
+
+body {
+  font-family: var(--sans);
+  background: var(--cream);
+  color: var(--ink);
+  overflow-x: hidden;
+  line-height: 1.6;
+}
+
+/* ─── NAV ─── */
+nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  padding: 18px 48px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(253,250,244,0.88);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(196,185,168,0.3);
+  transition: all 0.3s ease;
+}
+
+.nav-logo {
+  font-family: var(--serif);
+  font-size: 1.5rem;
+  font-weight: 900;
+  color: var(--ink);
+  letter-spacing: -0.02em;
+}
+
+.nav-logo span { color: var(--orange); }
+
+.nav-links {
+  display: flex;
+  gap: 36px;
+  list-style: none;
+}
+
+.nav-links a {
+  text-decoration: none;
+  color: var(--stone);
+  font-size: 0.875rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  transition: color 0.2s;
+}
+
+.nav-links a:hover { color: var(--orange); }
+
+.nav-cta {
+  background: var(--orange);
+  color: white !important;
+  padding: 10px 24px;
+  border-radius: 100px;
+  font-weight: 600 !important;
+  font-size: 0.85rem !important;
+  transition: all 0.2s ease !important;
+  letter-spacing: 0 !important;
+}
+
+.nav-cta:hover {
+  background: #c94a12 !important;
+  color: white !important;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(232,87,26,0.35) !important;
+}
+
+/* ─── HERO ─── */
+.hero {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  padding: 120px 80px 80px;
+  gap: 60px;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  width: 800px; height: 800px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(232,87,26,0.08) 0%, transparent 70%);
+  top: -200px; right: -200px;
+  pointer-events: none;
+}
+
+.hero::after {
+  content: '';
+  position: absolute;
+  width: 600px; height: 600px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(61,58,245,0.06) 0%, transparent 70%);
+  bottom: -100px; left: 100px;
+  pointer-events: none;
+}
+
+.hero-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(232,87,26,0.08);
+  border: 1px solid rgba(232,87,26,0.2);
+  color: var(--orange);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  padding: 7px 16px;
+  border-radius: 100px;
+  margin-bottom: 28px;
+}
+
+.hero-eyebrow::before { content: '●'; font-size: 0.5rem; animation: pulse 2s infinite; }
+
+@keyframes pulse {
+  0%,100% { opacity: 1; }
+  50%      { opacity: 0.3; }
+}
+
+.hero h1 {
+  font-family: var(--serif);
+  font-size: clamp(3rem, 5vw, 5.5rem);
+  font-weight: 900;
+  line-height: 1.0;
+  letter-spacing: -0.03em;
+  margin-bottom: 28px;
+  color: var(--ink);
+}
+
+.hero h1 em {
+  font-style: italic;
+  color: var(--orange);
+}
+
+.hero-sub {
+  font-size: 1.15rem;
+  color: var(--stone);
+  line-height: 1.75;
+  max-width: 480px;
+  margin-bottom: 44px;
+  font-weight: 300;
+}
+
+.hero-actions {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.btn-primary {
+  background: var(--orange);
+  color: white;
+  padding: 16px 36px;
+  border-radius: 100px;
+  font-weight: 600;
+  font-size: 1rem;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 20px rgba(232,87,26,0.3);
+}
+
+.btn-primary:hover {
+  background: #c94a12;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 32px rgba(232,87,26,0.4);
+}
+
+.btn-ghost {
+  color: var(--stone);
+  font-size: 0.95rem;
+  font-weight: 500;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: color 0.2s;
+}
+
+.btn-ghost:hover { color: var(--ink); }
+
+.hero-stats {
+  display: flex;
+  gap: 36px;
+  margin-top: 56px;
+  padding-top: 40px;
+  border-top: 1px solid rgba(196,185,168,0.4);
+}
+
+.hero-stat-num {
+  font-family: var(--serif);
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1;
+}
+
+.hero-stat-label {
+  font-size: 0.8rem;
+  color: var(--pebble);
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  margin-top: 4px;
+}
+
+/* Hero visual */
+.hero-visual {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mockup-stack {
+  position: relative;
+  width: 100%;
+  max-width: 520px;
+}
+
+.mockup-card {
+  background: white;
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-lg);
+  overflow: hidden;
+  border: 1px solid rgba(196,185,168,0.2);
+}
+
+.mockup-bar {
+  background: #f8f6f2;
+  padding: 12px 20px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-bottom: 1px solid rgba(196,185,168,0.2);
+}
+
+.dot { width: 10px; height: 10px; border-radius: 50%; }
+.dot-r { background: #FF5F57; }
+.dot-y { background: #FEBC2E; }
+.dot-g { background: #28C840; }
+
+.mockup-url {
+  flex: 1;
+  background: rgba(196,185,168,0.15);
+  border-radius: 6px;
+  padding: 5px 12px;
+  font-size: 0.72rem;
+  color: var(--pebble);
+  font-family: monospace;
+  text-align: center;
+}
+
+.mockup-body {
+  padding: 28px;
+}
+
+/* Idea card in mockup */
+.idea-card-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.idea-avatar {
+  width: 40px; height: 40px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.2rem;
+  flex-shrink: 0;
+}
+
+.idea-meta { flex: 1; }
+
+.idea-name {
+  font-family: var(--serif);
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1.2;
+}
+
+.idea-by {
+  font-size: 0.75rem;
+  color: var(--pebble);
+  margin-top: 2px;
+}
+
+.idea-tags {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-bottom: 14px;
+}
+
+.tag {
+  padding: 3px 10px;
+  border-radius: 100px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.tag-tech  { background: rgba(61,58,245,0.08); color: var(--indigo); }
+.tag-green { background: rgba(10,191,188,0.10); color: #0a9996; }
+.tag-seed  { background: rgba(232,87,26,0.08); color: var(--orange); }
+
+.idea-desc {
+  font-size: 0.85rem;
+  color: var(--stone);
+  line-height: 1.6;
+  margin-bottom: 20px;
+}
+
+.idea-progress-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.72rem;
+  color: var(--pebble);
+  margin-bottom: 6px;
+}
+
+.progress-bar {
+  height: 6px;
+  background: rgba(196,185,168,0.25);
+  border-radius: 100px;
+  overflow: hidden;
+  margin-bottom: 16px;
+}
+
+.progress-fill {
+  height: 100%;
+  border-radius: 100px;
+  background: linear-gradient(90deg, var(--orange), var(--amber));
+  animation: progressGrow 2s ease-out forwards;
+  width: 0;
+}
+
+@keyframes progressGrow {
+  to { width: var(--pct); }
+}
+
+.idea-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.ia-btn {
+  flex: 1;
+  padding: 10px;
+  border-radius: var(--r-sm);
+  font-size: 0.78rem;
+  font-weight: 600;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.ia-primary { background: var(--orange); color: white; }
+.ia-secondary { background: rgba(61,58,245,0.08); color: var(--indigo); }
+
+.floating-badge {
+  position: absolute;
+  background: white;
+  border-radius: 16px;
+  padding: 12px 16px;
+  box-shadow: 0 8px 32px rgba(26,20,16,0.12);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border: 1px solid rgba(196,185,168,0.2);
+  animation: badgeFloat 4s ease-in-out infinite alternate;
+  font-size: 0.82rem;
+}
+
+.badge-icon { font-size: 1.2rem; }
+.badge-text strong { display: block; font-size: 0.85rem; color: var(--ink); }
+.badge-text span { color: var(--pebble); font-size: 0.72rem; }
+
+.badge-1 { top: -20px; right: -30px; animation-delay: 0s; }
+.badge-2 { bottom: 30px; left: -40px; animation-delay: -2s; }
+
+@keyframes badgeFloat {
+  from { transform: translateY(0); }
+  to   { transform: translateY(-10px); }
+}
+
+/* ─── SECTION GENERIC ─── */
+section { position: relative; }
+
+.section-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 48px;
+}
+
+.section-eyebrow {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+  opacity: 0.6;
+}
+
+.section-title {
+  font-family: var(--serif);
+  font-size: clamp(2.2rem, 4vw, 3.5rem);
+  font-weight: 900;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  margin-bottom: 20px;
+}
+
+.section-lead {
+  font-size: 1.1rem;
+  color: var(--stone);
+  line-height: 1.75;
+  font-weight: 300;
+  max-width: 600px;
+}
+
+/* ─── THE PROBLEM ─── */
+.problem-section {
+  padding: 120px 0;
+  background: var(--ink);
+  color: var(--cream);
+}
+
+.problem-section .section-eyebrow { color: var(--amber); opacity: 1; }
+.problem-section .section-title { color: var(--cream); }
+.problem-section .section-lead { color: rgba(253,250,244,0.6); }
+
+.problem-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 2px;
+  margin-top: 72px;
+}
+
+.problem-item {
+  padding: 48px 36px;
+  background: rgba(255,255,255,0.03);
+  border-top: 2px solid rgba(255,255,255,0.06);
+  transition: background 0.3s;
+}
+
+.problem-item:hover { background: rgba(255,255,255,0.06); }
+
+.problem-icon {
+  width: 56px; height: 56px;
+  border-radius: 16px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.5rem;
+  margin-bottom: 24px;
+}
+
+.pi-1 { background: rgba(232,87,26,0.15); }
+.pi-2 { background: rgba(245,166,35,0.15); }
+.pi-3 { background: rgba(61,58,245,0.15); }
+
+.problem-item h3 {
+  font-family: var(--serif);
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--cream);
+  margin-bottom: 12px;
+  line-height: 1.2;
+}
+
+.problem-item p {
+  font-size: 0.9rem;
+  color: rgba(253,250,244,0.5);
+  line-height: 1.7;
+  font-weight: 300;
+}
+
+.problem-quote {
+  margin-top: 80px;
+  padding: 56px;
+  background: rgba(232,87,26,0.08);
+  border-left: 3px solid var(--orange);
+  border-radius: 0 var(--r-md) var(--r-md) 0;
+}
+
+.problem-quote p {
+  font-family: var(--serif);
+  font-size: clamp(1.4rem, 3vw, 2rem);
+  font-style: italic;
+  color: var(--cream);
+  line-height: 1.4;
+  margin-bottom: 24px;
+}
+
+.quote-attr {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.quote-avatar {
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  background: rgba(232,87,26,0.3);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.2rem;
+}
+
+.quote-name { font-weight: 600; font-size: 0.9rem; color: var(--cream); }
+.quote-role { font-size: 0.78rem; color: rgba(253,250,244,0.45); }
+
+/* ─── SOLUTION / HOW IT WORKS ─── */
+.solution-section {
+  padding: 140px 0;
+  background: var(--cream);
+}
+
+.solution-intro {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: center;
+  margin-bottom: 100px;
+}
+
+.solution-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.sol-step {
+  display: grid;
+  grid-template-columns: 64px 1fr;
+  gap: 24px;
+  padding: 32px 0;
+  border-bottom: 1px solid rgba(196,185,168,0.25);
+  position: relative;
+  opacity: 0;
+  transform: translateX(-20px);
+  transition: all 0.6s ease;
+}
+
+.sol-step.visible { opacity: 1; transform: translateX(0); }
+.sol-step:last-child { border-bottom: none; }
+
+.step-num-big {
+  width: 56px; height: 56px;
+  border-radius: 16px;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--serif);
+  font-size: 1.4rem;
+  font-weight: 900;
+  flex-shrink: 0;
+}
+
+.sn-1 { background: rgba(232,87,26,0.10); color: var(--orange); }
+.sn-2 { background: rgba(245,166,35,0.12); color: var(--amber); }
+.sn-3 { background: rgba(61,58,245,0.10); color: var(--indigo); }
+.sn-4 { background: rgba(10,191,188,0.10); color: var(--teal); }
+
+.sol-step h3 {
+  font-family: var(--serif);
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 8px;
+}
+
+.sol-step p {
+  font-size: 0.88rem;
+  color: var(--stone);
+  line-height: 1.65;
+  font-weight: 300;
+}
+
+.sol-step-chips {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-top: 10px;
+}
+
+.chip {
+  padding: 3px 10px;
+  border-radius: 100px;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  background: rgba(196,185,168,0.2);
+  color: var(--stone);
+}
+
+/* Solution visual panel */
+.sol-visual {
+  background: white;
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-lg);
+  overflow: hidden;
+  border: 1px solid rgba(196,185,168,0.15);
+  position: sticky;
+  top: 120px;
+}
+
+.sol-visual-tabs {
+  display: flex;
+  border-bottom: 1px solid rgba(196,185,168,0.2);
+  background: #f9f7f3;
+}
+
+.sv-tab {
+  flex: 1;
+  padding: 14px;
+  text-align: center;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--pebble);
+  cursor: pointer;
+  letter-spacing: 0.5px;
+  transition: all 0.2s;
+  border-bottom: 2px solid transparent;
+}
+
+.sv-tab.active { color: var(--orange); border-bottom-color: var(--orange); background: white; }
+
+.sv-content { padding: 28px; }
+
+/* Dashboard mini mockup */
+.dash-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.dash-stat {
+  background: #f9f7f3;
+  border-radius: var(--r-sm);
+  padding: 16px;
+}
+
+.dash-stat-num {
+  font-family: var(--serif);
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1;
+}
+
+.dash-stat-label {
+  font-size: 0.7rem;
+  color: var(--pebble);
+  margin-top: 4px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.dash-progress-section { margin-top: 4px; }
+
+.dps-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.72rem;
+  color: var(--pebble);
+  margin-bottom: 6px;
+  margin-top: 14px;
+}
+
+.dash-ideas { margin-top: 16px; }
+
+.dash-idea-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  background: #f9f7f3;
+  border-radius: var(--r-sm);
+  margin-bottom: 8px;
+}
+
+.dii-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.dii-active { background: var(--teal); }
+.dii-sprout { background: var(--amber); }
+.dii-draft  { background: var(--pebble); }
+
+.dii-text { flex: 1; }
+.dii-name { font-size: 0.8rem; font-weight: 600; color: var(--ink); }
+.dii-pct  { font-size: 0.68rem; color: var(--pebble); margin-top: 1px; }
+
+.dii-bar { width: 50px; height: 4px; background: rgba(196,185,168,0.25); border-radius: 100px; overflow: hidden; }
+.dii-fill { height: 100%; border-radius: 100px; }
+.df-hi  { background: var(--orange); width: 68%; }
+.df-mid { background: var(--amber); width: 42%; }
+.df-lo  { background: var(--pebble); width: 18%; }
+
+/* ─── TWO PERSONAS ─── */
+.personas-section {
+  padding: 140px 0;
+  background: var(--warm);
+}
+
+.personas-header { margin-bottom: 80px; }
+
+.personas-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+}
+
+.persona-card {
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  border: 1px solid rgba(196,185,168,0.2);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.persona-card:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-lg);
+}
+
+.pc-header {
+  padding: 48px 44px 36px;
+  position: relative;
+  overflow: hidden;
+}
+
+.pc-header::before {
+  content: '';
+  position: absolute;
+  width: 300px; height: 300px;
+  border-radius: 50%;
+  opacity: 0.12;
+  top: -100px; right: -80px;
+}
+
+.pc-ideator .pc-header { background: linear-gradient(135deg, #FFF5EE, #FFF0E5); }
+.pc-ideator .pc-header::before { background: var(--orange); }
+.pc-ideator .pc-accent { color: var(--orange); }
+.pc-ideator .pc-cta { background: var(--orange); }
+
+.pc-inspirator .pc-header { background: linear-gradient(135deg, #EEF0FF, #E8F7F7); }
+.pc-inspirator .pc-header::before { background: var(--indigo); }
+.pc-inspirator .pc-accent { color: var(--indigo); }
+.pc-inspirator .pc-cta { background: var(--indigo); }
+
+.pc-emoji { font-size: 3rem; margin-bottom: 16px; }
+
+.pc-type {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+
+.pc-name {
+  font-family: var(--serif);
+  font-size: 2.4rem;
+  font-weight: 900;
+  color: var(--ink);
+  margin-bottom: 16px;
+  line-height: 1;
+}
+
+.pc-desc {
+  font-size: 0.95rem;
+  color: var(--stone);
+  line-height: 1.65;
+  font-weight: 300;
+}
+
+.pc-body {
+  padding: 36px 44px 44px;
+  background: white;
+}
+
+.pc-wants {
+  margin-bottom: 28px;
+}
+
+.pc-wants h4 {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--pebble);
+  margin-bottom: 16px;
+}
+
+.pc-want-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 8px 0;
+  font-size: 0.875rem;
+  color: var(--stone);
+  border-bottom: 1px solid rgba(196,185,168,0.2);
+}
+
+.pc-want-item:last-child { border-bottom: none; }
+
+.pc-want-icon { font-size: 1rem; margin-top: 1px; flex-shrink: 0; }
+
+.pc-journey {
+  background: #f9f7f3;
+  border-radius: var(--r-md);
+  padding: 24px;
+  margin-top: 4px;
+}
+
+.pc-journey h4 {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--pebble);
+  margin-bottom: 16px;
+}
+
+.journey-mini-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.jms {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.8rem;
+  color: var(--stone);
+}
+
+.jms-num {
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.65rem;
+  font-weight: 700;
+  flex-shrink: 0;
+  color: white;
+}
+
+.jn-o { background: var(--orange); }
+.jn-i { background: var(--indigo); }
+
+/* ─── FEATURES ─── */
+.features-section {
+  padding: 140px 0;
+  background: var(--cream);
+}
+
+.features-header { margin-bottom: 80px; }
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+.feature-card {
+  background: white;
+  border-radius: var(--r-md);
+  padding: 36px 32px;
+  border: 1px solid rgba(196,185,168,0.2);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.feature-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.feature-card:hover::before { opacity: 1; }
+.feature-card:hover { transform: translateY(-4px); box-shadow: var(--shadow); }
+
+.fc-orange::before { background: linear-gradient(135deg, rgba(232,87,26,0.04), transparent); }
+.fc-amber::before  { background: linear-gradient(135deg, rgba(245,166,35,0.05), transparent); }
+.fc-indigo::before { background: linear-gradient(135deg, rgba(61,58,245,0.04), transparent); }
+.fc-teal::before   { background: linear-gradient(135deg, rgba(10,191,188,0.04), transparent); }
+.fc-green::before  { background: linear-gradient(135deg, rgba(34,197,94,0.04), transparent); }
+.fc-pink::before   { background: linear-gradient(135deg, rgba(236,72,153,0.04), transparent); }
+
+.fc-icon {
+  width: 52px; height: 52px;
+  border-radius: 14px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.4rem;
+  margin-bottom: 24px;
+}
+
+.fc-icon-orange { background: rgba(232,87,26,0.10); }
+.fc-icon-amber  { background: rgba(245,166,35,0.12); }
+.fc-icon-indigo { background: rgba(61,58,245,0.10); }
+.fc-icon-teal   { background: rgba(10,191,188,0.10); }
+.fc-icon-green  { background: rgba(34,197,94,0.10); }
+.fc-icon-pink   { background: rgba(236,72,153,0.08); }
+
+.feature-card h3 {
+  font-family: var(--serif);
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 10px;
+  line-height: 1.2;
+}
+
+.feature-card p {
+  font-size: 0.875rem;
+  color: var(--stone);
+  line-height: 1.65;
+  font-weight: 300;
+}
+
+.fc-phase {
+  display: inline-block;
+  margin-top: 16px;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  padding: 3px 10px;
+  border-radius: 100px;
+  background: rgba(196,185,168,0.15);
+  color: var(--pebble);
+}
+
+.fc-phase-1 { background: rgba(232,87,26,0.08); color: var(--orange); }
+.fc-phase-2 { background: rgba(61,58,245,0.08); color: var(--indigo); }
+
+/* ─── IDEA LIFECYCLE ─── */
+.lifecycle-section {
+  padding: 140px 0;
+  background: var(--ink);
+  color: var(--cream);
+  overflow: hidden;
+}
+
+.lifecycle-section .section-eyebrow { color: var(--teal); opacity: 1; }
+.lifecycle-section .section-title { color: var(--cream); }
+.lifecycle-section .section-lead { color: rgba(253,250,244,0.55); }
+
+.lifecycle-track {
+  position: relative;
+  margin-top: 80px;
+  padding-bottom: 40px;
+}
+
+.lifecycle-line {
+  position: absolute;
+  top: 36px;
+  left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--orange), var(--amber), var(--teal), var(--indigo));
+  opacity: 0.3;
+}
+
+.lifecycle-stages {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 0;
+  position: relative;
+}
+
+.lc-stage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 0 8px;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.5s ease;
+}
+
+.lc-stage.visible { opacity: 1; transform: translateY(0); }
+
+.lc-dot {
+  width: 72px; height: 72px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.05);
+  border: 2px solid rgba(255,255,255,0.1);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.5rem;
+  margin-bottom: 20px;
+  position: relative;
+  transition: all 0.3s;
+}
+
+.lc-stage:hover .lc-dot {
+  background: rgba(255,255,255,0.10);
+  border-color: rgba(255,255,255,0.25);
+  transform: scale(1.1);
+}
+
+.lc-stage-name {
+  font-family: var(--serif);
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--cream);
+  margin-bottom: 6px;
+}
+
+.lc-stage-desc {
+  font-size: 0.72rem;
+  color: rgba(253,250,244,0.4);
+  line-height: 1.5;
+}
+
+/* ─── SHOWCASE / SCREENS ─── */
+.screens-section {
+  padding: 140px 0;
+  background: var(--warm);
+}
+
+.screens-header { margin-bottom: 80px; }
+
+.screen-showcase {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  align-items: center;
+  margin-bottom: 100px;
+  opacity: 0;
+  transform: translateY(40px);
+  transition: all 0.7s ease;
+}
+
+.screen-showcase.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.screen-showcase:nth-child(even) { direction: rtl; }
+.screen-showcase:nth-child(even) > * { direction: ltr; }
+
+.screen-info {}
+
+.screen-tag {
+  display: inline-block;
+  padding: 5px 14px;
+  border-radius: 100px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  margin-bottom: 20px;
+}
+
+.st-ideator   { background: rgba(232,87,26,0.10); color: var(--orange); }
+.st-inspirator { background: rgba(61,58,245,0.10); color: var(--indigo); }
+.st-both      { background: rgba(10,191,188,0.10); color: var(--teal); }
+
+.screen-info h3 {
+  font-family: var(--serif);
+  font-size: clamp(1.6rem, 3vw, 2.4rem);
+  font-weight: 900;
+  color: var(--ink);
+  line-height: 1.1;
+  margin-bottom: 16px;
+  letter-spacing: -0.02em;
+}
+
+.screen-info p {
+  font-size: 0.95rem;
+  color: var(--stone);
+  line-height: 1.75;
+  font-weight: 300;
+  margin-bottom: 24px;
+}
+
+.screen-bullets {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.sb-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 0.875rem;
+  color: var(--stone);
+}
+
+.sb-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  margin-top: 7px;
+}
+
+.sd-o { background: var(--orange); }
+.sd-i { background: var(--indigo); }
+.sd-t { background: var(--teal); }
+
+/* Screen UI mockup */
+.screen-ui {
+  background: white;
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-lg);
+  border: 1px solid rgba(196,185,168,0.15);
+  overflow: hidden;
+}
+
+.sui-topbar {
+  background: #f9f7f3;
+  padding: 10px 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-bottom: 1px solid rgba(196,185,168,0.2);
+}
+
+.sui-title {
+  flex: 1;
+  text-align: center;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--stone);
+}
+
+.sui-body { padding: 20px; }
+
+/* Idea submission mockup */
+.form-field {
+  margin-bottom: 16px;
+}
+
+.form-label {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--stone);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 6px;
+}
+
+.form-input {
+  width: 100%;
+  padding: 10px 14px;
+  background: #f9f7f3;
+  border: 1.5px solid rgba(196,185,168,0.3);
+  border-radius: var(--r-sm);
+  font-size: 0.82rem;
+  color: var(--ink);
+}
+
+.form-input.active {
+  border-color: var(--orange);
+  background: rgba(232,87,26,0.03);
+}
+
+.type-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.type-item {
+  padding: 10px 12px;
+  background: #f9f7f3;
+  border: 1.5px solid rgba(196,185,168,0.25);
+  border-radius: var(--r-sm);
+  font-size: 0.75rem;
+  color: var(--stone);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.type-item.selected {
+  border-color: var(--orange);
+  background: rgba(232,87,26,0.06);
+  color: var(--orange);
+  font-weight: 600;
+}
+
+.form-btn {
+  width: 100%;
+  padding: 12px;
+  background: var(--orange);
+  color: white;
+  border-radius: var(--r-sm);
+  font-weight: 600;
+  font-size: 0.875rem;
+  text-align: center;
+}
+
+/* Community board mockup */
+.comment-item {
+  display: flex;
+  gap: 12px;
+  padding: 14px 0;
+  border-bottom: 1px solid rgba(196,185,168,0.15);
+}
+
+.comment-avatar {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #f0e8f5, #e8eeff);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.9rem;
+  flex-shrink: 0;
+}
+
+.comment-body { flex: 1; }
+.comment-name { font-size: 0.8rem; font-weight: 600; color: var(--ink); }
+.comment-time { font-size: 0.7rem; color: var(--pebble); float: right; }
+.comment-text { font-size: 0.8rem; color: var(--stone); margin-top: 4px; line-height: 1.5; }
+
+.comment-tags {
+  display: flex;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.ct { padding: 2px 8px; border-radius: 100px; font-size: 0.65rem; font-weight: 600; }
+.ct-q { background: rgba(245,166,35,0.1); color: var(--amber); }
+.ct-f { background: rgba(10,191,188,0.1); color: var(--teal); }
+
+.reaction-row {
+  display: flex;
+  gap: 10px;
+  margin-top: 6px;
+}
+
+.reaction { font-size: 0.72rem; color: var(--pebble); display: flex; align-items: center; gap: 3px; }
+
+/* Pitch deck mockup */
+.deck-preview {
+  background: linear-gradient(135deg, #1A1410, #2a2018);
+  border-radius: var(--r-md);
+  padding: 32px;
+  text-align: center;
+  margin-bottom: 12px;
+}
+
+.deck-title {
+  font-family: var(--serif);
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: white;
+  margin-bottom: 6px;
+}
+
+.deck-sub { font-size: 0.75rem; color: rgba(255,255,255,0.45); }
+
+.deck-nav {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  padding-bottom: 8px;
+}
+
+.dn-item {
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 0.7rem;
+  background: #f9f7f3;
+  color: var(--stone);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.dn-item.active { background: var(--orange); color: white; font-weight: 600; }
+
+/* ─── TRUST SECTION ─── */
+.trust-section {
+  padding: 120px 0;
+  background: var(--cream);
+}
+
+.trust-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 32px;
+  margin-top: 72px;
+}
+
+.trust-card {
+  background: white;
+  border-radius: var(--r-lg);
+  padding: 44px 36px;
+  border: 1px solid rgba(196,185,168,0.2);
+  text-align: center;
+  transition: all 0.3s;
+}
+
+.trust-card:hover { transform: translateY(-4px); box-shadow: var(--shadow); }
+
+.trust-icon { font-size: 2.5rem; margin-bottom: 20px; }
+
+.trust-card h3 {
+  font-family: var(--serif);
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 12px;
+}
+
+.trust-card p {
+  font-size: 0.875rem;
+  color: var(--stone);
+  line-height: 1.65;
+  font-weight: 300;
+}
+
+/* ─── HCE STUDIO ─── */
+.studio-section {
+  padding: 140px 0;
+  background: var(--warm);
+}
+
+.studio-inner {
+  display: grid;
+  grid-template-columns: 5fr 4fr;
+  gap: 80px;
+  align-items: center;
+}
+
+.studio-logo {
+  font-family: var(--serif);
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--pebble);
+  margin-bottom: 24px;
+}
+
+.studio-section .section-title { font-size: clamp(2rem, 3.5vw, 3rem); }
+
+.studio-section .section-lead {
+  margin-bottom: 40px;
+}
+
+.studio-pillars {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.studio-pillar {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 20px;
+  background: white;
+  border-radius: var(--r-md);
+  border: 1px solid rgba(196,185,168,0.2);
+}
+
+.sp-icon {
+  width: 44px; height: 44px;
+  border-radius: 12px;
+  background: rgba(232,87,26,0.08);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.2rem;
+  flex-shrink: 0;
+}
+
+.sp-title { font-weight: 600; font-size: 0.95rem; color: var(--ink); margin-bottom: 4px; }
+.sp-desc  { font-size: 0.82rem; color: var(--stone); font-weight: 300; }
+
+.studio-visual {
+  background: white;
+  border-radius: var(--r-lg);
+  padding: 40px;
+  box-shadow: var(--shadow-lg);
+  border: 1px solid rgba(196,185,168,0.15);
+}
+
+.mind-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.mind-card {
+  padding: 24px;
+  border-radius: var(--r-md);
+  text-align: center;
+}
+
+.mc-m { background: rgba(232,87,26,0.07); }
+.mc-i { background: rgba(245,166,35,0.08); }
+.mc-n { background: rgba(61,58,245,0.07); }
+.mc-d { background: rgba(10,191,188,0.07); }
+
+.mind-icon { font-size: 1.8rem; margin-bottom: 8px; }
+
+.mind-title {
+  font-family: var(--serif);
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 4px;
+}
+
+.mind-sub { font-size: 0.72rem; color: var(--pebble); line-height: 1.4; }
+
+.mind-center {
+  grid-column: span 2;
+  text-align: center;
+  padding: 20px;
+  background: var(--ink);
+  border-radius: var(--r-md);
+  color: white;
+}
+
+.mc-center-title {
+  font-family: var(--serif);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  opacity: 0.5;
+  margin-bottom: 4px;
+}
+
+.mc-center-brand {
+  font-family: var(--serif);
+  font-size: 1.6rem;
+  font-weight: 900;
+}
+
+.mc-center-brand span { color: var(--orange); }
+
+/* ─── SUCCESS STORIES ─── */
+.stories-section {
+  padding: 140px 0;
+  background: var(--cream);
+}
+
+.stories-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 28px;
+  margin-top: 72px;
+}
+
+.story-card {
+  background: white;
+  border-radius: var(--r-lg);
+  padding: 44px;
+  border: 1px solid rgba(196,185,168,0.2);
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s;
+}
+
+.story-card:hover { transform: translateY(-4px); box-shadow: var(--shadow); }
+
+.story-card::before {
+  content: '"';
+  position: absolute;
+  font-family: var(--serif);
+  font-size: 10rem;
+  font-weight: 900;
+  top: -20px;
+  right: 24px;
+  opacity: 0.05;
+  line-height: 1;
+}
+
+.sc-stars { margin-bottom: 20px; font-size: 0.9rem; letter-spacing: 2px; }
+
+.sc-quote {
+  font-family: var(--serif);
+  font-size: 1.1rem;
+  font-style: italic;
+  color: var(--ink);
+  line-height: 1.5;
+  margin-bottom: 28px;
+}
+
+.sc-person {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.sc-avatar {
+  width: 48px; height: 48px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.3rem;
+}
+
+.sc-name { font-weight: 600; font-size: 0.9rem; color: var(--ink); }
+.sc-role { font-size: 0.78rem; color: var(--pebble); margin-top: 2px; }
+
+.sc-tag {
+  margin-left: auto;
+  padding: 4px 12px;
+  border-radius: 100px;
+  font-size: 0.68rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.sc-ideator   { background: rgba(232,87,26,0.08); color: var(--orange); }
+.sc-inspirator { background: rgba(61,58,245,0.08); color: var(--indigo); }
+
+/* ─── CTA FOOTER ─── */
+.cta-section {
+  padding: 160px 0;
+  background: linear-gradient(135deg, var(--ink) 0%, #2A1A10 100%);
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.cta-section::before {
+  content: '';
+  position: absolute;
+  width: 800px; height: 800px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(232,87,26,0.15) 0%, transparent 70%);
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.cta-eyebrow {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--amber);
+  margin-bottom: 24px;
+  position: relative;
+}
+
+.cta-section h2 {
+  font-family: var(--serif);
+  font-size: clamp(3rem, 6vw, 5.5rem);
+  font-weight: 900;
+  color: var(--cream);
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  margin-bottom: 24px;
+  position: relative;
+}
+
+.cta-section h2 em {
+  font-style: italic;
+  color: var(--orange);
+}
+
+.cta-section p {
+  font-size: 1.1rem;
+  color: rgba(253,250,244,0.55);
+  max-width: 500px;
+  margin: 0 auto 56px;
+  font-weight: 300;
+  line-height: 1.75;
+  position: relative;
+}
+
+.cta-actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  position: relative;
+}
+
+.btn-cta {
+  background: var(--orange);
+  color: white;
+  padding: 20px 52px;
+  border-radius: 100px;
+  font-weight: 600;
+  font-size: 1.05rem;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  transition: all 0.3s ease;
+  box-shadow: 0 8px 32px rgba(232,87,26,0.4);
+}
+
+.btn-cta:hover {
+  background: #c94a12;
+  transform: translateY(-2px);
+  box-shadow: 0 12px 48px rgba(232,87,26,0.5);
+}
+
+.btn-cta-ghost {
+  color: rgba(253,250,244,0.6);
+  font-size: 0.95rem;
+  font-weight: 500;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: color 0.2s;
+}
+
+.btn-cta-ghost:hover { color: var(--cream); }
+
+/* ─── FOOTER ─── */
+footer {
+  background: #120D09;
+  padding: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 1px solid rgba(255,255,255,0.05);
+}
+
+.footer-brand {
+  font-family: var(--serif);
+  font-size: 1.1rem;
+  font-weight: 900;
+  color: var(--cream);
+  opacity: 0.6;
+}
+
+.footer-brand span { color: var(--orange); opacity: 1; }
+
+.footer-note {
+  font-size: 0.78rem;
+  color: rgba(253,250,244,0.3);
+}
+
+/* ─── SCROLL ANIMATIONS ─── */
+.fade-up {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+.fade-up.visible { opacity: 1; transform: translateY(0); }
+
+/* ─── RESPONSIVE ─── */
+@media (max-width: 900px) {
+  .hero { grid-template-columns: 1fr; padding: 120px 32px 80px; }
+  .hero-visual { display: none; }
+  .problem-grid { grid-template-columns: 1fr; }
+  .solution-intro { grid-template-columns: 1fr; }
+  .personas-grid { grid-template-columns: 1fr; }
+  .features-grid { grid-template-columns: 1fr 1fr; }
+  .lifecycle-stages { grid-template-columns: repeat(4, 1fr); }
+  .screen-showcase, .screen-showcase:nth-child(even) { grid-template-columns: 1fr; direction: ltr; }
+  .trust-grid { grid-template-columns: 1fr; }
+  .studio-inner { grid-template-columns: 1fr; }
+  .stories-grid { grid-template-columns: 1fr; }
+  .section-inner { padding: 0 24px; }
+  nav { padding: 16px 24px; }
+  .nav-links { display: none; }
+  footer { flex-direction: column; gap: 12px; text-align: center; }
+}
+</style>
+</head>
+<body>
+
+<!-- ─── NAV ─── -->
+<nav>
+  <div class="nav-logo">whatif<span>I</span></div>
+  <ul class="nav-links">
+    <li><a href="#problem">The Problem</a></li>
+    <li><a href="#solution">How It Works</a></li>
+    <li><a href="#personas">Who It's For</a></li>
+    <li><a href="#features">Features</a></li>
+    <li><a href="#studio">The Studio</a></li>
+    <li><a href="#cta" class="nav-cta">Join the Movement</a></li>
+  </ul>
+</nav>
+
+<!-- ─── HERO ─── -->
+<section class="hero">
+  <div class="hero-content">
+    <div class="hero-eyebrow">Now in Early Access</div>
+    <h1>What if your idea<br>actually <em>happened?</em></h1>
+    <p class="hero-sub">whatifI is the platform where brave ideas find their audience, get validated by real people, and are built into real businesses — with expert help every step of the way.</p>
+
+    <div class="hero-actions">
+      <a href="#cta" class="btn-primary">Submit Your Idea →</a>
+      <a href="#solution" class="btn-ghost">▶ See how it works</a>
+    </div>
+
+    <div class="hero-stats">
+      <div>
+        <div class="hero-stat-num">2</div>
+        <div class="hero-stat-label">Personas served</div>
+      </div>
+      <div>
+        <div class="hero-stat-num">8</div>
+        <div class="hero-stat-label">Journey stages</div>
+      </div>
+      <div>
+        <div class="hero-stat-num">7</div>
+        <div class="hero-stat-label">Idea growth stages</div>
+      </div>
+      <div>
+        <div class="hero-stat-num">∞</div>
+        <div class="hero-stat-label">Possibilities</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="hero-visual">
+    <div class="mockup-stack">
+      <!-- Floating badges -->
+      <div class="floating-badge badge-1">
+        <div class="badge-icon">🔥</div>
+        <div class="badge-text">
+          <strong>147 supporters</strong>
+          <span>Smart Garden Sensor</span>
+        </div>
+      </div>
+      <div class="floating-badge badge-2">
+        <div class="badge-icon">✅</div>
+        <div class="badge-text">
+          <strong>Idea Readiness 68%</strong>
+          <span>Ready to share publicly</span>
+        </div>
+      </div>
+
+      <!-- Main idea card -->
+      <div class="mockup-card">
+        <div class="mockup-bar">
+          <div class="dot dot-r"></div>
+          <div class="dot dot-y"></div>
+          <div class="dot dot-g"></div>
+          <div class="mockup-url">whatifi.com/ideas/smart-garden-sensor</div>
+        </div>
+        <div class="mockup-body">
+          <div class="idea-card-header">
+            <div class="idea-avatar" style="background:linear-gradient(135deg,#e8f5ee,#d4edda);">🌱</div>
+            <div class="idea-meta">
+              <div class="idea-name">Smart Garden Sensor</div>
+              <div class="idea-by">by Alex Ideator · San Francisco</div>
+            </div>
+          </div>
+          <div class="idea-tags">
+            <span class="tag tag-tech">IoT & Hardware</span>
+            <span class="tag tag-green">Sustainability</span>
+            <span class="tag tag-seed">Sprout Stage</span>
+          </div>
+          <p class="idea-desc">The operating system for modern gardens. Monitor soil health, automate watering, and grow better food with less waste — starting at $49.</p>
+          <div class="idea-progress-label">
+            <span>Idea Readiness Score</span>
+            <span>68%</span>
+          </div>
+          <div class="progress-bar">
+            <div class="progress-fill" style="--pct:68%;"></div>
+          </div>
+          <div class="idea-actions">
+            <div class="ia-btn ia-primary">💡 Support this Idea</div>
+            <div class="ia-btn ia-secondary">❤️ Follow</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── THE PROBLEM ─── -->
+<section class="problem-section" id="problem">
+  <div class="section-inner">
+    <div class="section-eyebrow">The Problem We're Solving</div>
+    <h2 class="section-title">Great ideas die in<br>people's heads every day.</h2>
+    <p class="section-lead">The gap between "I had this idea" and "I built this company" is where most innovation goes to die. Not because people lack courage — but because they lack structure, support and a community that believes in them.</p>
+
+    <div class="problem-grid">
+      <div class="problem-item">
+        <div class="problem-icon pi-1">😔</div>
+        <h3>No safe place to share</h3>
+        <p>Telling people your idea feels vulnerable. You need somewhere safe to test the water without exposing your concept to risk — or ridicule.</p>
+      </div>
+      <div class="problem-item">
+        <div class="problem-icon pi-2">🌀</div>
+        <h3>No structure to develop it</h3>
+        <p>You know what you want to build, but you don't know where to start. Business plans, pitch decks, market research — it's overwhelming without guidance.</p>
+      </div>
+      <div class="problem-item">
+        <div class="problem-icon pi-3">🏝️</div>
+        <h3>No community to back you</h3>
+        <p>Building something alone is hard. What if you could find 500 people who believe in your idea before you write a single line of code or spend a single pound?</p>
+      </div>
+    </div>
+
+    <div class="problem-quote">
+      <p>"I had the idea but no audience. Within a month on whatifI, I had 500 people on a waitlist before writing a single line of code."</p>
+      <div class="quote-attr">
+        <div class="quote-avatar">👩</div>
+        <div>
+          <div class="quote-name">Sarah Chen</div>
+          <div class="quote-role">Creator of ArtStream · whatifI Early Member</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── HOW IT WORKS ─── -->
+<section class="solution-section" id="solution">
+  <div class="section-inner">
+    <div class="solution-intro">
+      <div>
+        <div class="section-eyebrow" style="color:var(--orange);">How It Works</div>
+        <h2 class="section-title">From "what if…" to a real business outcome.</h2>
+        <p class="section-lead" style="margin-bottom:0;">We provide the structure, the audience, and the expert network you need to move beyond the idea phase. Every step of the journey is designed to build momentum.</p>
+
+        <div class="solution-steps" style="margin-top:48px;">
+          <div class="sol-step">
+            <div class="step-num-big sn-1">1</div>
+            <div>
+              <h3>Submit safely</h3>
+              <p>Your intellectual property is protected from day one. Share as much or as little as you're comfortable with. The platform guides you through an idea submission wizard that captures the essence of your concept.</p>
+              <div class="sol-step-chips">
+                <span class="chip">IP Protected</span>
+                <span class="chip">Private by Default</span>
+                <span class="chip">Community NDA</span>
+              </div>
+            </div>
+          </div>
+          <div class="sol-step">
+            <div class="step-num-big sn-2">2</div>
+            <div>
+              <h3>Develop & clarify</h3>
+              <p>An AI Business Coach interviews you conversationally to flesh out your idea. The Idea Clarity Score grows as you complete sections — problem statement, solution, market, team, and more.</p>
+              <div class="sol-step-chips">
+                <span class="chip">AI Voice Interview</span>
+                <span class="chip">Pitch Deck Builder</span>
+                <span class="chip">Business Plan</span>
+              </div>
+            </div>
+          </div>
+          <div class="sol-step">
+            <div class="step-num-big sn-3">3</div>
+            <div>
+              <h3>Build your audience</h3>
+              <p>Launch your public Showcase Page and share it with the world. Inspirators discover, vote on, and give feedback on your idea. Real people telling you it matters before you've committed a penny.</p>
+              <div class="sol-step-chips">
+                <span class="chip">Showcase Page</span>
+                <span class="chip">Community Board</span>
+                <span class="chip">Polls & Surveys</span>
+              </div>
+            </div>
+          </div>
+          <div class="sol-step">
+            <div class="step-num-big sn-4">4</div>
+            <div>
+              <h3>Execute with experts</h3>
+              <p>Access a curated marketplace of vetted specialists — marketers, developers, designers, legal advisors and investors — ready to help you take your validated idea to market.</p>
+              <div class="sol-step-chips">
+                <span class="chip">Expert Marketplace</span>
+                <span class="chip">Investor Intros</span>
+                <span class="chip">Co-founder Match</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Dashboard preview -->
+      <div class="sol-visual">
+        <div class="sol-visual-tabs">
+          <div class="sv-tab active">Dashboard</div>
+          <div class="sv-tab">My Ideas</div>
+          <div class="sv-tab">Audience</div>
+        </div>
+        <div class="sv-content">
+          <div class="dash-row">
+            <div class="dash-stat">
+              <div class="dash-stat-num">3</div>
+              <div class="dash-stat-label">Active Ideas</div>
+            </div>
+            <div class="dash-stat">
+              <div class="dash-stat-num">142</div>
+              <div class="dash-stat-label">Supporters</div>
+            </div>
+          </div>
+
+          <div class="dash-progress-section">
+            <div class="dps-label"><span>Idea Readiness — Smart Garden Sensor</span><span style="color:var(--orange)">68%</span></div>
+            <div class="progress-bar"><div class="progress-fill" style="--pct:68%;background:linear-gradient(90deg,var(--orange),var(--amber));"></div></div>
+            <div class="dps-label"><span>Idea Readiness — Uber for Dog Walking</span><span style="color:var(--amber)">42%</span></div>
+            <div class="progress-bar"><div class="progress-fill" style="--pct:42%;background:linear-gradient(90deg,var(--amber),#FCD34D);"></div></div>
+            <div class="dps-label"><span>Idea Readiness — AI Tech Newsletter</span><span>5%</span></div>
+            <div class="progress-bar"><div class="progress-fill" style="--pct:5%;background:var(--pebble);"></div></div>
+          </div>
+
+          <div class="dash-ideas">
+            <div class="dash-idea-item">
+              <div class="dii-dot dii-active"></div>
+              <div class="dii-text">
+                <div class="dii-name">Smart Garden Sensor</div>
+                <div class="dii-pct">Active · 68% ready</div>
+              </div>
+              <div class="dii-bar"><div class="dii-fill df-hi"></div></div>
+            </div>
+            <div class="dash-idea-item">
+              <div class="dii-dot dii-sprout"></div>
+              <div class="dii-text">
+                <div class="dii-name">Uber for Dog Walking</div>
+                <div class="dii-pct">Validation Phase · 42%</div>
+              </div>
+              <div class="dii-bar"><div class="dii-fill df-mid"></div></div>
+            </div>
+            <div class="dash-idea-item">
+              <div class="dii-dot dii-draft"></div>
+              <div class="dii-text">
+                <div class="dii-name">AI Tech Newsletter</div>
+                <div class="dii-pct">Draft · 5%</div>
+              </div>
+              <div class="dii-bar"><div class="dii-fill df-lo"></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── TWO PERSONAS ─── -->
+<section class="personas-section" id="personas">
+  <div class="section-inner">
+    <div class="personas-header fade-up">
+      <div class="section-eyebrow" style="color:var(--stone);">Two Journeys, One Platform</div>
+      <h2 class="section-title">Everyone belongs here.</h2>
+      <p class="section-lead">Whether you're the one with the idea or the one who loves discovering what's next — whatifI was built for you.</p>
+    </div>
+
+    <div class="personas-grid">
+      <!-- Ideator -->
+      <div class="persona-card pc-ideator fade-up">
+        <div class="pc-header">
+          <div class="pc-emoji">💡</div>
+          <div class="pc-type pc-accent">Persona One</div>
+          <div class="pc-name">The Ideator</div>
+          <p class="pc-desc">You have a concept — a business, book, event, or cause — that you believe in. You need structure, safety, and real human validation to take the leap.</p>
+        </div>
+        <div class="pc-body">
+          <div class="pc-wants">
+            <h4>What they're looking for</h4>
+            <div class="pc-want-item"><span class="pc-want-icon">🔒</span>A safe place to share their idea without fear of theft</div>
+            <div class="pc-want-item"><span class="pc-want-icon">🧭</span>Structure and guidance to develop and validate the concept</div>
+            <div class="pc-want-item"><span class="pc-want-icon">👥</span>Real people who believe in it before they invest money</div>
+            <div class="pc-want-item"><span class="pc-want-icon">🚀</span>Expert help to actually build and launch the venture</div>
+          </div>
+          <div class="pc-journey">
+            <h4>Their 8-Step Journey</h4>
+            <div class="journey-mini-steps">
+              <div class="jms"><div class="jms-num jn-o">1</div> Discover the platform & submit their idea</div>
+              <div class="jms"><div class="jms-num jn-o">2</div> Sign up & agree to the Community Vibe</div>
+              <div class="jms"><div class="jms-num jn-o">3</div> Build out the idea with AI coaching</div>
+              <div class="jms"><div class="jms-num jn-o">4</div> Create & publish their Showcase Page</div>
+              <div class="jms"><div class="jms-num jn-o">5</div> Attract Inspirators & build an audience</div>
+              <div class="jms"><div class="jms-num jn-o">6</div> Gather feedback and sharpen the concept</div>
+              <div class="jms"><div class="jms-num jn-o">7</div> Reach milestones: Seed → Grove</div>
+              <div class="jms"><div class="jms-num jn-o">8</div> Execute with experts & launch</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Inspirator -->
+      <div class="persona-card pc-inspirator fade-up">
+        <div class="pc-header">
+          <div class="pc-emoji">⚡</div>
+          <div class="pc-type pc-accent">Persona Two</div>
+          <div class="pc-name">The Inspirator</div>
+          <p class="pc-desc">You love discovering what's next before it's mainstream. Your feedback and backing shape the future — and your Scout Score grows with every brilliant idea you champion.</p>
+        </div>
+        <div class="pc-body">
+          <div class="pc-wants">
+            <h4>What they're looking for</h4>
+            <div class="pc-want-item"><span class="pc-want-icon">🔍</span>To discover genuinely interesting ideas before anyone else</div>
+            <div class="pc-want-item"><span class="pc-want-icon">🏅</span>Status as a founding member and early believer</div>
+            <div class="pc-want-item"><span class="pc-want-icon">🧠</span>To feel their feedback actually shapes the outcome</div>
+            <div class="pc-want-item"><span class="pc-want-icon">🌐</span>A community of like-minded curious, creative people</div>
+          </div>
+          <div class="pc-journey" style="background:rgba(61,58,245,0.04);">
+            <h4>Their 8-Step Journey</h4>
+            <div class="journey-mini-steps">
+              <div class="jms"><div class="jms-num jn-i">1</div> Discover an idea via social or the platform</div>
+              <div class="jms"><div class="jms-num jn-i">2</div> Browse the idea page (no login needed)</div>
+              <div class="jms"><div class="jms-num jn-i">3</div> Sign up & agree to Community Vibe</div>
+              <div class="jms"><div class="jms-num jn-i">4</div> React, vote and follow ideas they love</div>
+              <div class="jms"><div class="jms-num jn-i">5</div> Leave constructive comments & feedback</div>
+              <div class="jms"><div class="jms-num jn-i">6</div> Build their Scout Score & Inspirator profile</div>
+              <div class="jms"><div class="jms-num jn-i">7</div> Share ideas they believe in to their network</div>
+              <div class="jms"><div class="jms-num jn-i">8</div> Cross over and become an Ideator themselves</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── FEATURES ─── -->
+<section class="features-section" id="features">
+  <div class="section-inner">
+    <div class="features-header fade-up">
+      <div class="section-eyebrow" style="color:var(--orange);">Platform Features</div>
+      <h2 class="section-title">Everything your idea needs<br>to come to life.</h2>
+      <p class="section-lead">A complete ecosystem built around the full lifecycle of an idea — from first spark to funded venture.</p>
+    </div>
+
+    <div class="features-grid">
+      <div class="feature-card fc-orange fade-up">
+        <div class="fc-icon fc-icon-orange">💡</div>
+        <h3>Idea Clarifier</h3>
+        <p>A conversational AI coach interviews you to flesh out your concept. Answers auto-fill your Pitch Deck and Business Plan so you never start from scratch.</p>
+        <span class="fc-phase fc-phase-1">Phase 1</span>
+      </div>
+      <div class="feature-card fc-indigo fade-up">
+        <div class="fc-icon fc-icon-indigo">📊</div>
+        <h3>Idea Readiness Score</h3>
+        <p>A living score — Seed, Sprout, Seedling, Sapling, Young Tree, Mature, Grove — that gamifies progress and tells you exactly what to do next.</p>
+        <span class="fc-phase fc-phase-1">Phase 1</span>
+      </div>
+      <div class="feature-card fc-teal fade-up">
+        <div class="fc-icon fc-icon-teal">🌍</div>
+        <h3>Showcase Page Builder</h3>
+        <p>Turn your raw idea into a polished, Kickstarter-style landing page in minutes. The Hook, The Narrative, The Founder — all guided with copy coaching.</p>
+        <span class="fc-phase fc-phase-1">Phase 1</span>
+      </div>
+      <div class="feature-card fc-amber fade-up">
+        <div class="fc-icon fc-icon-amber">🔥</div>
+        <h3>Community Board & Voting</h3>
+        <p>Inspirators react (🔥💡❤️), vote on features, and leave structured feedback using Six Thinking Hats. AI sentiment filters keep it constructive.</p>
+        <span class="fc-phase fc-phase-1">Phase 1</span>
+      </div>
+      <div class="feature-card fc-green fade-up">
+        <div class="fc-icon fc-icon-green">⭐</div>
+        <h3>Scout Score System</h3>
+        <p>Inspirators build reputation through quality comments and backing ideas early. Your Scout Score unlocks new capabilities and community recognition.</p>
+        <span class="fc-phase fc-phase-2">Phase 2</span>
+      </div>
+      <div class="feature-card fc-pink fade-up">
+        <div class="fc-icon fc-icon-pink">🤝</div>
+        <h3>Expert Marketplace</h3>
+        <p>Connect with vetted marketers, developers, IoT engineers, legal advisors and investors. Get specialist help from people who've been there before.</p>
+        <span class="fc-phase fc-phase-2">Phase 2</span>
+      </div>
+      <div class="feature-card fc-orange fade-up">
+        <div class="fc-icon fc-icon-orange">🎤</div>
+        <h3>AI Voice Interview</h3>
+        <p>Talk through your idea out loud. The platform transcribes, structures and maps your thoughts directly into your business plan sections in real time.</p>
+        <span class="fc-phase fc-phase-1">Phase 1</span>
+      </div>
+      <div class="feature-card fc-indigo fade-up">
+        <div class="fc-icon fc-icon-indigo">📈</div>
+        <h3>Audience Campaigns</h3>
+        <p>Launch targeted campaigns: validate product-market fit, find co-founders, attract investors, or simply get inspirators to help spread the word.</p>
+        <span class="fc-phase fc-phase-1">Phase 1</span>
+      </div>
+      <div class="feature-card fc-teal fade-up">
+        <div class="fc-icon fc-icon-teal">🔐</div>
+        <h3>IP Protection & Community NDA</h3>
+        <p>Every member signs a platform-wide NDA on entry. Ideas are private by default. The community vibe is built around protection and trust first.</p>
+        <span class="fc-phase fc-phase-1">Phase 1</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── IDEA LIFECYCLE ─── -->
+<section class="lifecycle-section">
+  <div class="section-inner">
+    <div class="fade-up">
+      <div class="section-eyebrow">The Idea Lifecycle</div>
+      <h2 class="section-title">Every great company<br>started as a seed.</h2>
+      <p class="section-lead">The Idea Readiness Score tracks where your venture is on its journey from spark to established business. Each stage unlocks new tools, support and expert access.</p>
+    </div>
+
+    <div class="lifecycle-track">
+      <div class="lifecycle-line"></div>
+      <div class="lifecycle-stages">
+        <div class="lc-stage">
+          <div class="lc-dot">🌰</div>
+          <div class="lc-stage-name">Seed</div>
+          <div class="lc-stage-desc">Initial concept — just notes and conversations</div>
+        </div>
+        <div class="lc-stage">
+          <div class="lc-dot">🌱</div>
+          <div class="lc-stage-name">Sprout</div>
+          <div class="lc-stage-desc">Early validation — first research and talks</div>
+        </div>
+        <div class="lc-stage">
+          <div class="lc-dot">🌿</div>
+          <div class="lc-stage-name">Seedling</div>
+          <div class="lc-stage-desc">Early traction — first customers or users</div>
+        </div>
+        <div class="lc-stage">
+          <div class="lc-dot">🪴</div>
+          <div class="lc-stage-name">Sapling</div>
+          <div class="lc-stage-desc">Proven concept — consistent acquisition</div>
+        </div>
+        <div class="lc-stage">
+          <div class="lc-dot">🌳</div>
+          <div class="lc-stage-name">Young Tree</div>
+          <div class="lc-stage-desc">Scaling — strong growth and team</div>
+        </div>
+        <div class="lc-stage">
+          <div class="lc-dot">🌲</div>
+          <div class="lc-stage-name">Mature Tree</div>
+          <div class="lc-stage-desc">Established — stable, predictable business</div>
+        </div>
+        <div class="lc-stage">
+          <div class="lc-dot">🌳🌲🌳</div>
+          <div class="lc-stage-name">Grove</div>
+          <div class="lc-stage-desc">Market leader — multiple streams</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── SCREEN SHOWCASES ─── -->
+<section class="screens-section" id="how">
+  <div class="section-inner">
+    <div class="screens-header fade-up">
+      <div class="section-eyebrow" style="color:var(--stone);">Platform Walkthrough</div>
+      <h2 class="section-title">See it in action.</h2>
+      <p class="section-lead">From first submission to community-backed showcase — here's what the experience looks and feels like.</p>
+    </div>
+
+    <!-- Screen 1: Submit -->
+    <div class="screen-showcase">
+      <div class="screen-info">
+        <div class="screen-tag st-ideator">For Ideators</div>
+        <h3>Submit your idea in minutes — not hours</h3>
+        <p>A beautifully simple 3-step wizard captures what your idea is, what kind of venture it is, and what you want from the community. Private by default until you're ready to share.</p>
+        <div class="screen-bullets">
+          <div class="sb-item"><div class="sb-dot sd-o"></div>12 idea types — from Digital Business to Charity</div>
+          <div class="sb-item"><div class="sb-dot sd-o"></div>17 goal options to shape your personalised roadmap</div>
+          <div class="sb-item"><div class="sb-dot sd-o"></div>Your IP is safe before, during and after submission</div>
+        </div>
+      </div>
+      <div class="screen-ui">
+        <div class="sui-topbar">
+          <div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div>
+          <div class="sui-title">Tell us about your idea — Step 1 of 3</div>
+        </div>
+        <div class="sui-body">
+          <div class="form-field">
+            <div class="form-label">Working Title</div>
+            <div class="form-input active">Smart Garden Sensor</div>
+          </div>
+          <div class="form-field">
+            <div class="form-label">Short Description</div>
+            <div class="form-input" style="height:60px;padding-top:10px;color:var(--stone);font-size:0.78rem;">The operating system for modern gardens. Monitor soil health, automate watering…</div>
+          </div>
+          <div class="form-label" style="margin-bottom:10px;">What type of idea do you have?</div>
+          <div class="type-grid">
+            <div class="type-item selected">💻 A Digital Business</div>
+            <div class="type-item">🤝 A Community Space</div>
+            <div class="type-item">❤️ A Charity</div>
+            <div class="type-item">📚 An Education Platform</div>
+            <div class="type-item">🛍️ A Marketplace</div>
+            <div class="type-item">🎨 A Creative Venture</div>
+          </div>
+          <div class="form-btn">Continue to Preview →</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Screen 2: Community -->
+    <div class="screen-showcase">
+      <div class="screen-info">
+        <div class="screen-tag st-both">Ideators & Inspirators</div>
+        <h3>A community built on trust, not noise</h3>
+        <p>Every member signs the Community Pledge on entry. This isn't a legal wall of text — it's three clear human values that create a genuinely safe space for people sharing vulnerable ideas.</p>
+        <div class="screen-bullets">
+          <div class="sb-item"><div class="sb-dot sd-t"></div>Be constructive, not critical</div>
+          <div class="sb-item"><div class="sb-dot sd-t"></div>Respect intellectual property — platform-wide NDA</div>
+          <div class="sb-item"><div class="sb-dot sd-t"></div>Support first. Ask questions. Succeed together.</div>
+        </div>
+      </div>
+      <div class="screen-ui">
+        <div class="sui-topbar">
+          <div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div>
+          <div class="sui-title">Community Pledge & NDA — Step 3 of 3</div>
+        </div>
+        <div class="sui-body">
+          <div style="text-align:center;padding:16px 0 20px;">
+            <div style="font-family:var(--serif);font-size:1.1rem;font-weight:700;color:var(--ink);margin-bottom:6px;">Before you enter</div>
+            <div style="font-size:0.78rem;color:var(--stone);">We're building a safe space for innovation</div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:20px;">
+            <div style="display:flex;gap:12px;align-items:flex-start;padding:14px;background:#f9f7f3;border-radius:12px;">
+              <div style="font-size:1.2rem;">🏗️</div>
+              <div>
+                <div style="font-size:0.8rem;font-weight:600;color:var(--ink);margin-bottom:3px;">Be Constructive, Not Critical</div>
+                <div style="font-size:0.74rem;color:var(--stone);">We're here to build, not destroy. Cynicism has no place here.</div>
+              </div>
+            </div>
+            <div style="display:flex;gap:12px;align-items:flex-start;padding:14px;background:#f9f7f3;border-radius:12px;">
+              <div style="font-size:1.2rem;">🔐</div>
+              <div>
+                <div style="font-size:0.8rem;font-weight:600;color:var(--ink);margin-bottom:3px;">Respect Intellectual Property</div>
+                <div style="font-size:0.74rem;color:var(--stone);">You will not copy, steal, or share another user's concept.</div>
+              </div>
+            </div>
+            <div style="display:flex;gap:12px;align-items:flex-start;padding:14px;background:#f9f7f3;border-radius:12px;">
+              <div style="font-size:1.2rem;">🤝</div>
+              <div>
+                <div style="font-size:0.8rem;font-weight:600;color:var(--ink);margin-bottom:3px;">Support First</div>
+                <div style="font-size:0.74rem;color:var(--stone);">If you see an idea you doubt, ask helpful questions.</div>
+              </div>
+            </div>
+          </div>
+          <div class="form-btn">I Agree & Enter Dashboard →</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Screen 3: Community Board -->
+    <div class="screen-showcase">
+      <div class="screen-info">
+        <div class="screen-tag st-inspirator">For Inspirators</div>
+        <h3>Real feedback that actually shapes ideas</h3>
+        <p>Inspirators don't just hit "like" — they engage deeply. Six Thinking Hats-inspired reaction types, threaded discussions, polls and private feedback channels give Ideators signal they can act on.</p>
+        <div class="screen-bullets">
+          <div class="sb-item"><div class="sb-dot sd-i"></div>🔥 Hot Idea &nbsp;💡 Clever &nbsp;❤️ Love it — nuanced reactions</div>
+          <div class="sb-item"><div class="sb-dot sd-i"></div>AI sentiment check keeps feedback constructive</div>
+          <div class="sb-item"><div class="sb-dot sd-i"></div>Top comments surface the most useful insights</div>
+        </div>
+      </div>
+      <div class="screen-ui">
+        <div class="sui-topbar">
+          <div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div>
+          <div class="sui-title">Community Board · Smart Garden Sensor</div>
+        </div>
+        <div class="sui-body">
+          <div style="background:#f9f7f3;border-radius:12px;padding:12px;margin-bottom:14px;font-size:0.78rem;color:var(--stone);">Ask a question, share feedback, or leave a comment…</div>
+          <div class="comment-item">
+            <div class="comment-avatar">👩🏽</div>
+            <div class="comment-body">
+              <div class="comment-name">Maria Rodriguez <span class="comment-time">2h ago</span></div>
+              <div class="comment-text">Have you considered adding a cellular module (LTE-M) for remote farms that don't have WiFi coverage? That would open up the agricultural market significantly.</div>
+              <div class="comment-tags"><span class="ct ct-q">Question</span></div>
+              <div class="reaction-row">
+                <span class="reaction">👍 12</span>
+                <span class="reaction">Reply</span>
+              </div>
+            </div>
+          </div>
+          <div class="comment-item" style="margin-left:20px;background:rgba(232,87,26,0.03);border-radius:8px;padding:10px;margin-top:-8px;">
+            <div class="comment-avatar" style="background:linear-gradient(135deg,#fff0e8,#ffe8d4);">💡</div>
+            <div class="comment-body">
+              <div class="comment-name" style="color:var(--orange);">Alex Ideator <span style="background:rgba(232,87,26,0.1);color:var(--orange);font-size:0.6rem;padding:2px 6px;border-radius:4px;font-weight:700;margin-left:4px;">Creator</span> <span class="comment-time">1h ago</span></div>
+              <div class="comment-text">Great point! We're testing a LoRaWAN version for Phase 2 that solves exactly that.</div>
+              <div class="reaction-row"><span class="reaction">❤️ 4</span></div>
+            </div>
+          </div>
+          <div class="comment-item">
+            <div class="comment-avatar">👨🏾</div>
+            <div class="comment-body">
+              <div class="comment-name">Arjun Patel <span class="comment-time">5h ago</span></div>
+              <div class="comment-text">The financials slide seems optimistic on unit economics. Are you factoring in rising PCB assembly costs?</div>
+              <div class="comment-tags"><span class="ct ct-f">Feedback</span></div>
+              <div class="reaction-row"><span class="reaction">👍 2</span><span class="reaction">Reply</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Screen 4: Pitch Deck -->
+    <div class="screen-showcase">
+      <div class="screen-info">
+        <div class="screen-tag st-ideator">For Ideators</div>
+        <h3>A pitch deck that builds itself — with your voice</h3>
+        <p>The Pitch Deck Builder is guided, slide by slide, with an AI collaborator suggesting taglines, refining language and flagging gaps. When it's done, publish it as your Inspiration Page and export to PDF.</p>
+        <div class="screen-bullets">
+          <div class="sb-item"><div class="sb-dot sd-o"></div>8-section MBA-standard structure</div>
+          <div class="sb-item"><div class="sb-dot sd-o"></div>Live slide preview as you type</div>
+          <div class="sb-item"><div class="sb-dot sd-o"></div>AI Polish for taglines, headlines and summaries</div>
+          <div class="sb-item"><div class="sb-dot sd-o"></div>Export to PDF or publish as public Showcase</div>
+        </div>
+      </div>
+      <div class="screen-ui">
+        <div class="sui-topbar">
+          <div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div>
+          <div class="sui-title">Pitch Deck Builder · Smart Garden Sensor</div>
+        </div>
+        <div class="sui-body">
+          <div class="deck-nav" style="margin-bottom:14px;">
+            <div class="dn-item active">1 · Opening</div>
+            <div class="dn-item">2 · Problem</div>
+            <div class="dn-item">3 · Solution</div>
+            <div class="dn-item">4 · Market</div>
+            <div class="dn-item">5 · Traction</div>
+            <div class="dn-item">6 · Team</div>
+          </div>
+          <div class="deck-preview">
+            <div class="deck-title">Smart Garden Sensor</div>
+            <div class="deck-sub">The operating system for modern gardens</div>
+            <div style="margin-top:16px;font-size:0.7rem;color:rgba(255,255,255,0.35);">Presented by Alex Ideator · alex@example.com</div>
+          </div>
+          <div style="background:rgba(61,58,245,0.06);border-radius:10px;padding:14px;border:1px solid rgba(61,58,245,0.1);">
+            <div style="font-size:0.72rem;font-weight:700;color:var(--indigo);margin-bottom:8px;">✨ AI Polish Suggestions</div>
+            <div style="font-size:0.75rem;color:var(--stone);margin-bottom:4px;">"Data-driven insights for healthier soil."</div>
+            <div style="font-size:0.75rem;color:var(--stone);margin-bottom:4px;">"Automated care for the connected garden."</div>
+            <div style="font-size:0.75rem;color:var(--stone);">"Never guess when to water again."</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ─── TRUST ─── -->
+<section class="trust-section">
+  <div class="section-inner">
+    <div class="fade-up" style="text-align:center;margin-bottom:0;">
+      <div class="section-eyebrow" style="color:var(--orange);">Built on Trust</div>
+      <h2 class="section-title" style="text-align:center;">Why people feel safe here.</h2>
+    </div>
+    <div class="trust-grid">
+      <div class="trust-card fade-up">
+        <div class="trust-icon">🔐</div>
+        <h3>Platform-wide NDA</h3>
+        <p>Every member legally agrees to treat ideas as confidential on entry. There's no workaround — the community vibe IS the contract.</p>
+      </div>
+      <div class="trust-card fade-up">
+        <div class="trust-icon">🤖</div>
+        <h3>AI Sentiment Guard</h3>
+        <p>Every comment is checked for constructive intent before posting. Six Thinking Hats labels help everyone give feedback in a useful, structured way.</p>
+      </div>
+      <div class="trust-card fade-up">
+        <div class="trust-icon">👤</div>
+        <h3>Real Human Scores</h3>
+        <p>Profile completeness scores and Human Verification help weed out bots and anonymous trolls. Reputation matters here — and it's earned.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── HCE STUDIO ─── -->
+<section class="studio-section" id="studio">
+  <div class="section-inner">
+    <div class="studio-inner">
+      <div>
+        <div class="studio-logo">Human-Centric Engineering</div>
+        <h2 class="section-title">Not just a platform.<br>A venture studio with a mission.</h2>
+        <p class="section-lead">whatifI is the first venture launched by the Human-Centric Engineering Venture Studio — a new kind of business model where ideas are created, validated and scaled by a distributed network of builders, each with a stake in the success.</p>
+
+        <div class="studio-pillars">
+          <div class="studio-pillar">
+            <div class="sp-icon">⚡</div>
+            <div>
+              <div class="sp-title">AI-powered, Human-centred</div>
+              <div class="sp-desc">We combine the speed of AI tooling with decades of product, design and engineering experience to move from idea to market at unprecedented pace.</div>
+            </div>
+          </div>
+          <div class="studio-pillar">
+            <div class="sp-icon">🤝</div>
+            <div>
+              <div class="sp-title">Shared ownership model</div>
+              <div class="sp-desc">Contributors don't just get paid once — they receive fractional ownership tokens, sharing in the success of every venture they help build.</div>
+            </div>
+          </div>
+          <div class="studio-pillar">
+            <div class="sp-icon">🌍</div>
+            <div>
+              <div class="sp-title">A blueprint for better business</div>
+              <div class="sp-desc">We're demonstrating that a more equitable, more human, more fulfilling way of building companies is not just possible — it's better.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="studio-visual">
+        <div style="text-align:center;margin-bottom:28px;">
+          <div style="font-size:0.7rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--pebble);margin-bottom:8px;">Measured by the MIND Framework</div>
+          <div style="font-family:var(--serif);font-size:0.9rem;color:var(--stone);font-style:italic;">Emad Mostaque, The Last Economy</div>
+        </div>
+        <div class="mind-grid">
+          <div class="mind-card mc-m">
+            <div class="mind-icon">🏗️</div>
+            <div class="mind-title">Material</div>
+            <div class="mind-sub">Tangible assets, revenue, digital ownership</div>
+          </div>
+          <div class="mind-card mc-i">
+            <div class="mind-icon">🧠</div>
+            <div class="mind-title">Intelligence</div>
+            <div class="mind-sub">Knowledge, creativity, problem-solving</div>
+          </div>
+          <div class="mind-card mc-n">
+            <div class="mind-icon">🌐</div>
+            <div class="mind-title">Network</div>
+            <div class="mind-sub">Connections, trust, relationships</div>
+          </div>
+          <div class="mind-card mc-d">
+            <div class="mind-icon">🎨</div>
+            <div class="mind-title">Diversity</div>
+            <div class="mind-sub">Approaches, perspectives, possibilities</div>
+          </div>
+          <div class="mind-center">
+            <div class="mc-center-title">Powered by</div>
+            <div class="mc-center-brand">Ideas</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── STORIES ─── -->
+<section class="stories-section">
+  <div class="section-inner">
+    <div class="fade-up" style="text-align:center;">
+      <div class="section-eyebrow" style="color:var(--orange);">Success Stories</div>
+      <h2 class="section-title">Ideas that found their people.</h2>
+    </div>
+    <div class="stories-grid">
+      <div class="story-card fade-up">
+        <div class="sc-stars">★★★★★</div>
+        <p class="sc-quote">"whatifI gave me the confidence to quit my day job. The expert marketplace connected me with a CTO who built our prototype in three weeks."</p>
+        <div class="sc-person">
+          <div class="sc-avatar" style="background:linear-gradient(135deg,#e8f0ff,#dde8ff);">👨</div>
+          <div>
+            <div class="sc-name">Markus Weber</div>
+            <div class="sc-role">Founder of GreenLogistics</div>
+          </div>
+          <span class="sc-tag sc-ideator">Ideator</span>
+        </div>
+      </div>
+      <div class="story-card fade-up">
+        <div class="sc-stars">★★★★★</div>
+        <p class="sc-quote">"I had the idea but no audience. Within a month on whatifI, I had 500 people on a waitlist before writing a single line of code."</p>
+        <div class="sc-person">
+          <div class="sc-avatar" style="background:linear-gradient(135deg,#fff0f5,#ffe0ec);">👩</div>
+          <div>
+            <div class="sc-name">Sarah Chen</div>
+            <div class="sc-role">Creator of ArtStream</div>
+          </div>
+          <span class="sc-tag sc-ideator">Ideator</span>
+        </div>
+      </div>
+      <div class="story-card fade-up">
+        <div class="sc-stars">★★★★★</div>
+        <p class="sc-quote">"I've been an early backer on 12 ideas and two of them became businesses I now consult for. My Scout Score opened doors I never expected."</p>
+        <div class="sc-person">
+          <div class="sc-avatar" style="background:linear-gradient(135deg,#e8fff0,#d4f5e0);">🧑🏾</div>
+          <div>
+            <div class="sc-name">Priya Nair</div>
+            <div class="sc-role">Top 5% Inspirator · Sustainability</div>
+          </div>
+          <span class="sc-tag sc-inspirator">Inspirator</span>
+        </div>
+      </div>
+      <div class="story-card fade-up">
+        <div class="sc-stars">★★★★★</div>
+        <p class="sc-quote">"I started as an Inspirator, giving feedback on ideas I believed in. Six months later I submitted my own idea and had 200 supporters on day one."</p>
+        <div class="sc-person">
+          <div class="sc-avatar" style="background:linear-gradient(135deg,#fff8e8,#ffefd4);">👨🏻</div>
+          <div>
+            <div class="sc-name">David Lin</div>
+            <div class="sc-role">Inspirator → Ideator Journey</div>
+          </div>
+          <span class="sc-tag sc-inspirator">Inspirator</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── CTA ─── -->
+<section class="cta-section" id="cta">
+  <div class="cta-eyebrow">The platform is open</div>
+  <h2>What if your idea<br><em>actually existed?</em></h2>
+  <p>Stop wondering. Start building. Join the community of Ideators and Inspirators who are turning "what if…" into the companies, books, events and causes the world needs.</p>
+  <div class="cta-actions">
+    <a href="#" class="btn-cta">Submit Your Idea Today →</a>
+    <a href="#" class="btn-cta-ghost">Browse ideas first ↗</a>
+  </div>
+</section>
+
+<!-- ─── FOOTER ─── -->
+<footer>
+  <div class="footer-brand">whatif<span>I</span></div>
+  <div class="footer-note">A Human-Centric Engineering Venture Studio · Platform Showcase · 2025</div>
+</footer>
+
+<script>
+// Intersection Observer for scroll animations
+const io = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('visible');
+    }
+  });
+}, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+
+document.querySelectorAll('.fade-up, .sol-step, .screen-showcase, .lc-stage').forEach((el, i) => {
+  if (el.classList.contains('lc-stage') || el.classList.contains('sol-step')) {
+    el.style.transitionDelay = `${(i % 7) * 0.08}s`;
+  }
+  io.observe(el);
+});
+
+// Progress bars - animate on scroll
+const progressObs = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.querySelectorAll('.progress-fill').forEach(bar => {
+        bar.style.animationPlayState = 'running';
+      });
+    }
+  });
+});
+
+document.querySelectorAll('.progress-bar').forEach(bar => {
+  bar.querySelector('.progress-fill').style.animationPlayState = 'paused';
+  progressObs.observe(bar.parentElement);
+});
+
+// Sticky nav scroll effect
+const nav = document.querySelector('nav');
+window.addEventListener('scroll', () => {
+  if (window.scrollY > 60) {
+    nav.style.boxShadow = '0 2px 24px rgba(26,20,16,0.08)';
+  } else {
+    nav.style.boxShadow = 'none';
+  }
+});
+
+// Tab switching in solution section
+document.querySelectorAll('.sv-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.sv-tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+  });
+});
+</script>
+</body>
+</html>
