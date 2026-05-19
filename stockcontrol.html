@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Items Needed | Olive Branch Aid</title>
+
+  <style>
+    :root {
+      --bg-light: #f6f8f7;
+      --bg-white: #ffffff;
+      --text-primary: #1f2933;
+      --text-secondary: #4b5563;
+      --accent: #2f7d6d;
+      --accent-soft: #e6f2ef;
+      --border-light: #e5e7eb;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+        Roboto, Ubuntu, "Helvetica Neue", Arial, sans-serif;
+      background-color: var(--bg-light);
+      color: var(--text-primary);
+      line-height: 1.6;
+    }
+
+    header {
+      background-color: var(--accent);
+      color: #ffffff;
+    }
+
+    .header-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 2.5rem 1rem;
+    }
+
+    .header-inner h1 {
+      margin: 0;
+      font-size: 2.2rem;
+      font-weight: 600;
+    }
+
+    .header-inner p {
+      margin-top: 1rem;
+      max-width: 700px;
+      font-size: 1.1rem;
+      opacity: 0.95;
+    }
+
+    main {
+      max-width: 1100px;
+      margin: 2.5rem auto;
+      padding: 0 1rem;
+    }
+
+    .card {
+      background-color: var(--bg-white);
+      border-radius: 8px;
+      border: 1px solid var(--border-light);
+      padding: 2rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .card h2 {
+      margin-top: 0;
+      font-size: 1.5rem;
+    }
+
+    .callout {
+      background-color: var(--accent-soft);
+      border-left: 4px solid var(--accent);
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .callout p {
+      margin: 0;
+      font-size: 1.05rem;
+    }
+
+    .iframe-wrapper {
+      width: 100%;
+      border-radius: 6px;
+      overflow: hidden;
+      border: 1px solid var(--border-light);
+    }
+
+    .iframe-wrapper iframe {
+      width: 100%;
+      height: 600px;
+      border: 0;
+    }
+
+    .how-to {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1.5rem;
+      margin-top: 1.5rem;
+    }
+
+    .how-to div h3 {
+      margin-top: 0;
+      font-size: 1.1rem;
+      color: var(--accent);
+    }
+
+    footer {
+      background-color: var(--bg-white);
+      border-top: 1px solid var(--border-light);
+      padding: 2rem 1rem;
+    }
+
+    footer p {
+      max-width: 1100px;
+      margin: 0 auto;
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+    }
+
+    @media (max-width: 600px) {
+      .iframe-wrapper iframe {
+        height: 480px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <header>
+    <div class="header-inner">
+      <h1>Items We Need Right Now</h1>
+      <p>
+        Olive Branch Aid supports individuals and families across Lambeth with
+        food and essential supplies. The list below shows what we are currently
+        low on and where donations will make the biggest difference.
+      </p>
+    </div>
+  </header>
+
+  <main>
+
+    <section class="card">
+      <div class="callout">
+        <p>
+          💚 <strong>Please prioritise items shown as low or empty.</strong>
+          This list updates live as donations come in and stock is distributed.
+        </p>
+      </div>
+
+      <h2>Current Priority Items</h2>
+      <p>
+        This table is updated directly from our stock system. If an item appears
+        low, it means we urgently need donations of that item.
+      </p>
+
+      <div class="iframe-wrapper">
+        <iframe
+          src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQYSu9RiAUO5BigadSzgFgdoYCPwyAFu218YT6ONULKw0MDc36O1SXWKljHhITl2Z4pYWCpRjZb99wM/pubhtml?gid=1040598885&amp;single=true&amp;widget=true&amp;headers=false"
+          loading="lazy"
+          title="Items needed by Olive Branch Aid"
+        ></iframe>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>How to Use This List</h2>
+
+      <div class="how-to">
+        <div>
+          <h3>Before donating</h3>
+          <p>
+            Check this page to see what is most needed right now. This helps us
+            avoid surplus and waste.
+          </p>
+        </div>
+
+        <div>
+          <h3>When shopping</h3>
+          <p>
+            Focus on items shown as low or out of stock. Even small quantities
+            help us support more people.
+          </p>
+        </div>
+
+        <div>
+          <h3>Dropping off</h3>
+          <p>
+            Please follow Olive Branch Aid’s donation guidelines and drop-off
+            times as listed on our main website.
+          </p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    <p>
+      Olive Branch Aid is a volunteer-run community organisation providing food
+      and essential support to people in Lambeth and surrounding areas.
+    </p>
+  </footer>
+
+</body>
+</html>
